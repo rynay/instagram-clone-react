@@ -57,7 +57,7 @@ const Login = ({ history }) => {
 
   useEffect(() => {
     setError('');
-    if (email && password && /^.+@.+$/.test(email) && password.length >= 6) {
+    if (email && password && /^.+@.+$/.test(email) && password.length >= 4) {
       setIsValid(true);
     } else {
       setIsValid(false);

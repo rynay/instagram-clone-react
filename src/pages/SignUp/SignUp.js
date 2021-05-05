@@ -3,15 +3,36 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 import s from '../Login-SignUp.module.scss';
+import { firebase } from '../../lib/firebase';
+import * as Checkers from '../../services/firebase-checkers';
 
 const SignUp = () => {
-  const handleSubmit = () => {};
   const [userName, setUserName] = useState('');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
   const [isValid, setIsValid] = useState(false);
+  const [error, setError] = useState('');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const isUserNameExist = await Checkers.checkIsUserNameExist(userName);
+    const isEmailExist = await Checkers.checkIsEmailExist(email);
+
+    if (!isUserNameExist && !isEmailExist) {
+    } else {
+      if (isUserNameExist) {
+        setError(
+          'User with this username is already exists. Please choose another one.'
+        );
+      } else if (isEmailExist) {
+        setError(
+          'User with this email address is already exists. Please Log In or choose another email address.'
+        );
+      }
+    }
+  };
 
   const fields = [
     {
@@ -71,8 +92,9 @@ const SignUp = () => {
   }, []);
 
   useEffect(() => {
+    setError('');
     if (
-      fields.every((field) => field.value.length >= 6) &&
+      fields.every((field) => field.value.length >= 4) &&
       password === repeatPassword &&
       /^.+@.+$/.test(email)
     ) {
@@ -97,6 +119,7 @@ const SignUp = () => {
             <div className={s.content__logo}>
               <img alt="Instagram" src="./images/logo.png" />
             </div>
+            {error && <p className={s.error}>{error}</p>}
             <form
               className={`${s.content__form} ${s.form}`}
               onSubmit={handleSubmit}
