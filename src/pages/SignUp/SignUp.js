@@ -1,16 +1,39 @@
+import InputField from '../../components/InputField';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import InputField from '../../components/InputField';
 import * as ROUTES from '../../constants/routes';
 import s from '../Login-SignUp.module.scss';
 
-const Login = () => {
+const SignUp = () => {
+  const handleSubmit = () => {};
+  const [userName, setUserName] = useState('');
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [repeatPassword, setRepeatPassword] = useState('');
   const [isValid, setIsValid] = useState(false);
-  const handleSubmit = () => {};
 
   const fields = [
+    {
+      className: s.form__input,
+      type: 'text',
+      placeholder: 'Username',
+      'aria-label': 'Enter your username here',
+      value: userName,
+      onChange(e) {
+        setUserName(e.target.value);
+      },
+    },
+    {
+      className: s.form__input,
+      type: 'text',
+      placeholder: 'Full name',
+      'aria-label': 'Enter your full name here',
+      value: fullName,
+      onChange(e) {
+        setFullName(e.target.value);
+      },
+    },
     {
       className: s.form__input,
       type: 'email',
@@ -31,10 +54,20 @@ const Login = () => {
         setPassword(e.target.value);
       },
     },
+    {
+      className: s.form__input,
+      type: 'password',
+      placeholder: 'Repeat password',
+      'aria-label': 'Please repeat password',
+      value: repeatPassword,
+      onChange(e) {
+        setRepeatPassword(e.target.value);
+      },
+    },
   ];
 
   useEffect(() => {
-    document.title = 'Log In - Instagram';
+    document.title = 'Sign Up - Instagram';
   }, []);
 
   useEffect(() => {
@@ -70,15 +103,15 @@ const Login = () => {
               ))}
 
               <button className={s.form__button} disabled={!isValid}>
-                Log In
+                Sign Up
               </button>
             </form>
           </div>
           <section className={s.content__other}>
             <p>
-              Don't have an account?
-              <Link to={ROUTES.SIGN_UP} className={s.content__link}>
-                Sign Up
+              Have an account?
+              <Link to={ROUTES.LOGIN} className={s.content__link}>
+                Log In
               </Link>
             </p>
           </section>
@@ -88,4 +121,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;
