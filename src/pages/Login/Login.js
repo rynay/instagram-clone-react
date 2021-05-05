@@ -1,14 +1,32 @@
+import { firebase } from '../../lib/firebase';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import InputField from '../../components/InputField';
 import * as ROUTES from '../../constants/routes';
 import s from '../Login-SignUp.module.scss';
+import { withRouter } from 'react-router-dom';
 
-const Login = () => {
+const Login = ({ history }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isValid, setIsValid] = useState(false);
-  const handleSubmit = () => {};
+  const [error, setError] = useState('');
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    try {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(() => {
+          history.push(ROUTES.DASHBOARD);
+        })
+        .catch((error) => {
+          setError(error.message);
+        });
+    } catch (error) {
+      setError(error.message);
+    }
+  };
 
   const fields = [
     {
@@ -38,6 +56,7 @@ const Login = () => {
   }, []);
 
   useEffect(() => {
+    setError('');
     if (email && password && /^.+@.+$/.test(email) && password.length >= 6) {
       setIsValid(true);
     } else {
@@ -60,6 +79,7 @@ const Login = () => {
             <div className={s.content__logo}>
               <img alt="Instagram" src="./images/logo.png" />
             </div>
+            {error && <p className={s.error}>{error}</p>}
             <form
               className={`${s.content__form} ${s.form}`}
               onSubmit={handleSubmit}
@@ -88,4 +108,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default withRouter(Login);
