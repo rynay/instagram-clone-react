@@ -1,12 +1,12 @@
 import InputField from '../../components/InputField';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 import s from '../Login-SignUp.module.scss';
 import { firebase } from '../../lib/firebase';
 import * as Checkers from '../../services/firebase-checkers';
 
-const SignUp = () => {
+const SignUp = ({ history }) => {
   const [userName, setUserName] = useState('');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -21,6 +21,24 @@ const SignUp = () => {
     const isEmailExist = await Checkers.checkIsEmailExist(email);
 
     if (!isUserNameExist && !isEmailExist) {
+      try {
+        const userCreated = await firebase
+          .auth()
+          .createUserWithEmailAndPassword(email, password);
+        firebase.firestore().collection('users').add({
+          dateCreated: Date.now(),
+          emailAddress: email,
+          followers: [],
+          following: [],
+          fullName,
+          userId: userCreated.user.uid,
+          username: userName,
+        });
+
+        history.push(ROUTES.DASHBOARD);
+      } catch (error) {
+        setError(error.message);
+      }
     } else {
       if (isUserNameExist) {
         setError(
@@ -148,4 +166,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default withRouter(SignUp);
