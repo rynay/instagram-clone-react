@@ -71,12 +71,16 @@ const SignUp = () => {
   }, []);
 
   useEffect(() => {
-    if (email && password && /^.+@.+$/.test(email) && password.length >= 6) {
+    if (
+      fields.every((field) => field.value.length >= 6) &&
+      password === repeatPassword &&
+      /^.+@.+$/.test(email)
+    ) {
       setIsValid(true);
     } else {
       setIsValid(false);
     }
-  }, [email, password]);
+  }, [userName, fullName, email, password, repeatPassword]);
 
   return (
     <main className={`container ${s.container}`}>
