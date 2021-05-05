@@ -15,9 +15,16 @@ html {
 body {
   font-size: 1.6rem;
   background-color: #fafafa;
+  min-height: 100vh;
 }
 
 img {
   width: 100%;
   max-width: 100%;
+}
+
+.container {
+  width: 95%;
+  max-width: 114rem;
+  margin: 0 auto;
 }

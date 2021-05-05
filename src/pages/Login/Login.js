@@ -30,36 +30,37 @@ const Login = () => {
         />
       </div>
       <section className={s.content}>
-        <div className={s.content__logo}>
-          <img alt="Instagram" src="./images/logo.png" />
+        <div className={s.content__login}>
+          <div className={s.content__logo}>
+            <img alt="Instagram" src="./images/logo.png" />
+          </div>
+          <form
+            className={`${s.content__form} ${s.form}`}
+            onSubmit={handleSubmit}
+            method="POST"
+          >
+            <input
+              className={s.form__input}
+              type="text"
+              placeholder="Email address"
+              aria-label="Enter your email address here"
+              value={email}
+              onChange={({ target: { value } }) => setEmail(value)}
+            />
+            <input
+              className={s.form__input}
+              type="password"
+              placeholder="Password"
+              aria-label="Enter your password here"
+              value={password}
+              onChange={({ target: { value } }) => setPassword(value)}
+            />
+
+            <button className={s.form__button} disabled={!isValid}>
+              Login
+            </button>
+          </form>
         </div>
-        <form
-          className={`${s.content__form} ${s.form}`}
-          onSubmit={handleSubmit}
-          method="POST"
-        >
-          <input
-            className={s.form__input}
-            type="text"
-            placeholder="Email address"
-            aria-label="Enter your email address here"
-            value={email}
-            onChange={({ target: { value } }) => setEmail(value)}
-          />
-          <input
-            className={s.form__input}
-            type="password"
-            placeholder="Password"
-            aria-label="Enter your password here"
-            value={password}
-            onChange={({ target: { value } }) => setPassword(value)}
-          />
-
-          <button className={s.form__button} disabled={!isValid}>
-            Login
-          </button>
-        </form>
-
         <section className={s.content__signUp}>
           <p>
             Don't have an account?
