@@ -1,0 +1,23 @@
+html {
+  box-sizing: border-box;
+  font-size: 62.5%;
+  color: #333;
+}
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+body {
+  font-size: 1.6rem;
+  background-color: #fafafa;
+}
+
+img {
+  width: 100%;
+  max-width: 100%;
+}
