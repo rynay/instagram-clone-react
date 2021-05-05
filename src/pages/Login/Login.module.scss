@@ -5,6 +5,13 @@
   align-items: center;
 }
 
+.wrapper {
+  max-width: 80rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .phoneImage {
   flex: 1;
 }
@@ -41,7 +48,7 @@
     text-align: center;
     margin-bottom: 0.5em;
     img {
-      max-width: 20rem;
+      max-width: 15rem;
     }
   }
 
