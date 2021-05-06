@@ -34,6 +34,39 @@
   }
 }
 
+.button {
+  padding: 0.5em 1em;
+  border: 0;
+  border-radius: 0.35em;
+  font-size: 1.3rem;
+  font-weight: bold;
+  letter-spacing: 0.02em;
+  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+
+  &__login:link,
+  &__login:visited {
+    text-decoration: none;
+    background-color: rgb(29, 90, 202);
+    color: #fff;
+    transition: background-color 0.1s;
+
+    &:hover {
+      background-color: rgba(0, 62, 177, 1);
+    }
+  }
+
+  &__signup:link,
+  &__signup:visited {
+    text-decoration: none;
+    color: rgb(29, 90, 202);
+    transition: color 0.1s;
+
+    &:hover {
+      color: rgba(0, 54, 153, 1);
+    }
+  }
+}
+
 .container {
   padding: 0.5em;
   display: flex;
