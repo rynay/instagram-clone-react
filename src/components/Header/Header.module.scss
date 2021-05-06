@@ -7,6 +7,31 @@
     max-width: 12rem;
     transform: translateY(0.25em);
   }
+
+  &__buttons {
+    display: flex;
+    align-items: center;
+  }
+
+  &__icon {
+    &_dashboard,
+    &_logout {
+      cursor: pointer;
+      background: transparent;
+      border: 0;
+      color: #333;
+      margin: 0 0.5em;
+    }
+    &_dashboard {
+      height: 2.15rem;
+      width: 2.15rem;
+    }
+
+    &_logout {
+      height: 1.75rem;
+      width: 1.75rem;
+    }
+  }
 }
 
 .container {

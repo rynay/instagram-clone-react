@@ -26,6 +26,12 @@ function App() {
     });
   }, [firebase]);
 
+  const logout = () => {
+    firebase.auth().signOut();
+    localStorage.removeItem('authUser');
+    setUser(null);
+  };
+
   return (
     <UserContext.Provider value={user}>
       <Router>
@@ -34,11 +40,11 @@ function App() {
             <Route path={ROUTES.LOGIN} component={Login} />
             <Route path={ROUTES.SIGN_UP} component={SignUp} />
             <Route path={ROUTES.DASHBOARD} exact>
-              <Header />
+              <Header logout={logout} />
               <Dashboard />
             </Route>
             <Route>
-              <Header />
+              <Header logout={logout} />
               <NotFound />
             </Route>
           </Switch>

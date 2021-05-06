@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 import s from './Header.module.scss';
 
-const Header = () => {
+const Header = ({ logout }) => {
   const user = useContext(UserContext);
   return (
     <header className={s.header}>
@@ -16,23 +16,43 @@ const Header = () => {
         </div>
         <nav>
           {user ? (
-            <>
+            <div className={s.header__buttons}>
               <button
-                className={s.header__icon}
+                className={s.header__icon_dashboard}
                 aria-label="Dashboard"
                 title="Dashboard"
-              ></button>
+              >
+                <img alt="Dashboard icon" src="./icons/home.svg" />
+              </button>
 
               <button
-                className={s.header__icon}
-                aria-label="Sign Out"
-                title="Sign Out"
-              ></button>
-            </>
+                onClick={logout}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    logout();
+                  }
+                }}
+                className={s.header__icon_logout}
+                aria-label="Log Out"
+                title="Log Out"
+              >
+                <img alt="Log Out icon" src="./icons/logout.svg" />
+              </button>
+            </div>
           ) : (
             <>
-              <Link className={`${s.button} ${s.button__login}`}>Log In</Link>
-              <Link className={`${s.button} ${s.button__signup}`}>Sign Up</Link>
+              <Link
+                to={ROUTES.LOGIN}
+                className={`${s.button} ${s.button__login}`}
+              >
+                Log In
+              </Link>
+              <Link
+                to={ROUTES.SIGN_UP}
+                className={`${s.button} ${s.button__signup}`}
+              >
+                Sign Up
+              </Link>
             </>
           )}
         </nav>
