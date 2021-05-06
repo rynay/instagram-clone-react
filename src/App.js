@@ -15,7 +15,7 @@ function App() {
   const [user, setUser] = useState(localStorage.getItem('authUser'));
 
   useEffect(() => {
-    firebase.auth().onAuthStatusChanges((user) => {
+    firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         localStorage.setItem('authUser', JSON.stringify(user));
         setUser(user);

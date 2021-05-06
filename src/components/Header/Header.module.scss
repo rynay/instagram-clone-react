@@ -1,0 +1,17 @@
+.header {
+  background: #fff;
+  border-bottom: 1px solid #ccc;
+  box-shadow: 0 0.1rem 1rem #e4e4e4;
+
+  &__logo {
+    max-width: 12rem;
+    transform: translateY(0.25em);
+  }
+}
+
+.container {
+  padding: 0.5em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
