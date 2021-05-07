@@ -6,7 +6,7 @@ const getUserInfo = async (uid = '') => {
     .collection('users')
     .where('userId', '==', uid)
     .get();
-  return result[0];
+  return result;
 };
 
 export default getUserInfo;

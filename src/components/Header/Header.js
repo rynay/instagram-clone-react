@@ -5,6 +5,7 @@ import * as ROUTES from '../../constants/routes';
 import s from './Header.module.scss';
 
 const Header = ({ logout, userInfo = {} }) => {
+  console.log(userInfo);
   const user = useContext(UserContext);
   return (
     <header className={s.header}>

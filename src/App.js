@@ -14,14 +14,23 @@ const NotFound = lazy(() => import('./pages/NotFound/index'));
 function App() {
   const { firebase } = useContext(FirebaseContext);
   const [user, setUser] = useState(localStorage.getItem('authUser'));
-  const [userInfo, setUserInfo] = useState(getUserInfo(user.uid));
+  const [userInfo, setUserInfo] = useState(null);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         localStorage.setItem('authUser', JSON.stringify(user));
         setUser(user);
-        setUserInfo(getUserInfo(user.uid));
+        async function firebaseUserInfo(uid) {
+          const result = await getUserInfo(uid);
+          setUserInfo(
+            result.docs.map((doc) => ({
+              ...doc.data(),
+              docId: uid,
+            }))[0]
+          );
+        }
+        firebaseUserInfo(user.uid);
       } else {
         localStorage.removeItem('authUser');
         setUser(null);
