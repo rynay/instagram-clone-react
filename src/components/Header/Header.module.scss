@@ -3,6 +3,22 @@
   border-bottom: 1px solid #ccc;
   box-shadow: 0 0.1rem 1rem #e4e4e4;
 
+  &__profile {
+    &_link {
+      overflow: hidden;
+      display: block;
+      height: 3rem;
+      width: 3rem;
+      border-radius: 50%;
+
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+
   &__logo {
     max-width: 12rem;
     transform: translateY(0.25em);

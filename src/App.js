@@ -55,7 +55,7 @@ function App() {
             <Route path={ROUTES.DASHBOARD} exact>
               {user ? (
                 <>
-                  <Header userInfo={userInfo} logout={logout} />
+                  <Header login={userInfo?.username} logout={logout} />
                   <Dashboard />
                 </>
               ) : (
@@ -63,7 +63,7 @@ function App() {
               )}
             </Route>
             <Route>
-              <Header userInfo={userInfo} logout={logout} />
+              <Header login={userInfo?.username} logout={logout} />
               <NotFound />
             </Route>
           </Switch>
