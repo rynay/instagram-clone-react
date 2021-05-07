@@ -4,7 +4,7 @@ import * as ROUTES from './constants/routes';
 import Header from './components/Header';
 import FirebaseContext from './context/firebaseContext';
 import UserContext from './context/userContext';
-import getUserInfo from './services/getUserInfo';
+import * as FirebaseService from './services/firebase';
 
 const Login = lazy(() => import('./pages/Login/index'));
 const SignUp = lazy(() => import('./pages/SignUp/index'));
@@ -15,22 +15,30 @@ function App() {
   const { firebase } = useContext(FirebaseContext);
   const [user, setUser] = useState(localStorage.getItem('authUser'));
   const [userInfo, setUserInfo] = useState(null);
+  const [suggestions, setSuggestions] = useState([]);
+
+  async function firebaseSuggestions(uid) {
+    const result = await FirebaseService.getSuggestions(uid);
+    setSuggestions(result);
+  }
+
+  async function firebaseUserInfo(uid) {
+    const result = await FirebaseService.getUserInfo(uid);
+    setUserInfo(
+      result.docs.map((doc) => ({
+        ...doc.data(),
+        docId: uid,
+      }))[0]
+    );
+  }
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         localStorage.setItem('authUser', JSON.stringify(user));
         setUser(user);
-        async function firebaseUserInfo(uid) {
-          const result = await getUserInfo(uid);
-          setUserInfo(
-            result.docs.map((doc) => ({
-              ...doc.data(),
-              docId: uid,
-            }))[0]
-          );
-        }
         firebaseUserInfo(user.uid);
+        firebaseSuggestions(user.uid);
       } else {
         localStorage.removeItem('authUser');
         setUser(null);
@@ -45,6 +53,11 @@ function App() {
     setUser(null);
   };
 
+  const toggleFollowing = async (targetUser) => {
+    await FirebaseService.toggleFollowing(targetUser, userInfo);
+    firebaseSuggestions(userInfo.userId);
+  };
+
   return (
     <UserContext.Provider value={user}>
       <Router>
@@ -56,7 +69,11 @@ function App() {
               {user ? (
                 <>
                   <Header login={userInfo?.username} logout={logout} />
-                  <Dashboard />
+                  <Dashboard
+                    username={userInfo?.username}
+                    suggestions={suggestions}
+                    follow={toggleFollowing}
+                  />
                 </>
               ) : (
                 <Login />

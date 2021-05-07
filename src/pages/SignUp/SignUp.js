@@ -4,7 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 import s from '../Login-SignUp.module.scss';
 import { firebase } from '../../lib/firebase';
-import * as Checkers from '../../services/firebase-checkers';
+import * as FirebaseService from '../../services/firebase';
 
 const SignUp = ({ history }) => {
   const [userName, setUserName] = useState('');
@@ -17,8 +17,10 @@ const SignUp = ({ history }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const isUserNameExist = await Checkers.checkIsUserNameExist(userName);
-    const isEmailExist = await Checkers.checkIsEmailExist(email);
+    const isUserNameExist = await FirebaseService.checkIsUserNameExist(
+      userName
+    );
+    const isEmailExist = await FirebaseService.checkIsEmailExist(email);
 
     if (!isUserNameExist && !isEmailExist) {
       try {
