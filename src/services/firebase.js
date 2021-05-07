@@ -9,8 +9,8 @@ export async function getUserInfo(uid) {
   return result;
 }
 
-export function toggleFollowing(target, current) {
-  firebase
+export async function toggleFollowing(target, current) {
+  const result1 = await firebase
     .firestore()
     .collection('users')
     .where('userId', '==', target.userId)
@@ -28,7 +28,7 @@ export function toggleFollowing(target, current) {
       thing.ref.update({ followers: newVal });
     });
 
-  firebase
+  const result2 = await firebase
     .firestore()
     .collection('users')
     .where('userId', '==', current.userId)
@@ -45,6 +45,8 @@ export function toggleFollowing(target, current) {
       }
       thing.ref.update({ following: newVal });
     });
+
+  return [result1, result2];
 }
 
 export async function getSuggestions(uid = '') {

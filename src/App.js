@@ -53,9 +53,10 @@ function App() {
     setUser(null);
   };
 
-  const toggleFollowing = async (targetUser) => {
-    await FirebaseService.toggleFollowing(targetUser, userInfo);
-    firebaseSuggestions(userInfo.userId);
+  const toggleFollowing = (targetUser) => {
+    FirebaseService.toggleFollowing(targetUser, userInfo).then(() => {
+      firebaseSuggestions(userInfo.userId);
+    });
   };
 
   return (
