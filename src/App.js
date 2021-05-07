@@ -40,8 +40,14 @@ function App() {
             <Route path={ROUTES.LOGIN} component={Login} />
             <Route path={ROUTES.SIGN_UP} component={SignUp} />
             <Route path={ROUTES.DASHBOARD} exact>
-              <Header logout={logout} />
-              <Dashboard />
+              {user ? (
+                <>
+                  <Header logout={logout} />
+                  <Dashboard />
+                </>
+              ) : (
+                <Login />
+              )}
             </Route>
             <Route>
               <Header logout={logout} />
