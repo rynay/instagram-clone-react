@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 import s from './Header.module.scss';
 
-const Header = ({ logout }) => {
+const Header = ({ logout, userInfo = {} }) => {
   const user = useContext(UserContext);
   return (
     <header className={s.header}>

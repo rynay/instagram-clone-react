@@ -4,6 +4,7 @@ import * as ROUTES from './constants/routes';
 import Header from './components/Header';
 import FirebaseContext from './context/firebaseContext';
 import UserContext from './context/userContext';
+import getUserInfo from './services/getUserInfo';
 
 const Login = lazy(() => import('./pages/Login/index'));
 const SignUp = lazy(() => import('./pages/SignUp/index'));
@@ -13,15 +14,18 @@ const NotFound = lazy(() => import('./pages/NotFound/index'));
 function App() {
   const { firebase } = useContext(FirebaseContext);
   const [user, setUser] = useState(localStorage.getItem('authUser'));
+  const [userInfo, setUserInfo] = useState(getUserInfo(user.uid));
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         localStorage.setItem('authUser', JSON.stringify(user));
         setUser(user);
+        setUserInfo(getUserInfo(user.uid));
       } else {
         localStorage.removeItem('authUser');
         setUser(null);
+        setUserInfo(null);
       }
     });
   }, [firebase]);
@@ -42,7 +46,7 @@ function App() {
             <Route path={ROUTES.DASHBOARD} exact>
               {user ? (
                 <>
-                  <Header logout={logout} />
+                  <Header userInfo={userInfo} logout={logout} />
                   <Dashboard />
                 </>
               ) : (
@@ -50,7 +54,7 @@ function App() {
               )}
             </Route>
             <Route>
-              <Header logout={logout} />
+              <Header userInfo={userInfo} logout={logout} />
               <NotFound />
             </Route>
           </Switch>
