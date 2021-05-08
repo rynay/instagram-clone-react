@@ -1,0 +1,59 @@
+.container {
+  padding: 0.5em 0;
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .list {
+    list-style: none;
+
+    & > *:not(:last-child) {
+      margin-bottom: 0.5em;
+    }
+  }
+
+  .list_item {
+    margin-top: 0.5em;
+    display: flex;
+  }
+
+  .link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex: 6;
+  }
+
+  .image_container {
+    height: 4rem;
+    max-width: 4rem;
+    border-radius: 50%;
+    overflow: hidden;
+
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .username {
+    font-size: 1.5rem;
+    padding: 0.5em 1em;
+  }
+
+  .button {
+    cursor: pointer;
+    align-self: center;
+    padding: 0.25em 0.5em;
+    background-color: rgba(29, 90, 202, 0.75);
+    border-radius: 0.5em;
+    border: 0;
+    color: #fff;
+    transition: background-color 0.15s;
+
+    &:hover {
+      background-color: rgba(29, 90, 202, 1);
+    }
+  }
+}
