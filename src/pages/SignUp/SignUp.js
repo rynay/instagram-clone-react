@@ -122,7 +122,7 @@ const SignUp = ({ history }) => {
     } else {
       setIsValid(false);
     }
-  }, [userName, fullName, email, password, repeatPassword]);
+  }, [userName, fullName, email, password, repeatPassword, fields]);
 
   return (
     <main className={`container ${s.container}`}>

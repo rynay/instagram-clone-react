@@ -1,0 +1,47 @@
+.container {
+  max-height: 60rem;
+  max-width: 50rem;
+  border-radius: 0.25rem;
+  overflow: hidden;
+  margin-bottom: 3rem;
+  box-shadow: 0 0 3rem #ddd;
+
+  .header {
+    background-color: #fff;
+    display: flex;
+    padding: 0.5em;
+
+    .image_container {
+      height: 4rem;
+      max-width: 4rem;
+      border-radius: 50%;
+      overflow: hidden;
+
+      img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .author_info_container {
+      padding: 0 0.5em;
+    }
+    .username {
+      font-size: 1.5rem;
+    }
+    .posted {
+      font-size: 1.3rem;
+    }
+  }
+
+  .post_image_container {
+    display: flex;
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+}

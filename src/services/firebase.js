@@ -1,4 +1,4 @@
-import { firebase, FieldValue } from '../lib/firebase';
+import { firebase } from '../lib/firebase';
 
 export async function getUserInfo(uid) {
   const result = await firebase
@@ -7,6 +7,17 @@ export async function getUserInfo(uid) {
     .where('userId', '==', uid)
     .get();
   return result;
+}
+
+export async function getFollowingPosts(following = []) {
+  const results = await firebase
+    .firestore()
+    .collection('photos')
+    .where('userId', 'in', following)
+    .get();
+  return results.docs.flatMap((doc) => ({
+    ...doc.data(),
+  }));
 }
 
 export async function toggleFollowing(target, current) {
@@ -54,6 +65,7 @@ export async function getSuggestions(uid = '') {
     .firestore()
     .collection('users')
     .where('userId', '!=', uid)
+    .limit(10)
     .get();
   return results.docs
     .map((doc) => ({

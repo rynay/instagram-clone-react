@@ -16,35 +16,68 @@ function App() {
   const [user, setUser] = useState(localStorage.getItem('authUser'));
   const [userInfo, setUserInfo] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
+  const [followingPosts, setFollowingPosts] = useState([]);
 
   async function firebaseSuggestions(uid) {
     const result = await FirebaseService.getSuggestions(uid);
     setSuggestions(result);
   }
 
-  async function firebaseUserInfo(uid) {
-    const result = await FirebaseService.getUserInfo(uid);
-    setUserInfo(
-      result.docs.map((doc) => ({
-        ...doc.data(),
-        docId: uid,
-      }))[0]
+  async function firebaseFollowingPosts(following) {
+    const result = await FirebaseService.getFollowingPosts(following);
+    setFollowingPosts(
+      result
+        .map((post) => ({
+          ...post,
+        }))
+        .sort((a, b) => b.dateCreated - a.dateCreated)
     );
   }
 
+  async function getUserName(uid) {
+    const result = await FirebaseService.getUserInfo(uid);
+    const { username } = result.docs.map((doc) => ({
+      ...doc.data(),
+    }))[0];
+
+    return username;
+  }
+
+  async function firebaseUserInfo(uid) {
+    const result = await FirebaseService.getUserInfo(uid);
+    const info = result.docs.map((doc) => ({
+      ...doc.data(),
+      docId: uid,
+    }))[0];
+
+    setUserInfo(info);
+    return info;
+  }
+
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
+    if (!userInfo) return;
+    firebaseFollowingPosts(userInfo.following);
+  }, [userInfo]);
+
+  useEffect(() => {
+    const listener = firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         localStorage.setItem('authUser', JSON.stringify(user));
         setUser(user);
-        firebaseUserInfo(user.uid);
-        firebaseSuggestions(user.uid);
+        async function someAsyncShit(uid) {
+          const info = await firebaseUserInfo(uid);
+          await firebaseSuggestions(uid);
+          await firebaseFollowingPosts(info.following);
+        }
+        someAsyncShit(user.uid);
       } else {
         localStorage.removeItem('authUser');
         setUser(null);
         setUserInfo(null);
       }
     });
+
+    return listener;
   }, [firebase]);
 
   const logout = () => {
@@ -71,6 +104,8 @@ function App() {
                 <>
                   <Header login={userInfo?.username} logout={logout} />
                   <Dashboard
+                    getUserName={getUserName}
+                    posts={followingPosts}
                     username={userInfo?.username}
                     suggestions={suggestions}
                     follow={toggleFollowing}
