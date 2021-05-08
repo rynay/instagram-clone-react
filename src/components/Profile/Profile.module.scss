@@ -1,0 +1,23 @@
+.container {
+  color: inherit;
+  text-decoration: none;
+  display: flex;
+  .image_container {
+    height: 5rem;
+    max-width: 5rem;
+    border-radius: 50%;
+    overflow: hidden;
+
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .username {
+    padding: 0.25em 0.5em;
+    flex: 1;
+    font-size: 1.6rem;
+  }
+}

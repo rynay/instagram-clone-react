@@ -1,5 +1,6 @@
 .container {
   display: flex;
+  padding: 1em 0;
 
   & :nth-child(1) {
     flex: 3;
