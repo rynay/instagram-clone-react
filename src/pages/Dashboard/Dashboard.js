@@ -17,6 +17,7 @@ const Dashboard = ({
   return (
     <main className={`container ${s.container}`}>
       <Timeline
+        currentUserName={username}
         currentUserId={currentUserId}
         posts={posts}
         getUserName={getUserName}

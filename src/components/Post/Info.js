@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { FaRegHeart, FaHeart, FaCommentDots } from 'react-icons/fa';
+import { sendComment } from '../../services/firebase';
 
-const Info = ({ currentUserId, post, username }) => {
+const Info = ({ currentUserId, currentUserName, post, username }) => {
   const [showingComments, setShowingComments] = useState(
     post.comments.slice(0, 3)
   );
+  const [comment, setComment] = useState('');
   return (
     <div>
       <button>
@@ -60,6 +62,29 @@ const Info = ({ currentUserId, post, username }) => {
           </li>
         ))}
       </ul>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (!comment.trim()) return;
+          sendComment(currentUserName, post.photoId, comment.trim());
+          setShowingComments((comments) => [
+            ...comments,
+            {
+              comment,
+              displayName: currentUserName,
+            },
+          ]);
+          setComment('');
+        }}
+      >
+        <input
+          type="text"
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          placeholder="Comment..."
+        />
+        <button>POST</button>
+      </form>
     </div>
   );
 };

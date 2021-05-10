@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import s from './Post.module.scss';
 import Info from './Info';
 
-const Post = ({ post, getUserName, currentUserId }) => {
+const Post = ({ post, getUserName, currentUserId, currentUserName }) => {
   const [username, setUsername] = useState('');
   useEffect(() => {
     async function getAndSetUserName(uid) {
@@ -28,7 +28,12 @@ const Post = ({ post, getUserName, currentUserId }) => {
       <div className={s.post_image_container}>
         <img src={post.imageSrc} alt="" />
       </div>
-      <Info currentUserId={currentUserId} post={post} username={username} />
+      <Info
+        currentUserName={currentUserName}
+        currentUserId={currentUserId}
+        post={post}
+        username={username}
+      />
     </article>
   );
 };

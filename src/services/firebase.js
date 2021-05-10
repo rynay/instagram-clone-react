@@ -1,5 +1,26 @@
 import { firebase } from '../lib/firebase';
 
+export async function sendComment(displayName, targetPhoto, comment) {
+  await firebase
+    .firestore()
+    .collection('photos')
+    .where('photoId', '==', targetPhoto)
+    .get()
+    .then((query) => {
+      const target = query.docs[0];
+      var currVal = target.data().comments;
+      target.ref.update({
+        comments: [
+          ...currVal,
+          {
+            comment,
+            displayName,
+          },
+        ],
+      });
+    });
+}
+
 export async function getUserInfo(uid) {
   const result = await firebase
     .firestore()
