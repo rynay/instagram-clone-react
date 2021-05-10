@@ -64,12 +64,12 @@ function App() {
       if (user) {
         localStorage.setItem('authUser', JSON.stringify(user));
         setUser(user);
-        async function someAsyncShit(uid) {
+        async function firebaseWork(uid) {
           const info = await firebaseUserInfo(uid);
           await firebaseSuggestions(uid);
           await firebaseFollowingPosts(info.following);
         }
-        someAsyncShit(user.uid);
+        firebaseWork(user.uid);
       } else {
         localStorage.removeItem('authUser');
         setUser(null);

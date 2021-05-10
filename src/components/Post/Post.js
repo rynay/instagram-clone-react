@@ -1,3 +1,4 @@
+import { formatDistance } from 'date-fns';
 import { useEffect, useState } from 'react';
 import s from './Post.module.scss';
 
@@ -18,7 +19,9 @@ const Post = ({ post, getUserName }) => {
         </div>
         <div className={s.author_info_container}>
           <h3 className={s.username}>{username}</h3>
-          <p className={s.posted}>just now</p>
+          <p className={s.posted}>
+            {formatDistance(post.dateCreated, Date.now())} ago
+          </p>
         </div>
       </div>
       <div className={s.post_image_container}>
