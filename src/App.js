@@ -104,6 +104,7 @@ function App() {
                 <>
                   <Header login={userInfo?.username} logout={logout} />
                   <Dashboard
+                    currentUserId={userInfo?.userId}
                     getUserName={getUserName}
                     posts={followingPosts}
                     username={userInfo?.username}

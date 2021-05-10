@@ -2,8 +2,7 @@ import Post from '../Post';
 import Skeleton from 'react-loading-skeleton';
 import s from './Timeline.module.scss';
 
-const Timeline = ({ posts, getUserName }) => {
-  console.log(posts);
+const Timeline = ({ posts, getUserName, currentUserId }) => {
   return (
     <section className={s.container}>
       {!posts.length && (
@@ -15,7 +14,12 @@ const Timeline = ({ posts, getUserName }) => {
         />
       )}
       {posts.map((post) => (
-        <Post key={post.postId} getUserName={getUserName} post={post} />
+        <Post
+          key={post.postId}
+          currentUserId={currentUserId}
+          getUserName={getUserName}
+          post={post}
+        />
       ))}
     </section>
   );
