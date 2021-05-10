@@ -34,7 +34,7 @@ const SignUp = ({ history }) => {
           following: [],
           fullName,
           userId: userCreated.user.uid,
-          username: userName,
+          username: userName.toLowerCase(),
         });
 
         history.push(ROUTES.DASHBOARD);
