@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { FaRegHeart, FaHeart, FaCommentDots } from 'react-icons/fa';
+import { FaRegHeart, FaHeart, FaRegCommentDots } from 'react-icons/fa';
 import { sendComment, toggleLike } from '../../services/firebase';
 
-const Info = ({ currentUserId, currentUserName, post, username }) => {
+const Info = ({ s, currentUserId, currentUserName, post, username }) => {
   const [isLiked, setIsLiked] = useState(post.likes.includes(currentUserId));
   const [likesCount, setLikesCount] = useState(post.likes.length);
   const [commentsCount, setCommentsCount] = useState(post.comments.length);
@@ -11,8 +11,9 @@ const Info = ({ currentUserId, currentUserName, post, username }) => {
   );
   const [comment, setComment] = useState('');
   return (
-    <div>
+    <div className={s.info}>
       <button
+        className={s.info__button}
         onClick={() => {
           console.log('toggle');
           toggleLike(currentUserId, post.photoId);
@@ -28,13 +29,13 @@ const Info = ({ currentUserId, currentUserName, post, username }) => {
       >
         {isLiked ? <FaHeart style={{ fill: 'red' }} /> : <FaRegHeart />}
       </button>
-      <button>
-        <FaCommentDots />
+      <button className={s.info__button}>
+        <FaRegCommentDots />
       </button>
       <p>
         <strong>{username}</strong>: {post.caption}
       </p>
-      <div>
+      <div className={s.info__statistic}>
         <p>
           {likesCount} {likesCount === 1 ? 'like' : 'likes'}
         </p>

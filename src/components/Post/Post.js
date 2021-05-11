@@ -29,6 +29,7 @@ const Post = ({ post, getUserName, currentUserId, currentUserName }) => {
         <img src={post.imageSrc} alt="" />
       </div>
       <Info
+        s={s}
         currentUserName={currentUserName}
         currentUserId={currentUserId}
         post={post}
