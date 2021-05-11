@@ -13,12 +13,23 @@ const Profile = ({
     params: { userId: targetUserName },
   },
 }) => {
-  console.log();
   const [targetUser, setTargetUser] = useState(null);
-  const [isFollowing, setIsFollowing] = useState(
-    currentUserInfo?.following?.includes(targetUserName)
-  );
+  const [followersCountUpdated, setFollowersCountUpdated] = useState(null);
+  const [isFollowing, setIsFollowing] = useState(null);
   const [photos, setPhotos] = useState([]);
+
+  useEffect(() => {
+    setFollowersCountUpdated(targetUser?.followers?.length);
+    setIsFollowing(targetUser?.followers?.includes(currentUserInfo?.userId));
+  }, [targetUser, currentUserInfo]);
+
+  const updateFollowingInfo = (target, current) => {
+    toggleFollowing(target, current);
+    setIsFollowing((isFollowing) => !isFollowing);
+    isFollowing
+      ? setFollowersCountUpdated((count) => +count - 1)
+      : setFollowersCountUpdated((count) => +count + 1);
+  };
 
   useEffect(() => {
     if (currentUserInfo?.userId === targetUserName) {
@@ -49,12 +60,12 @@ const Profile = ({
           isFollowing={isFollowing}
           username={targetUser.username}
           fullName={targetUser.fullName}
-          followersCount={targetUser.followers.length}
+          followersCount={followersCountUpdated}
           followingCount={targetUser.following.length}
           photosCount={photos.length}
-          toggleFollowing={toggleFollowing}
-          currentUserId={currentUserInfo?.userId}
-          currentPageUserId={targetUser.userId}
+          toggleFollowing={updateFollowingInfo}
+          currentUser={currentUserInfo}
+          currentPageUser={targetUser}
         />
       ) : null}
     </main>

@@ -6,8 +6,8 @@ const Header = ({
   followingCount,
   photosCount,
   toggleFollowing,
-  currentUserId,
-  currentPageUserId,
+  currentUser,
+  currentPageUser,
 }) => {
   return (
     <section>
@@ -19,8 +19,16 @@ const Header = ({
           <h2>{username}</h2>
           <h3>{fullName}</h3>
         </div>
-        {currentUserId !== currentPageUserId && (
-          <button onClick={() => toggleFollowing}>
+        {currentUser?.userId !== currentPageUser?.userId && (
+          <button
+            onKeyDown={(e) => {
+              if (e.key !== 'Enter') return;
+              toggleFollowing(currentPageUser, currentUser);
+            }}
+            onClick={() => {
+              toggleFollowing(currentPageUser, currentUser);
+            }}
+          >
             {isFollowing ? 'Unfollow' : 'Follow'}
           </button>
         )}
@@ -28,7 +36,8 @@ const Header = ({
       <div>
         <p>{photosCount} photos</p>
         <p>
-          {followersCount} {followersCount === 1 ? 'follower' : 'followers'}
+          {followersCount || 0}{' '}
+          {followersCount === 1 ? 'follower' : 'followers'}
         </p>
         <p>{followingCount} following</p>
       </div>

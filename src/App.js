@@ -1,5 +1,5 @@
 import { lazy, Suspense, useContext, useEffect, useState } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import * as ROUTES from './constants/routes';
 import Header from './components/Header';
 import FirebaseContext from './context/firebaseContext';
@@ -12,7 +12,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard/index'));
 const NotFound = lazy(() => import('./pages/NotFound/index'));
 const Profile = lazy(() => import('./pages/Profile/index'));
 
-function App() {
+function App({ match }) {
   const { firebase } = useContext(FirebaseContext);
   const [user, setUser] = useState(localStorage.getItem('authUser'));
   const [userInfo, setUserInfo] = useState(null);
@@ -56,7 +56,7 @@ function App() {
   }
 
   useEffect(() => {
-    if (!userInfo) return;
+    if (!userInfo || match.path !== '/dashboard') return;
     firebaseFollowingPosts(userInfo.following);
   }, [userInfo]);
 
@@ -67,6 +67,7 @@ function App() {
         setUser(user);
         async function firebaseWork(uid) {
           const info = await firebaseUserInfo(uid);
+          if (match.path !== '/dashboard') return;
           await firebaseSuggestions(uid);
           await firebaseFollowingPosts(info.following);
         }
@@ -89,43 +90,42 @@ function App() {
 
   const toggleFollowing = (targetUser) => {
     FirebaseService.toggleFollowing(targetUser, userInfo).then(() => {
+      if (match.path !== '/dashboard') return;
       firebaseSuggestions(userInfo.userId);
     });
   };
 
   return (
     <UserContext.Provider value={user}>
-      <Router>
-        <Header login={userInfo?.username} logout={logout} />
-        <Suspense fallback={<p>Loading...</p>}>
-          <Switch>
-            <Route path={ROUTES.LOGIN} component={Login} />
-            <Route path={ROUTES.SIGN_UP} component={SignUp} />
-            <Route path={ROUTES.DASHBOARD} exact>
-              {user ? (
-                <>
-                  <Dashboard
-                    currentUserId={userInfo?.userId}
-                    getUserName={getUserName}
-                    posts={followingPosts}
-                    username={userInfo?.username}
-                    suggestions={suggestions}
-                    follow={toggleFollowing}
-                  />
-                </>
-              ) : (
-                <Login />
-              )}
-            </Route>
-            <Route path={ROUTES.PROFILE}>
-              <Profile currentUserInfo={userInfo} />
-            </Route>
-            <Route component={NotFound} />
-          </Switch>
-        </Suspense>
-      </Router>
+      <Header login={userInfo?.username} logout={logout} />
+      <Suspense fallback={<p>Loading...</p>}>
+        <Switch>
+          <Route path={ROUTES.LOGIN} component={Login} />
+          <Route path={ROUTES.SIGN_UP} component={SignUp} />
+          <Route path={ROUTES.DASHBOARD} exact>
+            {user ? (
+              <>
+                <Dashboard
+                  currentUserId={userInfo?.userId}
+                  getUserName={getUserName}
+                  posts={followingPosts}
+                  username={userInfo?.username}
+                  suggestions={suggestions}
+                  follow={toggleFollowing}
+                />
+              </>
+            ) : (
+              <Login />
+            )}
+          </Route>
+          <Route path={ROUTES.PROFILE}>
+            <Profile currentUserInfo={userInfo} />
+          </Route>
+          <Route component={NotFound} />
+        </Switch>
+      </Suspense>
     </UserContext.Provider>
   );
 }
 
-export default App;
+export default withRouter(App);
