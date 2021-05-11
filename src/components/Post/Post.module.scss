@@ -63,4 +63,36 @@
       margin-left: 0.25em;
     }
   }
+
+  &__form {
+    margin-top: 0.5em;
+    display: flex;
+    &_input {
+      flex: 1;
+      padding: 0.5em;
+      border: 1px solid #ccc;
+      border-radius: 0.25em 0 0 0.25em;
+      transition: border-color 0.15s;
+
+      &:focus {
+        border-color: #666;
+        outline: none;
+      }
+    }
+    &_button {
+      font-weight: bold;
+      padding: 0.25em 0.75em;
+      cursor: pointer;
+      background: none;
+      border: 0;
+      border-radius: 0 0.25em 0.25em 0;
+      background-color: #eee;
+      transition: background-color 0.15s;
+
+      &:hover,
+      &:focus {
+        background-color: #ccc;
+      }
+    }
+  }
 }

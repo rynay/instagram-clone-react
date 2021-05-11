@@ -75,6 +75,7 @@ const Info = ({ s, currentUserId, currentUserName, post, username }) => {
         ))}
       </ul>
       <form
+        className={s.info__form}
         onSubmit={(e) => {
           e.preventDefault();
           if (!comment.trim()) return;
@@ -91,12 +92,13 @@ const Info = ({ s, currentUserId, currentUserName, post, username }) => {
         }}
       >
         <input
+          className={s.info__form_input}
           type="text"
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           placeholder="Comment..."
         />
-        <button>POST</button>
+        <button className={s.info__form_button}>POST</button>
       </form>
     </div>
   );
