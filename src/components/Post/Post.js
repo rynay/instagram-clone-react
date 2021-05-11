@@ -1,10 +1,14 @@
 import { formatDistance } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useEffect, createRef, useState } from 'react';
 import s from './Post.module.scss';
 import Info from './Info';
 
 const Post = ({ post, getUserName, currentUserId, currentUserName }) => {
   const [username, setUsername] = useState('');
+  const ref = createRef();
+  function handleFocus() {
+    ref.current.focus();
+  }
   useEffect(() => {
     async function getAndSetUserName(uid) {
       const result = await getUserName(uid);
@@ -29,6 +33,8 @@ const Post = ({ post, getUserName, currentUserId, currentUserName }) => {
         <img src={post.imageSrc} alt="" />
       </div>
       <Info
+        refForInput={ref}
+        handleFocus={handleFocus}
         s={s}
         currentUserName={currentUserName}
         currentUserId={currentUserId}

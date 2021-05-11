@@ -2,7 +2,15 @@ import { useState } from 'react';
 import { FaRegHeart, FaHeart, FaRegCommentDots } from 'react-icons/fa';
 import { sendComment, toggleLike } from '../../services/firebase';
 
-const Info = ({ s, currentUserId, currentUserName, post, username }) => {
+const Info = ({
+  refForInput,
+  handleFocus,
+  s,
+  currentUserId,
+  currentUserName,
+  post,
+  username,
+}) => {
   const [isLiked, setIsLiked] = useState(post.likes.includes(currentUserId));
   const [likesCount, setLikesCount] = useState(post.likes.length);
   const [commentsCount, setCommentsCount] = useState(post.comments.length);
@@ -29,7 +37,7 @@ const Info = ({ s, currentUserId, currentUserName, post, username }) => {
       >
         {isLiked ? <FaHeart style={{ fill: 'red' }} /> : <FaRegHeart />}
       </button>
-      <button className={s.info__button}>
+      <button onClick={handleFocus} className={s.info__button}>
         <FaRegCommentDots />
       </button>
       <p>
@@ -92,6 +100,7 @@ const Info = ({ s, currentUserId, currentUserName, post, username }) => {
         }}
       >
         <input
+          ref={refForInput}
           className={s.info__form_input}
           type="text"
           value={comment}
