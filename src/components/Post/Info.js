@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FaRegHeart, FaHeart, FaRegCommentDots } from 'react-icons/fa';
 import { sendComment, toggleLike } from '../../services/firebase';
+import { Link } from 'react-router-dom';
 
 const Info = ({
   refForInput,
@@ -41,7 +42,12 @@ const Info = ({
         <FaRegCommentDots />
       </button>
       <p>
-        <strong>{username}</strong>: {post.caption}
+        <strong>
+          <Link to={`/p/${username}`} className={s.link}>
+            {username}
+          </Link>
+        </strong>
+        : {post.caption}
       </p>
       <div className={s.info__statistic}>
         <p>
@@ -78,7 +84,12 @@ const Info = ({
       <ul>
         {showingComments.map((comment) => (
           <li key={comment.displayName + comment.comment}>
-            <strong>{comment.displayName}</strong>: {comment.comment}
+            <strong>
+              <Link to={`/p/${comment.displayName}`} className={s.link}>
+                {comment.displayName}
+              </Link>
+            </strong>
+            : {comment.comment}
           </li>
         ))}
       </ul>
