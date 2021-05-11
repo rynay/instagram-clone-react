@@ -57,6 +57,7 @@ const Profile = ({
     <main className={`container ${s.container}`}>
       {targetUser ? (
         <Header
+          s={s}
           isFollowing={isFollowing}
           username={targetUser.username}
           fullName={targetUser.fullName}

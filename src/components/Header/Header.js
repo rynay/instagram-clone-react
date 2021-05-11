@@ -11,7 +11,7 @@ const Header = ({ logout, login }) => {
       <div className={`container ${s.container}`}>
         <div className={s.header__logo}>
           <Link to={user ? ROUTES.DASHBOARD : ROUTES.LOGIN}>
-            <img alt="Instagram" src="./images/logo.png" />
+            <img alt="Instagram" src="/images/logo.png" />
           </Link>
         </div>
         <nav>
@@ -23,7 +23,7 @@ const Header = ({ logout, login }) => {
                   aria-label="Dashboard"
                   title="Dashboard"
                 >
-                  <img alt="Dashboard icon" src="./icons/home.svg" />
+                  <img alt="Dashboard icon" src="/icons/home.svg" />
                 </button>
               </Link>
 
@@ -38,11 +38,11 @@ const Header = ({ logout, login }) => {
                 aria-label="Log Out"
                 title="Log Out"
               >
-                <img alt="Log Out icon" src="./icons/logout.svg" />
+                <img alt="Log Out icon" src="/icons/logout.svg" />
               </button>
               <div className={s.header__profile}>
                 <Link to={`/p/${login}`} className={s.header__profile_link}>
-                  <img src={`./images/avatars/${login}.jpg`} alt="" />
+                  <img src={`/images/avatars/${login}.jpg`} alt="" />
                 </Link>
               </div>
             </div>
