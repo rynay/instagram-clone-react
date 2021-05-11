@@ -16,7 +16,7 @@ const Info = ({
   const [likesCount, setLikesCount] = useState(post.likes.length);
   const [commentsCount, setCommentsCount] = useState(post.comments.length);
   const [showingComments, setShowingComments] = useState(
-    post.comments.slice(0, 3)
+    post.comments.slice(post.comments.length - 3, post.comments.length)
   );
   const [comment, setComment] = useState('');
   return (
@@ -59,18 +59,29 @@ const Info = ({
       </div>
       {post.comments.length > 3 && (
         <button
+          className={s.toggleComments}
           aria-label="toggle comments"
           onKeyDown={(e) => {
             if (e.key !== 'Enter') return;
             if (showingComments.length === post.comments.length) {
-              setShowingComments(post.comments.slice(0, 3));
+              setShowingComments(
+                post.comments.slice(
+                  post.comments.length - 3,
+                  post.comments.length
+                )
+              );
             } else {
               setShowingComments(post.comments);
             }
           }}
           onClick={() => {
             if (showingComments.length === post.comments.length) {
-              setShowingComments(post.comments.slice(0, 3));
+              setShowingComments(
+                post.comments.slice(
+                  post.comments.length - 3,
+                  post.comments.length
+                )
+              );
             } else {
               setShowingComments(post.comments);
             }
