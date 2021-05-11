@@ -10,6 +10,7 @@ const Login = lazy(() => import('./pages/Login/index'));
 const SignUp = lazy(() => import('./pages/SignUp/index'));
 const Dashboard = lazy(() => import('./pages/Dashboard/index'));
 const NotFound = lazy(() => import('./pages/NotFound/index'));
+const Profile = lazy(() => import('./pages/Profile/index'));
 
 function App() {
   const { firebase } = useContext(FirebaseContext);
@@ -95,6 +96,7 @@ function App() {
   return (
     <UserContext.Provider value={user}>
       <Router>
+        <Header login={userInfo?.username} logout={logout} />
         <Suspense fallback={<p>Loading...</p>}>
           <Switch>
             <Route path={ROUTES.LOGIN} component={Login} />
@@ -102,7 +104,6 @@ function App() {
             <Route path={ROUTES.DASHBOARD} exact>
               {user ? (
                 <>
-                  <Header login={userInfo?.username} logout={logout} />
                   <Dashboard
                     currentUserId={userInfo?.userId}
                     getUserName={getUserName}
@@ -116,10 +117,10 @@ function App() {
                 <Login />
               )}
             </Route>
-            <Route>
-              <Header login={userInfo?.username} logout={logout} />
-              <NotFound />
+            <Route path={ROUTES.PROFILE}>
+              <Profile currentUserInfo={userInfo} />
             </Route>
+            <Route component={NotFound} />
           </Switch>
         </Suspense>
       </Router>

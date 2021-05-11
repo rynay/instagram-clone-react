@@ -48,6 +48,15 @@ export async function getUserInfo(uid) {
   return result;
 }
 
+export async function getUserInfoByUserName(username) {
+  const result = await firebase
+    .firestore()
+    .collection('users')
+    .where('username', '==', username)
+    .get();
+  return result;
+}
+
 export async function getFollowingPosts(following = []) {
   const results = await firebase
     .firestore()
