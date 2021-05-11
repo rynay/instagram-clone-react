@@ -1,20 +1,32 @@
 import { useState } from 'react';
 import { FaRegHeart, FaHeart, FaCommentDots } from 'react-icons/fa';
-import { sendComment } from '../../services/firebase';
+import { sendComment, toggleLike } from '../../services/firebase';
 
 const Info = ({ currentUserId, currentUserName, post, username }) => {
+  const [isLiked, setIsLiked] = useState(post.likes.includes(currentUserId));
+  const [likesCount, setLikesCount] = useState(post.likes.length);
+  const [commentsCount, setCommentsCount] = useState(post.comments.length);
   const [showingComments, setShowingComments] = useState(
     post.comments.slice(0, 3)
   );
   const [comment, setComment] = useState('');
   return (
     <div>
-      <button>
-        {post.likes.includes(currentUserId) ? (
-          <FaHeart style={{ fill: 'red' }} />
-        ) : (
-          <FaRegHeart />
-        )}
+      <button
+        onClick={() => {
+          console.log('toggle');
+          toggleLike(currentUserId, post.photoId);
+          setIsLiked((isLiked) => !isLiked);
+          setLikesCount((count) => (isLiked ? count - 1 : count + 1));
+        }}
+        onKeyDown={(e) => {
+          if (e.key !== 'Enter') return;
+          toggleLike(currentUserId, post.photoId);
+          setIsLiked((isLiked) => !isLiked);
+          setLikesCount((count) => (isLiked ? count - 1 : count + 1));
+        }}
+      >
+        {isLiked ? <FaHeart style={{ fill: 'red' }} /> : <FaRegHeart />}
       </button>
       <button>
         <FaCommentDots />
@@ -24,11 +36,10 @@ const Info = ({ currentUserId, currentUserName, post, username }) => {
       </p>
       <div>
         <p>
-          {post.likes.length} {post.likes.length === 1 ? 'like' : 'likes'}
+          {likesCount} {likesCount === 1 ? 'like' : 'likes'}
         </p>
         <p>
-          {post.comments.length}{' '}
-          {post.comments.length === 1 ? 'comment' : 'comments'}
+          {commentsCount} {commentsCount === 1 ? 'comment' : 'comments'}
         </p>
       </div>
       {post.comments.length > 3 && (
@@ -75,6 +86,7 @@ const Info = ({ currentUserId, currentUserName, post, username }) => {
             },
           ]);
           setComment('');
+          setCommentsCount((count) => count + 1);
         }}
       >
         <input
