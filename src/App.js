@@ -17,7 +17,9 @@ function App({ match }) {
   const [user, setUser] = useState(localStorage.getItem('authUser'));
   const [userInfo, setUserInfo] = useState(null);
   const [suggestions, setSuggestions] = useState(null);
-  const [followingPosts, setFollowingPosts] = useState([]);
+  const [followingPosts, setFollowingPosts] = useState(null);
+
+  window.followingPosts = followingPosts;
 
   async function firebaseSuggestions(uid) {
     const result = await FirebaseService.getSuggestions(uid);
@@ -67,28 +69,32 @@ function App({ match }) {
   };
 
   const toggleFollowing = (targetUser) => {
-    FirebaseService.toggleFollowing(targetUser, userInfo).then(() => {
-      firebaseUserInfo(user.uid)
-        .then(() => {
-          firebaseSuggestions(userInfo.userId);
-        })
-        .then(() => {
-          firebaseFollowingPosts(userInfo.following);
-        });
-    });
-    if (userInfo.following.includes(targetUser.userId)) {
-      setFollowingPosts((posts) =>
-        posts.filter((post) => post.userId !== targetUser.userId)
-      );
-    }
-    if (!userInfo.following.includes(targetUser.userId)) {
-      setSuggestions((suggestions) =>
-        suggestions.filter(
-          (suggestion) => suggestion.userId !== targetUser.userId
-        )
-      );
-    }
+    const result = FirebaseService.toggleFollowing(targetUser, userInfo)
+      .then((res) => {
+        firebaseUserInfo(user.uid);
+        return res;
+      })
+      .then((res) => {
+        firebaseSuggestions(userInfo.userId);
+        return res;
+      })
+      .then((res) => {
+        firebaseFollowingPosts(userInfo.following);
+        return res;
+      });
+
+    return result;
   };
+
+  // useEffect(() => {
+  //   if (!userInfo) return;
+  //   firebaseSuggestions(userInfo.userId);
+  // }, [userInfo]);
+
+  // useEffect(() => {
+  //   if (!userInfo) return;
+  //   firebaseFollowingPosts(userInfo.following);
+  // }, [suggestions, userInfo]);
 
   useEffect(() => {
     const listener = firebase.auth().onAuthStateChanged((user) => {
@@ -111,12 +117,6 @@ function App({ match }) {
 
     return listener;
   }, [firebase]);
-
-  useEffect(() => {
-    if (!userInfo) return;
-    firebaseSuggestions(userInfo.userId);
-    firebaseFollowingPosts(userInfo.following);
-  }, [userInfo?.following]);
 
   return (
     <UserContext.Provider value={user}>

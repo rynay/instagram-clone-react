@@ -17,12 +17,15 @@ const Profile = ({
   const [photos, setPhotos] = useState([]);
 
   useEffect(() => {
-    setFollowersCountUpdated(targetUser?.followers?.length);
-    setIsFollowing(targetUser?.followers?.includes(currentUserInfo?.userId));
+    if (!targetUser) return;
+    setFollowersCountUpdated(targetUser.followers.length);
+    setIsFollowing(targetUser.followers.includes(currentUserInfo?.userId));
   }, [targetUser, currentUserInfo]);
 
   const updateFollowingInfo = (target, current) => {
-    toggleFollowing(target, current);
+    toggleFollowing(target, current).then(() => {
+      setTargetUser({ ...targetUser });
+    });
   };
 
   useEffect(() => {
