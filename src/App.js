@@ -16,7 +16,7 @@ function App({ match }) {
   const { firebase } = useContext(FirebaseContext);
   const [user, setUser] = useState(localStorage.getItem('authUser'));
   const [userInfo, setUserInfo] = useState(null);
-  const [suggestions, setSuggestions] = useState([]);
+  const [suggestions, setSuggestions] = useState(null);
   const [followingPosts, setFollowingPosts] = useState([]);
 
   async function firebaseSuggestions(uid) {
@@ -27,7 +27,6 @@ function App({ match }) {
 
   async function firebaseFollowingPosts(following) {
     const result = await FirebaseService.getFollowingPosts(following);
-    console.log(result);
     if (!result) {
       setFollowingPosts(null);
       return;
@@ -61,10 +60,35 @@ function App({ match }) {
     return info;
   }
 
-  useEffect(() => {
-    if (!userInfo || match.path !== '/') return;
-    firebaseFollowingPosts(userInfo.following);
-  }, [userInfo?.following, userInfo, match.path]);
+  const logout = () => {
+    firebase.auth().signOut();
+    localStorage.removeItem('authUser');
+    setUser(null);
+  };
+
+  const toggleFollowing = (targetUser) => {
+    FirebaseService.toggleFollowing(targetUser, userInfo).then(() => {
+      firebaseUserInfo(user.uid)
+        .then(() => {
+          firebaseSuggestions(userInfo.userId);
+        })
+        .then(() => {
+          firebaseFollowingPosts(userInfo.following);
+        });
+    });
+    if (userInfo.following.includes(targetUser.userId)) {
+      setFollowingPosts((posts) =>
+        posts.filter((post) => post.userId !== targetUser.userId)
+      );
+    }
+    if (!userInfo.following.includes(targetUser.userId)) {
+      setSuggestions((suggestions) =>
+        suggestions.filter(
+          (suggestion) => suggestion.userId !== targetUser.userId
+        )
+      );
+    }
+  };
 
   useEffect(() => {
     const listener = firebase.auth().onAuthStateChanged((user) => {
@@ -88,23 +112,11 @@ function App({ match }) {
     return listener;
   }, [firebase]);
 
-  const logout = () => {
-    firebase.auth().signOut();
-    localStorage.removeItem('authUser');
-    setUser(null);
-  };
-
-  const toggleFollowing = (targetUser) => {
-    FirebaseService.toggleFollowing(targetUser, userInfo).then(() => {
-      firebaseUserInfo(user.uid)
-        .then(() => {
-          firebaseSuggestions(userInfo.userId);
-        })
-        .then(() => {
-          firebaseFollowingPosts(userInfo.following);
-        });
-    });
-  };
+  useEffect(() => {
+    if (!userInfo) return;
+    firebaseSuggestions(userInfo.userId);
+    firebaseFollowingPosts(userInfo.following);
+  }, [userInfo?.following]);
 
   return (
     <UserContext.Provider value={user}>

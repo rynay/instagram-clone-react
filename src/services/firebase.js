@@ -118,7 +118,7 @@ export async function getSuggestions(uid = '') {
     .where('userId', '!=', uid)
     .limit(10)
     .get();
-  return results.docs
+  const formatted = results.docs
     .map((doc) => ({
       ...doc.data(),
     }))
@@ -127,6 +127,9 @@ export async function getSuggestions(uid = '') {
       username,
       userId,
     }));
+
+  if (!formatted.length) return null;
+  return formatted;
 }
 
 export async function checkIsUserNameExist(username) {

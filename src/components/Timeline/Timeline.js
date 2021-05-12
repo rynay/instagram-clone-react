@@ -18,7 +18,7 @@ const Timeline = ({ currentUserName, posts, getUserName, currentUserId }) => {
         posts.map((post) => (
           <Post
             currentUserName={currentUserName}
-            key={post.postId}
+            key={post.photoId}
             currentUserId={currentUserId}
             getUserName={getUserName}
             post={post}
