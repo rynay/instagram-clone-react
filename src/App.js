@@ -26,6 +26,10 @@ function App({ match }) {
 
   async function firebaseFollowingPosts(following) {
     const result = await FirebaseService.getFollowingPosts(following);
+    if (!result) {
+      setFollowingPosts(null);
+      return;
+    }
     setFollowingPosts(
       result
         .map((post) => ({
@@ -56,7 +60,7 @@ function App({ match }) {
   }
 
   useEffect(() => {
-    if (!userInfo || match.path !== '/dashboard') return;
+    if (!userInfo || match.path !== '/') return;
     firebaseFollowingPosts(userInfo.following);
   }, [userInfo]);
 
@@ -67,7 +71,7 @@ function App({ match }) {
         setUser(user);
         async function firebaseWork(uid) {
           const info = await firebaseUserInfo(uid);
-          if (match.path !== '/dashboard') return;
+          if (match.path !== '/') return;
           await firebaseSuggestions(uid);
           await firebaseFollowingPosts(info.following);
         }
@@ -90,7 +94,7 @@ function App({ match }) {
 
   const toggleFollowing = (targetUser) => {
     FirebaseService.toggleFollowing(targetUser, userInfo).then(() => {
-      if (match.path !== '/dashboard') return;
+      if (match.path !== '/') return;
       firebaseSuggestions(userInfo.userId);
     });
   };

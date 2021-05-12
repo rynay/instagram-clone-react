@@ -58,6 +58,7 @@ export async function getUserInfoByUserName(username) {
 }
 
 export async function getFollowingPosts(following = []) {
+  if (following.length === 0) return null;
   const results = await firebase
     .firestore()
     .collection('photos')
