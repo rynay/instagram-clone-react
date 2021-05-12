@@ -22,21 +22,23 @@ function App({ match }) {
   async function firebaseSuggestions(uid) {
     const result = await FirebaseService.getSuggestions(uid);
     setSuggestions(result);
+    return result;
   }
 
   async function firebaseFollowingPosts(following) {
     const result = await FirebaseService.getFollowingPosts(following);
+    console.log(result);
     if (!result) {
       setFollowingPosts(null);
       return;
     }
-    setFollowingPosts(
-      result
-        .map((post) => ({
-          ...post,
-        }))
-        .sort((a, b) => b.dateCreated - a.dateCreated)
-    );
+    const formatted = result
+      .map((post) => ({
+        ...post,
+      }))
+      .sort((a, b) => b.dateCreated - a.dateCreated);
+    setFollowingPosts(formatted);
+    return formatted;
   }
 
   async function getUserName(uid) {
@@ -62,7 +64,7 @@ function App({ match }) {
   useEffect(() => {
     if (!userInfo || match.path !== '/') return;
     firebaseFollowingPosts(userInfo.following);
-  }, [userInfo]);
+  }, [userInfo?.following, userInfo, match.path]);
 
   useEffect(() => {
     const listener = firebase.auth().onAuthStateChanged((user) => {
@@ -94,8 +96,13 @@ function App({ match }) {
 
   const toggleFollowing = (targetUser) => {
     FirebaseService.toggleFollowing(targetUser, userInfo).then(() => {
-      if (match.path !== '/') return;
-      firebaseSuggestions(userInfo.userId);
+      firebaseUserInfo(user.uid)
+        .then(() => {
+          firebaseSuggestions(userInfo.userId);
+        })
+        .then(() => {
+          firebaseFollowingPosts(userInfo.following);
+        });
     });
   };
 
@@ -123,7 +130,10 @@ function App({ match }) {
             )}
           </Route>
           <Route path={ROUTES.PROFILE}>
-            <Profile currentUserInfo={userInfo} />
+            <Profile
+              toggleFollowing={toggleFollowing}
+              currentUserInfo={userInfo}
+            />
           </Route>
           <Route component={NotFound} />
         </Switch>

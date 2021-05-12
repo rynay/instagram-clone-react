@@ -5,7 +5,7 @@ import s from './Timeline.module.scss';
 const Timeline = ({ currentUserName, posts, getUserName, currentUserId }) => {
   return (
     <section className={s.container}>
-      {!posts && <h2>Follow someone to see posts</h2>}
+      {!posts && <h2>Here's no posts just yet</h2>}
       {posts !== null && !posts?.length && (
         <Skeleton
           count={3}

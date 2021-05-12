@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
 import { withRouter } from 'react-router';
-import {
-  getUserInfoByUserName,
-  toggleFollowing,
-} from '../../services/firebase';
+import { getUserInfoByUserName } from '../../services/firebase';
 import Header from './Header';
 import s from './Profile.module.scss';
 
 const Profile = ({
+  toggleFollowing,
   currentUserInfo = {},
   match: {
     params: { userId: targetUserName },
@@ -25,10 +23,6 @@ const Profile = ({
 
   const updateFollowingInfo = (target, current) => {
     toggleFollowing(target, current);
-    setIsFollowing((isFollowing) => !isFollowing);
-    isFollowing
-      ? setFollowersCountUpdated((count) => +count - 1)
-      : setFollowersCountUpdated((count) => +count + 1);
   };
 
   useEffect(() => {

@@ -58,15 +58,17 @@ export async function getUserInfoByUserName(username) {
 }
 
 export async function getFollowingPosts(following = []) {
-  if (following.length === 0) return null;
+  if (!following.length) return null;
   const results = await firebase
     .firestore()
     .collection('photos')
     .where('userId', 'in', following)
     .get();
-  return results.docs.flatMap((doc) => ({
+  const formattedResult = results.docs.flatMap((doc) => ({
     ...doc.data(),
   }));
+  if (!formattedResult.length) return null;
+  return formattedResult;
 }
 
 export async function toggleFollowing(target, current) {
