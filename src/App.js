@@ -1,10 +1,9 @@
 import { connect } from 'react-redux';
 import * as AC from './redux/AC';
-import { lazy, Suspense, useContext, useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { Switch, Route, useParams, useHistory } from 'react-router-dom';
 import * as ROUTES from './constants/routes';
 import Header from './components/Header';
-import FirebaseContext from './context/firebaseContext';
 
 const Login = lazy(() => import('./pages/Login/index'));
 const SignUp = lazy(() => import('./pages/SignUp/index'));
@@ -12,25 +11,29 @@ const Dashboard = lazy(() => import('./pages/Dashboard/index'));
 const NotFound = lazy(() => import('./pages/NotFound/index'));
 const Profile = lazy(() => import('./pages/Profile/index'));
 
-function App({ setCurrentUser, setTargetUserById }) {
-  const { firebase } = useContext(FirebaseContext);
-  const { userId } = useParams();
+function App({
+  currentUser,
+  setCurrentUserListener,
+  setTargetUserListenerById,
+}) {
+  const { userId: targetUserId } = useParams();
   const history = useHistory();
 
   useEffect(() => {
-    const listener = firebase.auth.onAuthStateChanged((user) => {
-      setCurrentUser(user);
-      if (!user) history.push(ROUTES.LOGIN);
-    });
-
+    const listener = setCurrentUserListener();
     return listener;
-  }, [firebase]);
+  }, []);
 
   useEffect(() => {
-    if (!userId) return;
+    if (!currentUser) history.push(ROUTES.LOGIN);
+  }, [currentUser]);
 
-    setTargetUserById(userId);
-  }, [userId]);
+  useEffect(() => {
+    if (!targetUserId) return;
+
+    const listener = setTargetUserListenerById(targetUserId);
+    return listener;
+  }, [targetUserId]);
 
   return (
     <>
@@ -53,11 +56,11 @@ function App({ setCurrentUser, setTargetUserById }) {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  setCurrentUser: (user) => {
-    dispatch(AC.setCurrentUser(user));
+  setCurrentUserListener: () => {
+    dispatch(AC.setCurrentUserListener());
   },
-  setTargetUserById: (id) => {
-    dispatch(AC.setTargetUserById(id));
+  setTargetUserListenerById: (id) => {
+    dispatch(AC.setTargetUserListenerById(id));
   },
 });
 

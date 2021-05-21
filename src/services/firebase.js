@@ -45,7 +45,11 @@ export async function getUserInfo(uid) {
     .collection('users')
     .where('userId', '==', uid)
     .get();
-  return result;
+
+  return result.docs.map((doc) => ({
+    ...doc.data(),
+    docId: doc.id,
+  }))[0];
 }
 
 export async function getUserInfoByUserName(username) {
@@ -54,7 +58,22 @@ export async function getUserInfoByUserName(username) {
     .collection('users')
     .where('username', '==', username)
     .get();
-  return result;
+  return result.docs.map((doc) => ({
+    ...doc.data(),
+    docId: doc.id,
+  }))[0];
+}
+
+export async function getUserInfoByEmail(email) {
+  const result = await firebase
+    .firestore()
+    .collection('users')
+    .where('emailAddress', '==', email)
+    .get();
+  return result.docs.map((doc) => ({
+    ...doc.data(),
+    docId: doc.id,
+  }))[0];
 }
 
 export async function getFollowingPosts(following = []) {
