@@ -1,12 +1,12 @@
 import * as TYPES from '../TYPES';
 
-const targetUserReducer = (state = null, action) => {
+const suggestionsReducer = (state = null, action) => {
   switch (action.type) {
-    case TYPES.SET_TARGET_USER:
+    case TYPES.SET_SUGGESTIONS:
       return action.payload;
     default:
       return state;
   }
 };
 
-export default targetUserReducer;
+export default suggestionsReducer;
