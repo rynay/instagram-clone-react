@@ -1,43 +1,22 @@
-// import 'firebase/firestore';
-// import 'firebase/auth';
-
 import { firebase } from '../lib/firebase';
 import * as firebaseService from '../services/firebase';
 import * as TYPES from './TYPES';
 
-// export const setCurrentUser = (user) => ({
-//   type: TYPES.SET_CURRENT_USER,
-//   payload: {
-//     ...user.data(),
-//     docId: user.uid,
-//   },
-// });
-
 export const setCurrentUserListener = () => (dispatch, getState) => {
   const userListener = firebase.auth().onAuthStateChanged((user) => {
     if (!user) {
-      dispatch({
-        type: TYPES.SET_CURRENT_USER,
-        payload: null,
-      });
-      dispatch({
-        type: TYPES.SET_DASHBOARD_POSTS,
-        payload: null,
-      });
-      dispatch({
-        type: TYPES.SET_SUGGESTIONS,
-        payload: null,
-      });
+      dispatch(setCurrentUser(null));
+      dispatch(setDashboardPosts(null));
+      dispatch(setSuggestions(null));
       return;
     }
     firebaseService.getUserInfoByEmail(user.email).then((userInfo) => {
-      dispatch({
-        type: TYPES.SET_CURRENT_USER,
-        payload: {
+      dispatch(
+        setCurrentUser({
           ...userInfo,
           docId: user.uid,
-        },
-      });
+        })
+      );
       dispatch(setDashboardPosts());
       dispatch(setSuggestions());
     });
@@ -66,7 +45,25 @@ export const setTargetUserListenerById = (id) => (dispatch) => {
   return targetUserListener;
 };
 
-const setDashboardPosts = () => (dispatch, getState) => {
+export const logout = () => (dispatch) => {
+  firebase
+    .auth()
+    .signOut()
+    .then(() => {
+      dispatch(setCurrentUser(null));
+      dispatch(setDashboardPosts(null));
+      dispatch(setSuggestions(null));
+    });
+};
+
+const setDashboardPosts = (data) => (dispatch, getState) => {
+  if (data === null) {
+    dispatch({
+      type: TYPES.SET_DASHBOARD_POSTS,
+      payload: data,
+    });
+    return;
+  }
   const { following } = getState().currentUser;
   firebaseService.getFollowingPosts(following).then((posts) => {
     dispatch({
@@ -76,7 +73,14 @@ const setDashboardPosts = () => (dispatch, getState) => {
   });
 };
 
-const setSuggestions = () => (dispatch, getState) => {
+const setSuggestions = (data) => (dispatch, getState) => {
+  if (data === null) {
+    dispatch({
+      type: TYPES.SET_SUGGESTIONS,
+      payload: data,
+    });
+    return;
+  }
   const { userId } = getState().currentUser;
   firebaseService.getSuggestions(userId).then((suggestions) => {
     dispatch({
@@ -85,3 +89,8 @@ const setSuggestions = () => (dispatch, getState) => {
     });
   });
 };
+
+const setCurrentUser = (userInfo) => ({
+  type: TYPES.SET_CURRENT_USER,
+  payload: userInfo,
+});

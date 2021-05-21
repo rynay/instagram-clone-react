@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import currentUserReducer from './currentUserReducer';
 import targetUserReducer from './targetUserReducer';
 import suggestionsReducer from './suggestionsReducer';
-import dashboardReducer from './dashboardReducer';
+import dashboardPostsReducer from './dashboardPostsReducer';
 
 const rootReducer = combineReducers({
   currentUser: currentUserReducer,

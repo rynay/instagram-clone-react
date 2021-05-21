@@ -1,25 +1,22 @@
+import { connect } from 'react-redux';
 import Sidebar from '../../components/Sidebar';
 import Timeline from '../../components/Timeline';
-import { useEffect } from 'react';
 import s from './Dashboard.module.scss';
 
 const Dashboard = ({
   suggestions,
   follow,
   username,
-  posts,
+  dashboardPosts,
   getUserName,
   currentUserId,
 }) => {
-  useEffect(() => {
-    document.title = 'Instagram';
-  }, []);
   return (
     <main className={`container ${s.container}`}>
       <Timeline
         currentUserName={username}
         currentUserId={currentUserId}
-        posts={posts}
+        posts={dashboardPosts}
         getUserName={getUserName}
       />
       <Sidebar username={username} suggestions={suggestions} follow={follow} />
@@ -27,4 +24,10 @@ const Dashboard = ({
   );
 };
 
-export default Dashboard;
+const mapStateToProps = (state) => ({
+  username: state.currentUser.username,
+  suggestions: state.suggestions,
+  dashboardPosts: state.dashboardPosts,
+});
+
+export default connect(mapStateToProps)(Dashboard);
