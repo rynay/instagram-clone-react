@@ -26,6 +26,8 @@ function App({
 
   useEffect(() => {
     if (!currentUser) history.push(ROUTES.LOGIN);
+    if (currentUser) history.push(ROUTES.DASHBOARD);
+    if (currentUser) localStorage.setItem('user', JSON.stringify(currentUser));
   }, [currentUser]);
 
   useEffect(() => {
@@ -34,7 +36,6 @@ function App({
     const listener = setTargetUserListenerById(targetUserId);
     return listener;
   }, [targetUserId]);
-
   return (
     <>
       <Header />
@@ -55,6 +56,10 @@ function App({
   );
 }
 
+const mapStateToProps = (state) => ({
+  currentUser: state.currentUser,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   setCurrentUserListener: () => {
     dispatch(AC.setCurrentUserListener());
@@ -64,4 +69,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -6,26 +6,29 @@ import s from './Dashboard.module.scss';
 const Dashboard = ({
   suggestions,
   follow,
-  username,
+  currentUser,
   dashboardPosts,
   getUserName,
-  currentUserId,
 }) => {
   return (
     <main className={`container ${s.container}`}>
       <Timeline
-        currentUserName={username}
-        currentUserId={currentUserId}
+        currentUserName={currentUser?.username}
+        currentUserId={currentUser?.currentUserId}
         posts={dashboardPosts}
         getUserName={getUserName}
       />
-      <Sidebar username={username} suggestions={suggestions} follow={follow} />
+      <Sidebar
+        username={currentUser?.username}
+        suggestions={suggestions}
+        follow={follow}
+      />
     </main>
   );
 };
 
 const mapStateToProps = (state) => ({
-  username: state.currentUser.username,
+  currentUser: state.currentUser,
   suggestions: state.suggestions,
   dashboardPosts: state.dashboardPosts,
 });

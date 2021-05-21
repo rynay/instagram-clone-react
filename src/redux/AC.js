@@ -3,23 +3,35 @@ import * as firebaseService from '../services/firebase';
 import * as TYPES from './TYPES';
 
 export const setCurrentUserListener = () => (dispatch, getState) => {
+  const localStorageUser = JSON.parse(localStorage.getItem('user'));
+
   const userListener = firebase.auth().onAuthStateChanged((user) => {
-    if (!user) {
+    if (!user && !localStorageUser) {
       dispatch(setCurrentUser(null));
       dispatch(setDashboardPosts(null));
       dispatch(setSuggestions(null));
       return;
     }
-    firebaseService.getUserInfoByEmail(user.email).then((userInfo) => {
-      dispatch(
-        setCurrentUser({
-          ...userInfo,
-          docId: user.uid,
-        })
-      );
-      dispatch(setDashboardPosts());
-      dispatch(setSuggestions());
-    });
+
+    firebaseService
+      .getUserInfoByEmail(user?.email || localStorageUser.emailAddress)
+      .then((userInfo) => {
+        localStorage.setItem(
+          'user',
+          JSON.stringify({
+            ...userInfo,
+            docId: user?.uid,
+          })
+        );
+        dispatch(
+          setCurrentUser({
+            ...userInfo,
+            docId: user?.uid || localStorageUser.docId,
+          })
+        );
+        dispatch(setDashboardPosts());
+        dispatch(setSuggestions());
+      });
   });
 
   return userListener;
@@ -50,6 +62,7 @@ export const logout = () => (dispatch) => {
     .auth()
     .signOut()
     .then(() => {
+      localStorage.removeItem('user');
       dispatch(setCurrentUser(null));
       dispatch(setDashboardPosts(null));
       dispatch(setSuggestions(null));

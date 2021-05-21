@@ -1,11 +1,10 @@
-import { useContext } from 'react';
-import UserContext from '../../context/userContext';
+import { connect } from 'react-redux';
+import { logout } from '../../redux/AC';
 import { Link } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 import s from './Header.module.scss';
 
-const Header = ({ logout, login }) => {
-  const user = useContext(UserContext);
+const Header = ({ logout, user }) => {
   return (
     <header className={s.header}>
       <div className={`container ${s.container}`}>
@@ -41,8 +40,11 @@ const Header = ({ logout, login }) => {
                 <img alt="Log Out icon" src="/icons/logout.svg" />
               </button>
               <div className={s.header__profile}>
-                <Link to={`/p/${login}`} className={s.header__profile_link}>
-                  <img src={`/images/avatars/${login}.jpg`} alt="" />
+                <Link
+                  to={`/p/${user.username}`}
+                  className={s.header__profile_link}
+                >
+                  <img src={`/images/avatars/${user.username}.jpg`} alt="" />
                 </Link>
               </div>
             </div>
@@ -68,4 +70,12 @@ const Header = ({ logout, login }) => {
   );
 };
 
-export default Header;
+const mapStateToProps = (state) => ({
+  user: state.currentUser,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  logout: dispatch(logout()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
