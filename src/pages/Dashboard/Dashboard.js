@@ -1,10 +1,15 @@
+import * as AC from '../../redux/AC';
 import { connect } from 'react-redux';
 import Sidebar from '../../components/Sidebar';
 import Timeline from '../../components/Timeline';
 import s from './Dashboard.module.scss';
-import * as firebaseService from '../../services/firebase';
 
-const Dashboard = ({ currentUser, suggestions, dashboardPosts }) => {
+const Dashboard = ({
+  currentUser,
+  suggestions,
+  dashboardPosts,
+  toggleFollowing,
+}) => {
   return (
     <main className={`container ${s.container}`}>
       <Timeline
@@ -15,7 +20,7 @@ const Dashboard = ({ currentUser, suggestions, dashboardPosts }) => {
       <Sidebar
         currentUser={currentUser}
         suggestions={suggestions}
-        follow={firebaseService.toggleFollowing}
+        follow={toggleFollowing}
       />
     </main>
   );
@@ -27,4 +32,10 @@ const mapStateToProps = (state) => ({
   dashboardPosts: state.dashboardPosts,
 });
 
-export default connect(mapStateToProps)(Dashboard);
+const mapDispatchToProps = (dispatch) => ({
+  toggleFollowing: (target, current) => {
+    dispatch(AC.toggleFollowing(target, current));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
