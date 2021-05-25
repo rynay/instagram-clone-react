@@ -1,19 +1,27 @@
+import Skeleton from 'react-loading-skeleton';
 import { connect } from 'react-redux';
-import * as firebaseService from '../../services/firebase';
+import { toggleFollowing } from '../../services/firebase';
 
 const Header = ({ s, currentUser, targetUser }) => {
-  console.log(targetUser);
-  console.log(currentUser);
-
   return (
     <section className={s.header}>
       <div className={s.header__image_container}>
-        <img src={`/images/avatars/${targetUser?.username}.jpg`} alt="" />
+        {targetUser?.username && (
+          <img src={`/images/avatars/${targetUser.username}.jpg`} alt="" />
+        )}
+        {!targetUser?.username && (
+          <Skeleton height={85} width={85} circle={true} count={1} />
+        )}
       </div>
       <div className={s.header__content}>
         <div className={s.header__userInfo}>
           <div className={s.header__heading}>
-            <h2 className={s.header__username}>{targetUser?.username}</h2>
+            {targetUser?.username && (
+              <h2 className={s.header__username}>{targetUser.username}</h2>
+            )}
+            {!targetUser?.username && (
+              <Skeleton height={20} width={100} count={1} />
+            )}
             {currentUser &&
               targetUser &&
               currentUser?.userId !== targetUser?.userId && (
@@ -25,10 +33,10 @@ const Header = ({ s, currentUser, targetUser }) => {
                   }`}
                   onKeyDown={(e) => {
                     if (e.key !== 'Enter') return;
-                    firebaseService.toggleFollowing(targetUser, currentUser);
+                    toggleFollowing(targetUser, currentUser);
                   }}
                   onClick={() => {
-                    firebaseService.toggleFollowing(targetUser, currentUser);
+                    toggleFollowing(targetUser, currentUser);
                   }}
                 >
                   {targetUser?.followers.includes(currentUser?.userId)
@@ -37,15 +45,30 @@ const Header = ({ s, currentUser, targetUser }) => {
                 </button>
               )}
           </div>
-          <h3 className={s.header__fullName}>{targetUser?.fullName}</h3>
+          {targetUser?.fullName && (
+            <h3 className={s.header__fullName}>{targetUser?.fullName}</h3>
+          )}
+          {!targetUser?.fullName && (
+            <Skeleton height={14} width={75} count={1} />
+          )}
         </div>
         <div className={s.header__statistic}>
           {/* <p>{photosCount} photos</p> */}
           <p>
-            {targetUser?.followers.length || 0}{' '}
+            {targetUser?.followers.length &&
+              (targetUser?.followers.length || 0)}{' '}
+            {targetUser?.followers.length === undefined && (
+              <Skeleton height={14} width={14} count={1} />
+            )}{' '}
             {targetUser?.followers.length === 1 ? 'follower' : 'followers'}
           </p>
-          <p>{targetUser?.following.length} following</p>
+          <p>
+            {targetUser?.following.length && targetUser?.following.length}
+            {targetUser?.following.length === undefined && (
+              <Skeleton height={14} width={14} count={1} />
+            )}{' '}
+            following
+          </p>
         </div>
       </div>
     </section>
