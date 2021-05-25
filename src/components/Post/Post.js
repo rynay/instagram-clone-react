@@ -1,5 +1,5 @@
 import { formatDistance } from 'date-fns';
-import { useEffect, createRef, useState } from 'react';
+import { createRef } from 'react';
 import s from './Post.module.scss';
 import Info from './Info';
 import { Link } from 'react-router-dom';

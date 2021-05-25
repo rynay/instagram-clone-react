@@ -127,3 +127,18 @@ export const toggleFollowing = (target, current) => (dispatch) => {
     dispatch(setDashboardPosts());
   });
 };
+
+export const toggleLike = (targetPost) => (dispatch, getState) => {
+  const {
+    currentUser: { userId },
+    targetUser,
+  } = getState();
+  if (!targetUser) {
+    // like from dashboard
+    firebaseService.toggleLike(userId, targetPost).then(() => {
+      dispatch(setDashboardPosts());
+    });
+  } else {
+    // like from profile
+  }
+};

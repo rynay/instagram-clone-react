@@ -1,38 +1,38 @@
-import { useState } from 'react';
+import { createRef, useState } from 'react';
 import { FaRegHeart, FaHeart, FaRegCommentDots } from 'react-icons/fa';
-import { sendComment, toggleLike } from '../../services/firebase';
 import { Link } from 'react-router-dom';
+import * as AC from '../../redux/AC';
+import { connect } from 'react-redux';
 
 const Info = ({
   refForInput,
   handleFocus,
   s,
-  currentUserId,
-  currentUserName,
+  currentUser,
   post,
   username,
+  toggleLike,
+  sendComment,
 }) => {
-  const [isLiked, setIsLiked] = useState(post.likes.includes(currentUserId));
-  const [likesCount, setLikesCount] = useState(post.likes.length);
+  const isLiked = post.likes.includes(currentUser?.userId);
+
+  const likesCount = post.likes.length;
   const [commentsCount, setCommentsCount] = useState(post.comments.length);
   const [showingComments, setShowingComments] = useState(
     post.comments.slice(post.comments.length - 3, post.comments.length)
   );
   const [comment, setComment] = useState('');
+
   return (
     <div className={s.info}>
       <button
         className={s.info__button}
         onClick={() => {
-          toggleLike(currentUserId, post.photoId);
-          setIsLiked((isLiked) => !isLiked);
-          setLikesCount((count) => (isLiked ? count - 1 : count + 1));
+          toggleLike(post.photoId);
         }}
         onKeyDown={(e) => {
           if (e.key !== 'Enter') return;
-          toggleLike(currentUserId, post.photoId);
-          setIsLiked((isLiked) => !isLiked);
-          setLikesCount((count) => (isLiked ? count - 1 : count + 1));
+          toggleLike(post.photoId);
         }}
       >
         {isLiked ? <FaHeart style={{ fill: 'red' }} /> : <FaRegHeart />}
@@ -108,12 +108,12 @@ const Info = ({
         onSubmit={(e) => {
           e.preventDefault();
           if (!comment.trim()) return;
-          sendComment(currentUserName, post.photoId, comment.trim());
+          sendComment(currentUser.username, post.photoId, comment.trim());
           setShowingComments((comments) => [
             ...comments,
             {
               comment,
-              displayName: currentUserName,
+              displayName: currentUser.username,
             },
           ]);
           setComment('');
@@ -134,4 +134,14 @@ const Info = ({
   );
 };
 
-export default Info;
+const mapDispatchToProps = (dispatch) => ({
+  toggleLike: (post) => {
+    dispatch(AC.toggleLike(post));
+  },
+});
+
+const mapStateToProps = (state) => ({
+  currentUser: state.currentUser,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Info);

@@ -1,21 +1,20 @@
 import { firebase } from '../lib/firebase';
 
 export async function toggleLike(userId, targetPhoto) {
-  await firebase
+  const query = await firebase
     .firestore()
     .collection('photos')
     .where('photoId', '==', targetPhoto)
-    .get()
-    .then((query) => {
-      const target = query.docs[0];
-      const currVal = target.data().likes;
-      const newVal = currVal.includes(userId)
-        ? [...currVal.filter((id) => id !== userId)]
-        : [...currVal, userId];
-      target.ref.update({
-        likes: newVal,
-      });
-    });
+    .get();
+
+  const target = query.docs[0];
+  const currVal = target.data().likes;
+  const newVal = currVal.includes(userId)
+    ? [...currVal.filter((id) => id !== userId)]
+    : [...currVal, userId];
+  return target.ref.update({
+    likes: newVal,
+  });
 }
 
 export async function sendComment(displayName, targetPhoto, comment) {

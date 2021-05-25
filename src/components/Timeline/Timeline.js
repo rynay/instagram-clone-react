@@ -5,11 +5,11 @@ import s from './Timeline.module.scss';
 const Timeline = ({ currentUserName, posts, currentUserId }) => {
   return (
     <section className={s.container}>
-      {!posts && <h2>Here's no posts just yet</h2>}
-      {posts !== null && !posts?.length && (
+      {posts?.length === 0 && <h2>Here's no posts just yet</h2>}
+      {posts === null && (
         <Skeleton
           count={3}
-          height={500}
+          height={750}
           width={500}
           style={{ display: 'block', marginBottom: '3em' }}
         />
