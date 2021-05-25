@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import * as AC from './redux/AC';
 import { lazy, Suspense, useEffect } from 'react';
-import { Switch, Route, useParams, useHistory } from 'react-router-dom';
+import { Switch, Route, useHistory, useRouteMatch } from 'react-router-dom';
 import * as ROUTES from './constants/routes';
 import Header from './components/Header';
 
@@ -14,7 +14,6 @@ const Profile = lazy(() => import('./pages/Profile/index'));
 function App({
   currentUser,
   setCurrentUserAuthenticationListener,
-  setTargetUserListenerByName,
   setCurrentUserInformationListener,
   deleteCurrentUser,
 }) {
@@ -34,19 +33,9 @@ function App({
     return listener;
   }, [currentUser]);
 
-  const { userId: targetUserName } = useParams();
-
-  useEffect(() => {
-    if (!targetUserName) return;
-
-    const listener = setTargetUserListenerByName(targetUserName);
-    return listener;
-  }, [targetUserName]);
-
   useEffect(() => {
     if (!currentUser) history.push(ROUTES.LOGIN);
     if (currentUser) history.push(ROUTES.DASHBOARD);
-    if (currentUser) localStorage.setItem('user', JSON.stringify(currentUser));
   }, [currentUser]);
 
   return (
@@ -75,13 +64,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   setCurrentUserAuthenticationListener: () => {
-    dispatch(AC.setCurrentUserAuthenticationListener());
-  },
-  setTargetUserListenerByName: (name) => {
-    dispatch(AC.setTargetUserListenerByName(name));
+    return dispatch(AC.setCurrentUserAuthenticationListener());
   },
   setCurrentUserInformationListener: () => {
-    dispatch(AC.setCurrentUserInformationListener());
+    return dispatch(AC.setCurrentUserInformationListener());
   },
   deleteCurrentUser: () => {
     dispatch(AC.setCurrentUser(null));

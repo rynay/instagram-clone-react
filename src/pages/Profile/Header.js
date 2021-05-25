@@ -2,7 +2,9 @@ import { connect } from 'react-redux';
 import * as firebaseService from '../../services/firebase';
 
 const Header = ({ s, currentUser, targetUser }) => {
-  console.log(currentUser, targetUser);
+  console.log(targetUser);
+  console.log(currentUser);
+
   return (
     <section className={s.header}>
       <div className={s.header__image_container}>

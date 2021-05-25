@@ -50,27 +50,25 @@ export const setCurrentUserInformationListener = () => (dispatch, getState) => {
   return userListener;
 };
 
-export const setTargetUserListenerByName = (name) => (dispatch) => {
-  let targetUserDocId;
-  let targetUserListener;
-  firebaseService.getUserInfo(name).then((userInfo) => {
-    targetUserDocId = userInfo.docId;
-    targetUserListener = firebase
-      .firestore()
-      .collection('users')
-      .doc(targetUserDocId)
-      .onSnapshot((doc) => {
-        dispatch({
-          type: TYPES.SET_TARGET_USER,
-          payload: {
-            ...doc.data(),
-          },
-        });
-      });
-  });
-
-  return targetUserListener;
+export const setTargetUserListenerByName = (name) => async (dispatch) => {
+  const userInfo = await firebaseService.getUserInfo(name);
+  dispatch(setTargetUser(userInfo));
+  const listener = firebase
+    .firestore()
+    .collection('users')
+    .doc(userInfo.docId)
+    .onSnapshot((doc) => {
+      dispatch(setTargetUser({ ...doc.data(), docId: userInfo.docId }));
+    });
+  return () => {
+    listener();
+  };
 };
+
+export const setTargetUser = (targetUserInfo) => ({
+  type: TYPES.SET_TARGET_USER,
+  payload: targetUserInfo,
+});
 
 export const logout = () => (dispatch) => {
   localStorage.removeItem('user');
