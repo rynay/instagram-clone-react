@@ -39,11 +39,24 @@ export async function sendComment(displayName, targetPhoto, comment) {
     });
 }
 
-export async function getUserInfo(uid) {
+export async function getUserInfo(name) {
   const result = await firebase
     .firestore()
     .collection('users')
-    .where('userId', '==', uid)
+    .where('username', '==', name)
+    .get();
+
+  return result.docs.map((doc) => ({
+    ...doc.data(),
+    docId: doc.id,
+  }))[0];
+}
+
+export async function getUserInfoById(id) {
+  const result = await firebase
+    .firestore()
+    .collection('users')
+    .where('userId', '==', id)
     .get();
 
   return result.docs.map((doc) => ({
@@ -141,12 +154,7 @@ export async function getSuggestions(uid = '') {
     .map((doc) => ({
       ...doc.data(),
     }))
-    .filter((doc) => !doc.followers.includes(uid))
-    .map(({ username, userId }) => ({
-      username,
-      userId,
-    }));
-
+    .filter((doc) => !doc.followers.includes(uid));
   if (!formatted.length) return null;
   return formatted;
 }

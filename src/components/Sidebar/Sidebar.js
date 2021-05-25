@@ -2,11 +2,15 @@ import Profile from '../Profile';
 import Suggestions from '../Suggestions';
 import s from './Sidebar.module.scss';
 
-const Sidebar = ({ suggestions, follow, username }) => {
+const Sidebar = ({ suggestions, follow, currentUser }) => {
   return (
     <aside className={s.container}>
-      <Profile username={username} />
-      <Suggestions suggestions={suggestions} follow={follow} />
+      <Profile username={currentUser?.username} />
+      <Suggestions
+        currentUser={currentUser}
+        suggestions={suggestions}
+        follow={follow}
+      />
     </aside>
   );
 };

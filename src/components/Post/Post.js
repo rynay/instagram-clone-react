@@ -3,17 +3,18 @@ import { useEffect, createRef, useState } from 'react';
 import s from './Post.module.scss';
 import Info from './Info';
 import { Link } from 'react-router-dom';
+import { getUserInfoById } from '../../services/firebase';
 
-const Post = ({ post, getUserName, currentUserId, currentUserName }) => {
+const Post = ({ post, currentUserId, currentUserName }) => {
   const [username, setUsername] = useState('');
   const ref = createRef();
   function handleFocus() {
     ref.current.focus();
   }
   useEffect(() => {
-    async function getAndSetUserName(uid) {
-      const result = await getUserName(uid);
-      setUsername(result);
+    async function getAndSetUserName(id) {
+      const result = await getUserInfoById(id);
+      setUsername(result.userName);
     }
     getAndSetUserName(post.userId);
   }, []);

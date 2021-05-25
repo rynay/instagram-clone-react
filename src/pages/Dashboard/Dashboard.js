@@ -2,26 +2,20 @@ import { connect } from 'react-redux';
 import Sidebar from '../../components/Sidebar';
 import Timeline from '../../components/Timeline';
 import s from './Dashboard.module.scss';
+import * as firebaseService from '../../services/firebase';
 
-const Dashboard = ({
-  suggestions,
-  follow,
-  currentUser,
-  dashboardPosts,
-  getUserName,
-}) => {
+const Dashboard = ({ currentUser, suggestions, dashboardPosts }) => {
   return (
     <main className={`container ${s.container}`}>
       <Timeline
         currentUserName={currentUser?.username}
         currentUserId={currentUser?.currentUserId}
         posts={dashboardPosts}
-        getUserName={getUserName}
       />
       <Sidebar
-        username={currentUser?.username}
+        currentUser={currentUser}
         suggestions={suggestions}
-        follow={follow}
+        follow={firebaseService.toggleFollowing}
       />
     </main>
   );

@@ -2,7 +2,7 @@ import Skeleton from 'react-loading-skeleton';
 import { Link } from 'react-router-dom';
 import s from './Suggestions.module.scss';
 
-const Suggestions = ({ suggestions, follow }) => {
+const Suggestions = ({ suggestions, follow, currentUser }) => {
   return (
     <section className={s.container}>
       {suggestions && (
@@ -25,9 +25,9 @@ const Suggestions = ({ suggestions, follow }) => {
                   className={s.button}
                   onKeyDown={(e) => {
                     if (e.key !== 'Enter') return;
-                    follow(sug);
+                    follow(sug, currentUser);
                   }}
-                  onClick={() => follow(sug)}
+                  onClick={() => follow(sug, currentUser)}
                 >
                   follow
                 </button>

@@ -2,10 +2,9 @@ import { firebase } from '../lib/firebase';
 import * as firebaseService from '../services/firebase';
 import * as TYPES from './TYPES';
 
-export const setCurrentUserListener = () => (dispatch, getState) => {
-  const localStorageUser = JSON.parse(localStorage.getItem('user'));
-
-  const userListener = firebase.auth().onAuthStateChanged((user) => {
+export const setCurrentUserAuthenticationListener = () => (dispatch) => {
+  const authListener = firebase.auth().onAuthStateChanged((user) => {
+    const localStorageUser = JSON.parse(localStorage.getItem('user'));
     if (!user && !localStorageUser) {
       dispatch(setCurrentUser(null));
       dispatch(setDashboardPosts(null));
@@ -34,35 +33,51 @@ export const setCurrentUserListener = () => (dispatch, getState) => {
       });
   });
 
+  return authListener;
+};
+
+export const setCurrentUserInformationListener = () => (dispatch, getState) => {
+  const { docId } = getState().currentUser;
+  if (!docId) return;
+  const userListener = firebase
+    .firestore()
+    .collection('users')
+    .doc(docId)
+    .onSnapshot((snapshot) => {
+      console.log(snapshot.data());
+    });
+
   return userListener;
 };
 
-export const setTargetUserListenerById = (id) => (dispatch) => {
+export const setTargetUserListenerByName = (name) => (dispatch) => {
   let targetUserDocId;
-  firebaseService.getUserInfo(id).then((userInfo) => {
+  let targetUserListener;
+  firebaseService.getUserInfo(name).then((userInfo) => {
     targetUserDocId = userInfo.docId;
-  });
-
-  const targetUserListener = firebase
-    .firestore()
-    .collection('users')
-    .doc(targetUserDocId)
-    .onSnapshot((snapshot) => {
-      dispatch({
-        type: TYPES.SET_TARGET_USER,
-        payload: snapshot,
+    targetUserListener = firebase
+      .firestore()
+      .collection('users')
+      .doc(targetUserDocId)
+      .onSnapshot((doc) => {
+        dispatch({
+          type: TYPES.SET_TARGET_USER,
+          payload: {
+            ...doc.data(),
+          },
+        });
       });
-    });
+  });
 
   return targetUserListener;
 };
 
 export const logout = () => (dispatch) => {
+  localStorage.removeItem('user');
   firebase
     .auth()
     .signOut()
     .then(() => {
-      localStorage.removeItem('user');
       dispatch(setCurrentUser(null));
       dispatch(setDashboardPosts(null));
       dispatch(setSuggestions(null));
@@ -103,7 +118,7 @@ const setSuggestions = (data) => (dispatch, getState) => {
   });
 };
 
-const setCurrentUser = (userInfo) => ({
+export const setCurrentUser = (userInfo) => ({
   type: TYPES.SET_CURRENT_USER,
   payload: userInfo,
 });

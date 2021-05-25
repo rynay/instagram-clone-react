@@ -13,16 +13,35 @@ const Profile = lazy(() => import('./pages/Profile/index'));
 
 function App({
   currentUser,
-  setCurrentUserListener,
-  setTargetUserListenerById,
+  setCurrentUserAuthenticationListener,
+  setTargetUserListenerByName,
+  setCurrentUserInformationListener,
+  deleteCurrentUser,
 }) {
-  const { userId: targetUserId } = useParams();
   const history = useHistory();
 
   useEffect(() => {
-    const listener = setCurrentUserListener();
+    const listener = setCurrentUserAuthenticationListener();
     return listener;
   }, []);
+
+  useEffect(() => {
+    if (!currentUser) {
+      deleteCurrentUser(null);
+      return;
+    }
+    const listener = setCurrentUserInformationListener();
+    return listener;
+  }, [currentUser]);
+
+  const { userId: targetUserName } = useParams();
+
+  useEffect(() => {
+    if (!targetUserName) return;
+
+    const listener = setTargetUserListenerByName(targetUserName);
+    return listener;
+  }, [targetUserName]);
 
   useEffect(() => {
     if (!currentUser) history.push(ROUTES.LOGIN);
@@ -30,12 +49,6 @@ function App({
     if (currentUser) localStorage.setItem('user', JSON.stringify(currentUser));
   }, [currentUser]);
 
-  useEffect(() => {
-    if (!targetUserId) return;
-
-    const listener = setTargetUserListenerById(targetUserId);
-    return listener;
-  }, [targetUserId]);
   return (
     <>
       <Header />
@@ -61,11 +74,17 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  setCurrentUserListener: () => {
-    dispatch(AC.setCurrentUserListener());
+  setCurrentUserAuthenticationListener: () => {
+    dispatch(AC.setCurrentUserAuthenticationListener());
   },
-  setTargetUserListenerById: (id) => {
-    dispatch(AC.setTargetUserListenerById(id));
+  setTargetUserListenerByName: (name) => {
+    dispatch(AC.setTargetUserListenerByName(name));
+  },
+  setCurrentUserInformationListener: () => {
+    dispatch(AC.setCurrentUserInformationListener());
+  },
+  deleteCurrentUser: () => {
+    dispatch(AC.setCurrentUser(null));
   },
 });
 
