@@ -120,3 +120,10 @@ export const setCurrentUser = (userInfo) => ({
   type: TYPES.SET_CURRENT_USER,
   payload: userInfo,
 });
+
+export const toggleFollowing = (target, current) => (dispatch) => {
+  firebaseService.toggleFollowing(target, current).then(() => {
+    dispatch(setSuggestions());
+    dispatch(setDashboardPosts());
+  });
+};

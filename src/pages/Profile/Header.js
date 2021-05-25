@@ -1,8 +1,8 @@
 import Skeleton from 'react-loading-skeleton';
 import { connect } from 'react-redux';
-import { toggleFollowing } from '../../services/firebase';
+import * as AC from '../../redux/AC';
 
-const Header = ({ s, currentUser, targetUser }) => {
+const Header = ({ s, currentUser, targetUser, toggleFollowing }) => {
   return (
     <section className={s.header}>
       <div className={s.header__image_container}>
@@ -80,4 +80,10 @@ const mapStateToProps = (state) => ({
   targetUser: state.targetUser,
 });
 
-export default connect(mapStateToProps)(Header);
+const mapDispatchToProps = (dispatch) => ({
+  toggleFollowing: (target, current) => {
+    dispatch(AC.toggleFollowing(target, current));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
