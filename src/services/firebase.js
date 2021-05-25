@@ -96,12 +96,25 @@ export async function getFollowingPosts(following = []) {
     .collection('photos')
     .where('userId', 'in', following)
     .get();
-  const formattedResult = results.docs.flatMap((doc) => ({
+  const formattedResult = results.docs.map(async (doc) => ({
     ...doc.data(),
+    username: await getUserNameById(doc.data().userId),
   }));
-  if (!formattedResult.length) return null;
-  return formattedResult;
+
+  return Promise.all(formattedResult);
 }
+
+const getUserNameById = async (id) => {
+  if (!id) return;
+  const result = await firebase
+    .firestore()
+    .collection('users')
+    .where('userId', '==', id)
+    .get();
+  return result.docs.map((doc) => ({
+    ...doc.data(),
+  }))[0].username;
+};
 
 export async function toggleFollowing(target, current) {
   const result1 = await firebase

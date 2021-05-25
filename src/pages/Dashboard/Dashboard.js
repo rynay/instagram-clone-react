@@ -10,6 +10,7 @@ const Dashboard = ({
   dashboardPosts,
   toggleFollowing,
 }) => {
+  console.log(dashboardPosts);
   return (
     <main className={`container ${s.container}`}>
       <Timeline
