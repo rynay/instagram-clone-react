@@ -179,8 +179,6 @@ export async function checkIsUserNameExist(username) {
     .where('username', '==', username)
     .get();
 
-  console.log(results.docs);
-
   return !!results.docs.length;
 }
 
@@ -190,7 +188,5 @@ export async function checkIsEmailExist(email) {
     .collection('users')
     .where('emailAddress', '==', email)
     .get();
-
-  console.log(results.docs);
   return !!results.docs.length;
 }

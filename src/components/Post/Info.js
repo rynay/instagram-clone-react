@@ -24,7 +24,6 @@ const Info = ({
       <button
         className={s.info__button}
         onClick={() => {
-          console.log('toggle');
           toggleLike(currentUserId, post.photoId);
           setIsLiked((isLiked) => !isLiked);
           setLikesCount((count) => (isLiked ? count - 1 : count + 1));

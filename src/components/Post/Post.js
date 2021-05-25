@@ -3,32 +3,23 @@ import { useEffect, createRef, useState } from 'react';
 import s from './Post.module.scss';
 import Info from './Info';
 import { Link } from 'react-router-dom';
-import { getUserInfoById } from '../../services/firebase';
 
 const Post = ({ post, currentUserId, currentUserName }) => {
-  const [username, setUsername] = useState('');
   const ref = createRef();
   function handleFocus() {
     ref.current.focus();
   }
-  useEffect(() => {
-    async function getAndSetUserName(id) {
-      const result = await getUserInfoById(id);
-      setUsername(result.userName);
-    }
-    getAndSetUserName(post.userId);
-  }, []);
   return (
     <article className={s.container} key={post.photoId}>
       <div className={s.header}>
-        <Link to={`/p/${username}`} className={s.link}>
+        <Link to={`/p/${post.username}`} className={s.link}>
           <div className={s.image_container}>
-            <img src={`./images/avatars/${username}.jpg`} alt="" />
+            <img src={`./images/avatars/${post.username}.jpg`} alt="" />
           </div>
         </Link>
         <div className={s.author_info_container}>
-          <Link to={`/p/${username}`} className={s.link}>
-            <h3 className={s.username}>{username}</h3>
+          <Link to={`/p/${post.username}`} className={s.link}>
+            <h3 className={s.username}>{post.username}</h3>
           </Link>
           <p className={s.posted}>
             {formatDistance(post.dateCreated, Date.now())} ago
@@ -45,7 +36,7 @@ const Post = ({ post, currentUserId, currentUserName }) => {
         currentUserName={currentUserName}
         currentUserId={currentUserId}
         post={post}
-        username={username}
+        username={post.username}
       />
     </article>
   );
