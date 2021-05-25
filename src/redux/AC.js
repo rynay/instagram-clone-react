@@ -37,14 +37,15 @@ export const setCurrentUserAuthenticationListener = () => (dispatch) => {
 };
 
 export const setCurrentUserInformationListener = () => (dispatch, getState) => {
-  const { docId } = getState().currentUser;
-  if (!docId) return;
+  const { userId } = getState().currentUser;
   const userListener = firebase
     .firestore()
     .collection('users')
-    .doc(docId)
+    .where('userId', '==', userId)
     .onSnapshot((snapshot) => {
-      console.log(snapshot.data());
+      dispatch(setCurrentUser(snapshot.docs[0].data()));
+      dispatch(setDashboardPosts());
+      dispatch(setSuggestions());
     });
 
   return userListener;
@@ -122,10 +123,7 @@ export const setCurrentUser = (userInfo) => ({
 });
 
 export const toggleFollowing = (target, current) => (dispatch) => {
-  firebaseService.toggleFollowing(target, current).then(() => {
-    dispatch(setSuggestions());
-    dispatch(setDashboardPosts());
-  });
+  firebaseService.toggleFollowing(target, current);
 };
 
 export const toggleLike = (targetPost) => (dispatch, getState) => {

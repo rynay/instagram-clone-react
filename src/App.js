@@ -18,6 +18,7 @@ function App({
   deleteCurrentUser,
 }) {
   const history = useHistory();
+  const match = useRouteMatch();
 
   useEffect(() => {
     const listener = setCurrentUserAuthenticationListener();
@@ -31,12 +32,14 @@ function App({
     }
     const listener = setCurrentUserInformationListener();
     return listener;
-  }, [currentUser]);
+  }, []);
 
   useEffect(() => {
-    if (!currentUser) history.push(ROUTES.LOGIN);
-    if (currentUser) history.push(ROUTES.DASHBOARD);
-  }, [currentUser]);
+    if (!currentUser && !JSON.parse(localStorage.getItem('user')))
+      history.push(ROUTES.LOGIN);
+    if (currentUser && JSON.parse(localStorage.getItem('user')))
+      history.push(ROUTES.DASHBOARD);
+  }, []);
 
   return (
     <>
