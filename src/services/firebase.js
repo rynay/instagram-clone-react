@@ -17,21 +17,21 @@ export async function toggleLike(userId, targetPhoto) {
   });
 }
 
-export async function sendComment(displayName, targetPhoto, comment) {
-  await firebase
+export async function sendComment({ username, targetPhoto, comment }) {
+  return firebase
     .firestore()
     .collection('photos')
     .where('photoId', '==', targetPhoto)
     .get()
     .then((query) => {
       const target = query.docs[0];
-      var currVal = target.data().comments;
-      target.ref.update({
+      const currVal = target.data().comments;
+      return target.ref.update({
         comments: [
           ...currVal,
           {
             comment,
-            displayName,
+            displayName: username,
           },
         ],
       });

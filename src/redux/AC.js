@@ -142,3 +142,11 @@ export const toggleLike = (targetPost) => (dispatch, getState) => {
     // like from profile
   }
 };
+
+export const sendComment = ({ username, targetPhoto, comment }) => (
+  dispatch
+) => {
+  firebaseService.sendComment({ username, targetPhoto, comment }).then(() => {
+    dispatch(setDashboardPosts());
+  });
+};

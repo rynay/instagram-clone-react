@@ -17,9 +17,11 @@ const Info = ({
   const isLiked = post.likes.includes(currentUser?.userId);
 
   const likesCount = post.likes.length;
-  const [commentsCount, setCommentsCount] = useState(post.comments.length);
+  const commentsCount = post.comments.length;
   const [showingComments, setShowingComments] = useState(
-    post.comments.slice(post.comments.length - 3, post.comments.length)
+    post.comments.length >= 3
+      ? post.comments.slice(post.comments.length - 3, post.comments.length)
+      : post.comments
   );
   const [comment, setComment] = useState('');
 
@@ -108,7 +110,11 @@ const Info = ({
         onSubmit={(e) => {
           e.preventDefault();
           if (!comment.trim()) return;
-          sendComment(currentUser.username, post.photoId, comment.trim());
+          sendComment({
+            username: currentUser.username,
+            targetPhoto: post.photoId,
+            comment: comment.trim(),
+          });
           setShowingComments((comments) => [
             ...comments,
             {
@@ -117,7 +123,6 @@ const Info = ({
             },
           ]);
           setComment('');
-          setCommentsCount((count) => count + 1);
         }}
       >
         <input
@@ -137,6 +142,9 @@ const Info = ({
 const mapDispatchToProps = (dispatch) => ({
   toggleLike: (post) => {
     dispatch(AC.toggleLike(post));
+  },
+  sendComment: ({ username, targetPhoto, comment }) => {
+    dispatch(AC.sendComment({ username, targetPhoto, comment }));
   },
 });
 
