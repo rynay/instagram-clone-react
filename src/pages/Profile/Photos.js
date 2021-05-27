@@ -6,6 +6,7 @@ import { FaHeart, FaCommentDots } from 'react-icons/fa';
 const Photos = ({ s, toggleLike, photos, currentUserId }) => (
   <article className={s.photos}>
     {!photos && <Skeleton height={377} width={270} count={6} />}
+    {photos && photos.length === 0 && <h2>User has not added photos yet</h2>}
     {photos &&
       photos.map((photo) => {
         const isLiked = photo.likes.includes(currentUserId);
