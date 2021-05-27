@@ -98,9 +98,25 @@ export async function getFollowingPosts(following = []) {
   const formattedResult = results.docs.map(async (doc) => ({
     ...doc.data(),
     username: await getUserNameById(doc.data().userId),
+    authorAvatar: await getAvatarById(doc.data().userId),
   }));
 
   return Promise.all(formattedResult) || [];
+}
+
+async function getAvatarById(id) {
+  if (!id) return;
+
+  const results = await firebase
+    .firestore()
+    .collection('users')
+    .where('userId', '==', id)
+    .get();
+  const formattedResult = results.docs.map((doc) => ({
+    authorAvatar: doc.data().photo,
+  }))[0].authorAvatar;
+
+  return formattedResult;
 }
 
 export async function getPosts(id) {

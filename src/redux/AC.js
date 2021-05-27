@@ -4,33 +4,22 @@ import * as TYPES from './TYPES';
 
 export const setCurrentUserAuthenticationListener = () => (dispatch) => {
   const authListener = firebase.auth().onAuthStateChanged((user) => {
-    const localStorageUser = JSON.parse(localStorage.getItem('user'));
-    if (!user && !localStorageUser) {
+    if (!user) {
       dispatch(setCurrentUser(null));
       dispatch(setDashboardPosts(null));
       dispatch(setSuggestions(null));
       return;
     }
 
-    firebaseService
-      .getUserInfoByEmail(user?.email || localStorageUser.emailAddress)
-      .then((userInfo) => {
-        localStorage.setItem(
-          'user',
-          JSON.stringify({
-            ...userInfo,
-            docId: user?.uid,
-          })
-        );
-        dispatch(
-          setCurrentUser({
-            ...userInfo,
-            docId: user?.uid || localStorageUser.docId,
-          })
-        );
-        dispatch(setDashboardPosts());
-        dispatch(setSuggestions());
-      });
+    firebaseService.getUserInfoByEmail(user.email).then((userInfo) => {
+      dispatch(
+        setCurrentUser({
+          ...userInfo,
+        })
+      );
+      dispatch(setDashboardPosts());
+      dispatch(setSuggestions());
+    });
   });
 
   return authListener;

@@ -39,7 +39,8 @@ const SignUp = ({ history, currentUsername }) => {
           following: [],
           fullName,
           userId: userCreated.user.uid,
-          username: userName.toLowerCase(),
+          username: userName,
+          photo: '/images/avatars/default.png',
         });
 
         history.push(ROUTES.DASHBOARD);
@@ -87,7 +88,7 @@ const SignUp = ({ history, currentUsername }) => {
       'aria-label': 'Enter your email address here',
       value: email,
       onChange(e) {
-        setEmail(e.target.value);
+        setEmail(e.target.value.toLowerCase());
       },
     },
     {

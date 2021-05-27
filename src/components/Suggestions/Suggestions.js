@@ -17,7 +17,10 @@ const Suggestions = ({ suggestions, follow, currentUser }) => {
               <li className={s.list_item} key={sug.username}>
                 <Link className={s.link} to={`/p/${sug.username}`}>
                   <div className={s.image_container}>
-                    <img alt="" src={`./images/avatars/${sug.username}.jpg`} />
+                    <img
+                      alt=""
+                      src={sug.photo || `./images/avatars/${sug.username}.jpg`}
+                    />
                   </div>
                   <h3 className={s.username}>{sug.username}</h3>
                 </Link>

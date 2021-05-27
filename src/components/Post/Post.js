@@ -14,7 +14,10 @@ const Post = ({ post, currentUserId, currentUserName }) => {
       <div className={s.header}>
         <Link to={`/p/${post.username}`} className={s.link}>
           <div className={s.image_container}>
-            <img src={`./images/avatars/${post.username}.jpg`} alt="" />
+            <img
+              src={post.authorAvatar || `./images/avatars/${post.username}.jpg`}
+              alt=""
+            />
           </div>
         </Link>
         <div className={s.author_info_container}>

@@ -3,11 +3,17 @@ import { connect } from 'react-redux';
 import * as AC from '../../redux/AC';
 
 const Header = ({ s, currentUser, targetUser, toggleFollowing }) => {
+  console.log(targetUser);
   return (
     <section className={s.header}>
       <div className={s.header__image_container}>
         {targetUser?.username && (
-          <img src={`/images/avatars/${targetUser.username}.jpg`} alt="" />
+          <img
+            src={
+              targetUser.photo || `/images/avatars/${targetUser.username}.jpg`
+            }
+            alt=""
+          />
         )}
         {!targetUser?.username && (
           <Skeleton height={85} width={85} circle={true} count={1} />

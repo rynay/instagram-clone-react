@@ -15,9 +15,19 @@
     }
   }
 
-  .username {
-    padding: 0.25em 0.5em;
+  .info {
     flex: 1;
+    padding: 0.25em 0.5em;
+  }
+
+  .username {
     font-size: 1.6rem;
+    line-height: 1;
+    margin-bottom: 0.25em;
+  }
+
+  .fullName {
+    font-size: 1.4rem;
+    line-height: 1;
   }
 }
