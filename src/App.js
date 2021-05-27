@@ -13,6 +13,7 @@ const Profile = lazy(() => import('./pages/Profile/index'));
 
 function App({
   currentUser,
+  currentUsername,
   setCurrentUserAuthenticationListener,
   setCurrentUserInformationListener,
   deleteCurrentUser,
@@ -29,7 +30,7 @@ function App({
     }
     const listener = setCurrentUserInformationListener();
     return listener;
-  }, []);
+  }, [currentUsername]);
 
   return (
     <>
@@ -53,6 +54,7 @@ function App({
 
 const mapStateToProps = (state) => ({
   currentUser: state.currentUser,
+  currentUsername: state.currentUser?.username,
 });
 
 const mapDispatchToProps = (dispatch) => ({
