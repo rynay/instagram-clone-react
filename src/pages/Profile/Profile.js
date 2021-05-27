@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { useEffect } from 'react';
 import * as AC from '../../redux/AC';
 import Header from './Header';
+import Photos from './Photos';
 import s from './Profile.module.scss';
 
 const Profile = ({ deleteTargetUser, setTargetUserListenerByName }) => {
@@ -20,6 +21,7 @@ const Profile = ({ deleteTargetUser, setTargetUserListenerByName }) => {
   return (
     <main className={`container ${s.container}`}>
       <Header s={s} />
+      <Photos s={s} />
     </main>
   );
 };

@@ -69,3 +69,58 @@
     }
   }
 }
+
+.photos {
+  max-width: 85rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+  gap: 2rem;
+
+  &__photoContainer {
+    position: relative;
+
+    &:hover {
+      .photos__buttonContainer {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__imageContainer {
+    height: 37.7rem;
+    width: 27rem;
+    background-color: #ccc;
+    img {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__buttonContainer {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: opacity 0.15s;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__button {
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 1.5em;
+    svg {
+      height: 3rem;
+      width: 3rem;
+    }
+  }
+}

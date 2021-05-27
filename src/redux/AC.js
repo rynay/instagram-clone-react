@@ -143,7 +143,16 @@ export const toggleLike = (targetPost) => (dispatch, getState) => {
     });
   } else {
     // like from profile
+    firebaseService.toggleLike(userId, targetPost).then(() => {
+      dispatch(updateTargetUserPhotos());
+    });
   }
+};
+
+export const updateTargetUserPhotos = () => async (dispatch, getState) => {
+  const { targetUser } = getState();
+  const photos = await firebaseService.getPosts(targetUser.userId);
+  dispatch(setTargetUser({ ...targetUser, photos }));
 };
 
 export const sendComment = ({ username, targetPhoto, comment }) => (

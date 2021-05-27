@@ -1,4 +1,4 @@
-import { createRef, useState } from 'react';
+import { useState } from 'react';
 import { FaRegHeart, FaHeart, FaRegCommentDots } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import * as AC from '../../redux/AC';
