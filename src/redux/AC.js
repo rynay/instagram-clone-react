@@ -58,8 +58,13 @@ export const setTargetUserListenerByName = (name) => async (dispatch) => {
     .firestore()
     .collection('users')
     .doc(userInfo.docId)
-    .onSnapshot((doc) => {
-      dispatch(setTargetUser({ ...doc.data(), docId: userInfo.docId }));
+    .onSnapshot(async (doc) => {
+      const data = {
+        ...doc.data(),
+        docId: userInfo.docId,
+        photos: await firebaseService.getPosts(userInfo.userId),
+      };
+      dispatch(setTargetUser({ ...data }));
     });
   return () => {
     listener();

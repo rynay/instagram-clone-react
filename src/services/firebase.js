@@ -103,6 +103,21 @@ export async function getFollowingPosts(following = []) {
   return Promise.all(formattedResult);
 }
 
+export async function getPosts(id) {
+  if (!id) return null;
+  const results = await firebase
+    .firestore()
+    .collection('photos')
+    .where('userId', '==', id)
+    .get();
+
+  const formattedResult = results.docs.map((doc) => ({
+    ...doc.data(),
+  }));
+
+  return formattedResult;
+}
+
 const getUserNameById = async (id) => {
   if (!id) return;
   const result = await firebase
