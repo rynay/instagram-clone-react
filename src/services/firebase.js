@@ -89,7 +89,7 @@ export async function getUserInfoByEmail(email) {
 }
 
 export async function getFollowingPosts(following = []) {
-  if (!following.length) return null;
+  if (!following.length) return [];
   const results = await firebase
     .firestore()
     .collection('photos')
@@ -100,7 +100,7 @@ export async function getFollowingPosts(following = []) {
     username: await getUserNameById(doc.data().userId),
   }));
 
-  return Promise.all(formattedResult);
+  return Promise.all(formattedResult) || [];
 }
 
 export async function getPosts(id) {

@@ -67,7 +67,7 @@ const SignUp = ({ history, currentUsername }) => {
       'aria-label': 'Enter your username here',
       value: userName,
       onChange(e) {
-        setUserName(e.target.value);
+        setUserName(e.target.value.toLowerCase());
       },
     },
     {
