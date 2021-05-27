@@ -6,11 +6,16 @@ import * as ROUTES from '../../constants/routes';
 import s from '../Login-SignUp.module.scss';
 import { withRouter } from 'react-router-dom';
 
-const Login = ({ history }) => {
+const Login = ({ history, currentUsername }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (currentUsername) history.push('/');
+  }, [currentUsername]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     try {

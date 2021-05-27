@@ -6,7 +6,7 @@ import s from '../Login-SignUp.module.scss';
 import { firebase } from '../../lib/firebase';
 import * as FirebaseService from '../../services/firebase';
 
-const SignUp = ({ history }) => {
+const SignUp = ({ history, currentUsername }) => {
   const [userName, setUserName] = useState('');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -14,6 +14,11 @@ const SignUp = ({ history }) => {
   const [repeatPassword, setRepeatPassword] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (currentUsername) history.push('/');
+  }, [currentUsername]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 

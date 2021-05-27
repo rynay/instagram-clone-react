@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import * as AC from './redux/AC';
 import { lazy, Suspense, useEffect } from 'react';
-import { Switch, Route, useHistory, useRouteMatch } from 'react-router-dom';
+import { Switch, Route, useHistory } from 'react-router-dom';
 import * as ROUTES from './constants/routes';
 import Header from './components/Header';
 
@@ -18,6 +18,8 @@ function App({
   setCurrentUserInformationListener,
   deleteCurrentUser,
 }) {
+  const history = useHistory();
+
   useEffect(() => {
     const listener = setCurrentUserAuthenticationListener();
     return listener;
@@ -32,13 +34,21 @@ function App({
     return listener;
   }, [currentUsername]);
 
+  useEffect(() => {
+    if (!currentUsername) history.push('/login');
+  }, [currentUsername]);
+
   return (
     <>
       <Header />
       <Suspense fallback={<p>Loading...</p>}>
         <Switch>
-          <Route path={ROUTES.LOGIN} component={Login} />
-          <Route path={ROUTES.SIGN_UP} component={SignUp} />
+          <Route path={ROUTES.LOGIN}>
+            <Login currentUsername={currentUsername} />
+          </Route>
+          <Route path={ROUTES.SIGN_UP}>
+            <SignUp currentUsername={currentUsername} />
+          </Route>
           <Route path={ROUTES.DASHBOARD} exact>
             <Dashboard />
           </Route>
