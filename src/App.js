@@ -11,14 +11,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard/index'));
 const NotFound = lazy(() => import('./pages/NotFound/index'));
 const Profile = lazy(() => import('./pages/Profile/index'));
 
-function App({
-  initApp,
-  currentUsername,
-  // currentUser,
-  // setCurrentUserAuthenticationListener,
-  // setCurrentUserInformationListener,
-  // deleteCurrentUser,
-}) {
+function App({ initApp, currentUsername }) {
   const history = useHistory();
 
   useEffect(() => {
@@ -29,22 +22,9 @@ function App({
     return initApp();
   }, []);
 
-  // useEffect(() => {
-  //   const listener = setCurrentUserAuthenticationListener();
-  //   return listener;
-  // }, []);
-
-  // useEffect(() => {
-  //   if (!currentUser) {
-  //     deleteCurrentUser(null);
-  //     return;
-  //   }
-  //   const listener = setCurrentUserInformationListener();
-  //   return listener;
-  // }, [currentUsername]);
-
   useEffect(() => {
-    if (!currentUsername) history.push('/login');
+    const localUser = JSON.parse(localStorage.getItem('user'));
+    if (!currentUsername && !localUser) history.push('/login');
   }, [currentUsername]);
 
   return (
