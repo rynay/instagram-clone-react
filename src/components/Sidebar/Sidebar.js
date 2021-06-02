@@ -6,7 +6,7 @@ const Sidebar = ({ suggestions, follow, currentUser }) => {
   return (
     <aside className={s.container}>
       <Profile
-        fullName={currentUser.fullName}
+        fullName={currentUser?.fullName}
         avatar={currentUser?.photo}
         username={currentUser?.username}
       />

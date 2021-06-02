@@ -45,22 +45,24 @@ function App({
   return (
     <>
       <Header />
-      <Suspense fallback={<p>Loading...</p>}>
-        <Switch>
-          <Route path={ROUTES.LOGIN}>
-            <Login currentUsername={currentUsername} />
-          </Route>
-          <Route path={ROUTES.SIGN_UP}>
-            <SignUp currentUsername={currentUsername} />
-          </Route>
-          <Route path={ROUTES.DASHBOARD} exact>
-            <Dashboard />
-          </Route>
-          <Route path={ROUTES.PROFILE}>
-            <Profile />
-          </Route>
-          <Route component={NotFound} />
-        </Switch>
+      <Suspense fallback={<p></p>}>
+        <div style={{ paddingTop: '5rem' }}>
+          <Switch>
+            <Route path={ROUTES.LOGIN}>
+              <Login currentUsername={currentUsername} />
+            </Route>
+            <Route path={ROUTES.SIGN_UP}>
+              <SignUp currentUsername={currentUsername} />
+            </Route>
+            <Route path={ROUTES.DASHBOARD} exact>
+              <Dashboard />
+            </Route>
+            <Route path={ROUTES.PROFILE}>
+              <Profile />
+            </Route>
+            <Route component={NotFound} />
+          </Switch>
+        </div>
       </Suspense>
     </>
   );

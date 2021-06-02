@@ -10,7 +10,8 @@ const Header = ({ logout, user }) => {
       <div className={`container ${s.container}`}>
         <div className={s.header__logo}>
           <Link to={user ? ROUTES.DASHBOARD : ROUTES.LOGIN}>
-            <img alt="Instagram" src="/images/logo.png" />
+            {/* <img alt="Instagram" src="/images/logo.png" /> */}
+            <h2>Fake Instagram</h2>
           </Link>
         </div>
         <nav>

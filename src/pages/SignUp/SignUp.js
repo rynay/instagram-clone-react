@@ -141,13 +141,14 @@ const SignUp = ({ history, currentUsername }) => {
           <img
             className={s.phoneImage__image}
             alt=""
-            src="./images/iphone-with-profile.jpg"
+            src="/images/iphone-with-profile.jpg"
           />
         </div>
         <section className={s.content}>
           <div className={s.content__fields}>
             <div className={s.content__logo}>
-              <img alt="Instagram" src="./images/logo.png" />
+              {/* <img alt="Instagram" src="/images/logo.png" /> */}
+              <h2>Fake Instagram</h2>
             </div>
             {error && <p className={s.error}>{error}</p>}
             <form

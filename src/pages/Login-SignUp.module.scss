@@ -54,9 +54,14 @@
   &__logo {
     text-align: center;
     margin-bottom: 0.5em;
-    img {
-      max-width: 15rem;
+
+    h2 {
+      font-family: 'Pattaya', sans-serif;
     }
+
+    // img {
+    //   max-width: 15rem;
+    // }
   }
 
   .form {
