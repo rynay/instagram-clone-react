@@ -12,11 +12,12 @@ const NotFound = lazy(() => import('./pages/NotFound/index'));
 const Profile = lazy(() => import('./pages/Profile/index'));
 
 function App({
-  currentUser,
+  initApp,
   currentUsername,
-  setCurrentUserAuthenticationListener,
-  setCurrentUserInformationListener,
-  deleteCurrentUser,
+  // currentUser,
+  // setCurrentUserAuthenticationListener,
+  // setCurrentUserInformationListener,
+  // deleteCurrentUser,
 }) {
   const history = useHistory();
 
@@ -25,18 +26,22 @@ function App({
   }, []);
 
   useEffect(() => {
-    const listener = setCurrentUserAuthenticationListener();
-    return listener;
+    return initApp();
   }, []);
 
-  useEffect(() => {
-    if (!currentUser) {
-      deleteCurrentUser(null);
-      return;
-    }
-    const listener = setCurrentUserInformationListener();
-    return listener;
-  }, [currentUsername]);
+  // useEffect(() => {
+  //   const listener = setCurrentUserAuthenticationListener();
+  //   return listener;
+  // }, []);
+
+  // useEffect(() => {
+  //   if (!currentUser) {
+  //     deleteCurrentUser(null);
+  //     return;
+  //   }
+  //   const listener = setCurrentUserInformationListener();
+  //   return listener;
+  // }, [currentUsername]);
 
   useEffect(() => {
     if (!currentUsername) history.push('/login');
@@ -74,14 +79,17 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  setCurrentUserAuthenticationListener: () => {
-    return dispatch(AC.setCurrentUserAuthenticationListener());
-  },
-  setCurrentUserInformationListener: () => {
-    return dispatch(AC.setCurrentUserInformationListener());
-  },
-  deleteCurrentUser: () => {
-    dispatch(AC.setCurrentUser(null));
+  // setCurrentUserAuthenticationListener: () => {
+  //   return dispatch(AC.setCurrentUserAuthenticationListener());
+  // },
+  // setCurrentUserInformationListener: () => {
+  //   return dispatch(AC.setCurrentUserInformationListener());
+  // },
+  // deleteCurrentUser: () => {
+  //   dispatch(AC.setCurrentUser(null));
+  // },
+  initApp: () => {
+    return dispatch(AC.initApp());
   },
 });
 

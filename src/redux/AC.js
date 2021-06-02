@@ -2,13 +2,30 @@ import { firebase } from '../lib/firebase';
 import * as firebaseService from '../services/firebase';
 import * as TYPES from './TYPES';
 
+export const initApp = () => (dispatch) => {
+  const localUser = JSON.parse(localStorage.getItem('user'));
+  let authListener;
+  let currentInfoListener;
+  if (localUser) {
+    dispatch(setCurrentUser(localUser));
+    currentInfoListener = dispatch(setCurrentUserInformationListener());
+  }
+  authListener = dispatch(setCurrentUserAuthenticationListener());
+  return () => {
+    currentInfoListener();
+    authListener();
+  };
+};
+
 export const setCurrentUserAuthenticationListener = () => (dispatch) => {
   const authListener = firebase.auth().onAuthStateChanged((user) => {
-    const localUser = JSON.parse(localStorage.getItem('user'));
-    if (!user && !localUser) {
+    // const localUser = JSON.parse(localStorage.getItem('user'));
+    // &&  !localUser
+    if (!user) {
       dispatch(setCurrentUser(null));
       dispatch(setDashboardPosts(null));
       dispatch(setSuggestions(null));
+      localStorage.removeItem('user');
       return;
     }
 
