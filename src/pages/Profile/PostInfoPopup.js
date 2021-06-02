@@ -1,7 +1,17 @@
+import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import Post from '../../components/Post';
 
 const PostInfoPopup = ({ togglePostInfoPopup, targetPostInfo, s }) => {
+  useEffect(() => {
+    const onKeyDownHandler = (e) => {
+      if (e.key === 'Escape') {
+        togglePostInfoPopup();
+      }
+    };
+    document.addEventListener('keydown', onKeyDownHandler);
+    return () => document.removeEventListener('keydown', onKeyDownHandler);
+  }, []);
   return (
     <div
       onClick={() => {

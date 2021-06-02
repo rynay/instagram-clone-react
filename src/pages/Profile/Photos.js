@@ -18,17 +18,25 @@ const Photos = ({
         const isLiked = photo.likes.includes(currentUserId);
 
         return (
-          <section className={s.photos__photoContainer} key={photo.photoId}>
+          <section
+            onClick={() => {
+              togglePostInfoPopup(photo.photoId);
+            }}
+            className={s.photos__photoContainer}
+            key={photo.photoId}
+          >
             <div className={s.photos__imageContainer}>
               <img src={photo.imageSrc} alt={photo.caption} />
             </div>
             <div className={s.photos__buttonContainer}>
               <button
                 className={s.photos__button}
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   toggleLike(photo.photoId);
                 }}
                 onKeyDown={(e) => {
+                  e.stopPropagation();
                   if (e.key !== 'Enter') return;
                   toggleLike(photo.photoId);
                 }}
@@ -36,9 +44,13 @@ const Photos = ({
                 {<FaHeart style={{ fill: isLiked ? 'red' : 'white' }} />}
               </button>
               <button
-                onClick={() => togglePostInfoPopup(photo.photoId)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  togglePostInfoPopup(photo.photoId);
+                }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
+                    e.stopPropagation();
                     togglePostInfoPopup(photo.photoId);
                   }
                 }}

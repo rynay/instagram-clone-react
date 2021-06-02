@@ -79,6 +79,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
   gap: 2rem;
+  padding-bottom: 2rem;
 
   &__photoContainer {
     position: relative;

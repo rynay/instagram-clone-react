@@ -121,16 +121,20 @@ const Info = ({
           }
         }
       >
-        {showingComments.map((comment) => (
-          <li key={comment.displayName + comment.comment}>
-            <strong>
-              <Link to={`/p/${comment.displayName}`} className={s.link}>
-                {comment.displayName}
-              </Link>
-            </strong>
-            : {comment.comment}
-          </li>
-        ))}
+        {!commentsCount && (
+          <p style={{ color: '#666' }}>Here's no comments just yet</p>
+        )}
+        {showingComments &&
+          showingComments.map((comment) => (
+            <li key={comment.displayName + comment.comment}>
+              <strong>
+                <Link to={`/p/${comment.displayName}`} className={s.link}>
+                  {comment.displayName}
+                </Link>
+              </strong>
+              : {comment.comment}
+            </li>
+          ))}
       </ul>
       <form
         style={
