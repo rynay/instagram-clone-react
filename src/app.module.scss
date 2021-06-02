@@ -16,3 +16,82 @@
   max-height: 90vh;
   max-width: 80vw;
 }
+
+.NewPost {
+  padding: 1em;
+  background-color: #fff;
+  min-width: 30rem;
+  border-radius: 0.25em;
+
+  .image {
+    max-width: 30rem;
+  }
+
+  & > *:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+
+    input,
+    textarea {
+      padding: 1rem;
+      resize: vertical;
+      font-family: inherit;
+      min-height: 5rem;
+      max-height: 25rem;
+    }
+
+    .label {
+      cursor: pointer;
+      border-color: rgb(55, 102, 189);
+      padding: 0.25em 0.5em;
+      border-radius: 0.25em;
+      color: #fff;
+      font-weight: bold;
+      background-color: rgb(55, 102, 189);
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      & > * {
+        padding: 0.25rem;
+      }
+
+      svg {
+        height: 2rem;
+        width: 2rem;
+      }
+    }
+
+    .fileInput {
+      display: none;
+    }
+
+    div {
+      display: flex;
+      button {
+        flex: 1;
+        padding: 0.5em;
+        cursor: pointer;
+      }
+      .post {
+        border-color: rgb(55, 102, 189);
+        padding: 0.25em 0.5em;
+        border-radius: 0.25em;
+        color: #fff;
+        font-weight: bold;
+        background-color: rgb(55, 102, 189);
+      }
+      .cancel {
+        border-color: rgb(55, 102, 189);
+        padding: 0.25em 0.5em;
+        border-radius: 0.25em;
+        color: rgb(55, 102, 189);
+        font-weight: bold;
+        background-color: rgb(226, 229, 235);
+      }
+    }
+  }
+}

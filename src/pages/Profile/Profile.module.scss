@@ -77,12 +77,21 @@
   max-width: 85rem;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
   gap: 2rem;
   padding-bottom: 2rem;
 
+  .skeleton {
+    grid-column: 1 / -1;
+  }
+
+  h2 {
+    grid-column: 1 / -1;
+  }
+
   &__photoContainer {
     position: relative;
+    // max-width: 27rem;
 
     &:hover {
       .photos__buttonContainer {
@@ -92,8 +101,8 @@
   }
 
   &__imageContainer {
-    height: 37.7rem;
-    width: 27rem;
+    height: 40rem;
+
     background-color: #ccc;
     img {
       height: 100%;

@@ -1,6 +1,8 @@
-import { firebase } from '../lib/firebase';
+import firebase from 'firebase/app';
+import 'firebase/storage';
 import * as firebaseService from '../services/firebase';
 import * as TYPES from './TYPES';
+import { nanoid } from 'nanoid';
 
 export const initApp = () => (dispatch) => {
   const localUser = JSON.parse(localStorage.getItem('user'));
@@ -191,3 +193,58 @@ export const setTargetPostId = (id) => ({
   type: TYPES.SET_TARGET_POST_ID,
   payload: id,
 });
+
+const setIsPhotoUploading = (state) => ({
+  type: TYPES.SET_IS_PHOTO_UPLOADING,
+  payload: state,
+});
+const setUploadError = (error) => ({
+  type: TYPES.SET_UPLOAD_ERROR,
+  payload: error,
+});
+
+export const uploadPhoto = ({ photo, description }) => (dispatch, getState) => {
+  const {
+    currentUser: { userId },
+  } = getState();
+  const id = nanoid();
+  const filename = `images/${id}.${photo.name.split('.').reverse()[0]}`;
+  const metadata = {
+    contentType: `image/${photo.name.split('.').reverse()[0]}`,
+  };
+  const storageRef = firebase.storage().ref();
+  const uploadTask = storageRef.child(filename).put(photo, metadata);
+
+  uploadTask.on(
+    'state_changed',
+    (snapshot) => {
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      if (progress != 100) {
+        dispatch(setIsPhotoUploading(true));
+      }
+    },
+    (error) => {
+      dispatch(setIsPhotoUploading(false));
+      dispatch(setUploadError(error.message));
+    },
+    () => {
+      uploadTask.snapshot.ref
+        .getDownloadURL()
+        .then((downloadURL) => {
+          dispatch(setIsPhotoUploading(false));
+          firebaseService.addPhoto({
+            caption: description,
+            comments: [],
+            likes: [],
+            imageSrc: downloadURL,
+            photoId: id,
+            userId,
+            dateCreated: Date.now(),
+          });
+        })
+        .then(() => {
+          dispatch(updateTargetUserPhotos());
+        });
+    }
+  );
+};

@@ -10,7 +10,6 @@ const Profile = ({
   deleteTargetUser,
   setTargetUserListenerByName,
   toggleNewPostPopup,
-  togglePostInfoPopup,
 }) => {
   const { userId: userName } = useParams();
 
@@ -32,7 +31,7 @@ const Profile = ({
     <>
       <main className={`container ${s.container}`}>
         <Header toggleNewPostPopup={toggleNewPostPopup} s={s} />
-        <Photos togglePostInfoPopup={togglePostInfoPopup} s={s} />
+        <Photos s={s} />
       </main>
     </>
   );

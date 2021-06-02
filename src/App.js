@@ -5,6 +5,7 @@ import { Switch, Route, useHistory } from 'react-router-dom';
 import * as ROUTES from './constants/routes';
 import Header from './components/Header';
 import s from './app.module.scss';
+import NewPostPopup from './components/NewPostPopup';
 
 const Login = lazy(() => import('./pages/Login/index'));
 const SignUp = lazy(() => import('./pages/SignUp/index'));
@@ -15,6 +16,7 @@ const PostInfoPopup = lazy(() => import('./components/PostInfoPopup'));
 
 function App({ initApp, currentUsername }) {
   const history = useHistory();
+  const [isNewPostPopupOpen, setIsNewPostPopupOpen] = useState(false);
 
   useEffect(() => {
     document.title = 'Instagram';
@@ -31,6 +33,12 @@ function App({ initApp, currentUsername }) {
 
   return (
     <>
+      {isNewPostPopupOpen && (
+        <NewPostPopup
+          s={s}
+          togglePopup={() => setIsNewPostPopupOpen((state) => !state)}
+        />
+      )}
       <Header />
       <Suspense fallback={<p></p>}>
         <div style={{ paddingTop: '5rem' }}>
@@ -45,7 +53,11 @@ function App({ initApp, currentUsername }) {
               <Dashboard />
             </Route>
             <Route path={ROUTES.PROFILE}>
-              <Profile />
+              <Profile
+                toggleNewPostPopup={() =>
+                  setIsNewPostPopupOpen((state) => !state)
+                }
+              />
               <Route path={ROUTES.PROFILE + '/:postId'} exact>
                 <PostInfoPopup s={s} />
               </Route>

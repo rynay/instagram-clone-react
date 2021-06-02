@@ -1,5 +1,9 @@
 import { firebase } from '../lib/firebase';
 
+export async function addPhoto(data) {
+  return await firebase.firestore().collection('photos').add(data);
+}
+
 export async function toggleLike(userId, targetPhoto) {
   const query = await firebase
     .firestore()
