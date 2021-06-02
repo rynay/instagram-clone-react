@@ -4,7 +4,8 @@ import * as TYPES from './TYPES';
 
 export const setCurrentUserAuthenticationListener = () => (dispatch) => {
   const authListener = firebase.auth().onAuthStateChanged((user) => {
-    if (!user) {
+    const localUser = JSON.parse(localStorage.getItem('user'));
+    if (!user && !localUser) {
       dispatch(setCurrentUser(null));
       dispatch(setDashboardPosts(null));
       dispatch(setSuggestions(null));
@@ -12,6 +13,8 @@ export const setCurrentUserAuthenticationListener = () => (dispatch) => {
     }
 
     firebaseService.getUserInfoByEmail(user.email).then((userInfo) => {
+      localStorage.setItem('user', JSON.stringify(userInfo));
+
       dispatch(
         setCurrentUser({
           ...userInfo,
@@ -151,3 +154,8 @@ export const sendComment = ({ username, targetPhoto, comment }) => (
     dispatch(setDashboardPosts());
   });
 };
+
+export const setTargetPostId = (id) => ({
+  type: TYPES.SET_TARGET_POST_ID,
+  payload: id,
+});

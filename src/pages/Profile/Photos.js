@@ -3,7 +3,13 @@ import * as AC from '../../redux/AC';
 import Skeleton from 'react-loading-skeleton';
 import { FaHeart, FaCommentDots } from 'react-icons/fa';
 
-const Photos = ({ s, toggleLike, photos, currentUserId }) => (
+const Photos = ({
+  togglePostInfoPopup,
+  s,
+  toggleLike,
+  photos,
+  currentUserId,
+}) => (
   <article className={s.photos}>
     {!photos && <Skeleton height={377} width={270} count={6} />}
     {photos && photos.length === 0 && <h2>User has not added photos yet</h2>}
@@ -29,7 +35,15 @@ const Photos = ({ s, toggleLike, photos, currentUserId }) => (
               >
                 {<FaHeart style={{ fill: isLiked ? 'red' : 'white' }} />}
               </button>
-              <button className={s.photos__button}>
+              <button
+                onClick={() => togglePostInfoPopup(photo.photoId)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    togglePostInfoPopup(photo.photoId);
+                  }
+                }}
+                className={s.photos__button}
+              >
                 <FaCommentDots style={{ fill: 'white' }} />
               </button>
             </div>

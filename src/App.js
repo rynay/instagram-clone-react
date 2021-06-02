@@ -21,6 +21,10 @@ function App({
   const history = useHistory();
 
   useEffect(() => {
+    document.title = 'Instagram';
+  }, []);
+
+  useEffect(() => {
     const listener = setCurrentUserAuthenticationListener();
     return listener;
   }, []);

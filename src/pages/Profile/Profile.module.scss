@@ -53,14 +53,14 @@
     padding: 0.25em 0.5em;
     border-radius: 0.25em;
 
-    &_unfollow {
-      color: rgb(29, 90, 202);
-      font-weight: bold;
-    }
     &_follow {
       color: #fff;
       font-weight: bold;
       background-color: rgb(29, 90, 202);
+    }
+    &_unfollow {
+      color: rgb(29, 90, 202);
+      font-weight: bold;
     }
   }
 
@@ -126,4 +126,13 @@
       width: 3rem;
     }
   }
+}
+.toggleNewPostPopup {
+  cursor: pointer;
+  border-color: rgb(29, 90, 202);
+  padding: 0.25em 0.5em;
+  border-radius: 0.25em;
+  color: #fff;
+  font-weight: bold;
+  background-color: rgb(29, 90, 202);
 }

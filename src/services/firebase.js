@@ -127,11 +127,13 @@ export async function getPosts(id) {
     .where('userId', '==', id)
     .get();
 
-  const formattedResult = results.docs.map((doc) => ({
+  const formattedResult = results.docs.map(async (doc) => ({
     ...doc.data(),
+    username: await getUserNameById(doc.data().userId),
+    authorAvatar: await getAvatarById(doc.data().userId),
   }));
 
-  return formattedResult;
+  return Promise.all(formattedResult) || [];
 }
 
 const getUserNameById = async (id) => {

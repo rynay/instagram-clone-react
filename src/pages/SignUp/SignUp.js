@@ -16,6 +16,10 @@ const SignUp = ({ history, currentUsername }) => {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    document.title = 'Sign Up - Instagram';
+  }, []);
+
+  useEffect(() => {
     if (currentUsername) history.push('/');
   }, [currentUsername]);
 
@@ -60,7 +64,7 @@ const SignUp = ({ history, currentUsername }) => {
     }
   };
 
-  const fields = [
+  const [fields] = useState(() => [
     {
       className: s.form__input,
       type: 'text',
@@ -111,7 +115,7 @@ const SignUp = ({ history, currentUsername }) => {
         setRepeatPassword(e.target.value);
       },
     },
-  ];
+  ]);
 
   useEffect(() => {
     document.title = 'Sign Up - Instagram';

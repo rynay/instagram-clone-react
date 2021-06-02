@@ -13,6 +13,7 @@ const Info = ({
   username,
   toggleLike,
   sendComment,
+  poppedUp,
 }) => {
   const isLiked = post.likes.includes(currentUser?.userId);
 
@@ -26,22 +27,38 @@ const Info = ({
   const [comment, setComment] = useState('');
 
   return (
-    <div className={s.info}>
-      <button
-        className={s.info__button}
-        onClick={() => {
-          toggleLike(post.photoId);
-        }}
-        onKeyDown={(e) => {
-          if (e.key !== 'Enter') return;
-          toggleLike(post.photoId);
-        }}
+    <div
+      style={
+        poppedUp && {
+          display: 'flex',
+          flexDirection: 'column',
+        }
+      }
+      className={s.info}
+    >
+      <div
+        style={
+          poppedUp && {
+            order: 2,
+          }
+        }
       >
-        {isLiked ? <FaHeart style={{ fill: 'red' }} /> : <FaRegHeart />}
-      </button>
-      <button onClick={handleFocus} className={s.info__button}>
-        <FaRegCommentDots />
-      </button>
+        <button
+          className={s.info__button}
+          onClick={() => {
+            toggleLike(post.photoId);
+          }}
+          onKeyDown={(e) => {
+            if (e.key !== 'Enter') return;
+            toggleLike(post.photoId);
+          }}
+        >
+          {isLiked ? <FaHeart style={{ fill: 'red' }} /> : <FaRegHeart />}
+        </button>
+        <button onClick={handleFocus} className={s.info__button}>
+          <FaRegCommentDots />
+        </button>
+      </div>
       <p>
         <strong>
           <Link to={`/p/${username}`} className={s.link}>
@@ -93,7 +110,15 @@ const Info = ({
             : 'View all comments'}
         </button>
       )}
-      <ul>
+      <ul
+        style={
+          poppedUp && {
+            flex: 1,
+            overflow: 'auto',
+            maxHeight: '20rem',
+          }
+        }
+      >
         {showingComments.map((comment) => (
           <li key={comment.displayName + comment.comment}>
             <strong>
@@ -106,6 +131,11 @@ const Info = ({
         ))}
       </ul>
       <form
+        style={
+          poppedUp && {
+            order: 2,
+          }
+        }
         className={s.info__form}
         onSubmit={(e) => {
           e.preventDefault();
