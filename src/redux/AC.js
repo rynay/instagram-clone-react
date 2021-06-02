@@ -125,7 +125,7 @@ export const toggleFollowing = (target, current) => (dispatch) => {
 
 export const toggleLike = (targetPost) => (dispatch, getState) => {
   const {
-    currentUser: { userId },
+    currentUser: { userId, following },
     targetUser,
   } = getState();
   if (!targetUser) {
@@ -137,6 +137,9 @@ export const toggleLike = (targetPost) => (dispatch, getState) => {
     // like from profile
     firebaseService.toggleLike(userId, targetPost).then(() => {
       dispatch(updateTargetUserPhotos());
+      if (following.includes(targetUser.userId)) {
+        dispatch(setDashboardPosts());
+      }
     });
   }
 };
@@ -151,12 +154,18 @@ export const sendComment = ({ username, targetPhoto, comment }) => (
   dispatch,
   getState
 ) => {
-  const { targetUser } = getState();
+  const {
+    targetUser,
+    currentUser: { following },
+  } = getState();
   firebaseService.sendComment({ username, targetPhoto, comment }).then(() => {
     if (!targetUser) {
       dispatch(setDashboardPosts());
     } else {
       dispatch(updateTargetUserPhotos());
+      if (following.includes(targetUser.userId)) {
+        dispatch(setDashboardPosts());
+      }
     }
   });
 };
