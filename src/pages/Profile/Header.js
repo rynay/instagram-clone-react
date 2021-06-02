@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { connect } from 'react-redux';
 import * as AC from '../../redux/AC';
+import { FaCamera, FaPlus } from 'react-icons/fa';
 
 const Header = ({
   s,
@@ -8,15 +10,44 @@ const Header = ({
   targetUser,
   toggleFollowing,
   toggleNewPostPopup,
+  uploadAvatar,
 }) => {
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const handlePhotoChange = (e) => {
+    uploadAvatar(e.target.files[0]);
+    setPhotoPreview(URL.createObjectURL(e.target.files[0]));
+  };
   return (
     <>
       <section className={s.header}>
         <div className={s.header__image_container}>
+          {currentUser &&
+            targetUser &&
+            currentUser.userId === targetUser.userId && (
+              <form>
+                <label
+                  className={s.label}
+                  htmlFor="file"
+                  aria-label="Choose an avatar from your device"
+                >
+                  {' '}
+                  <FaPlus /> <FaCamera />
+                </label>
+                <input
+                  multiple={false}
+                  id="file"
+                  accept="image/*"
+                  type="file"
+                  onChange={(e) => handlePhotoChange(e)}
+                />
+              </form>
+            )}
           {targetUser?.username && (
             <img
               src={
-                targetUser.photo || `/images/avatars/${targetUser.username}.jpg`
+                photoPreview ||
+                targetUser.photo ||
+                `/images/avatars/${targetUser.username}.jpg`
               }
               alt=""
             />
@@ -111,6 +142,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   toggleFollowing: (target, current) => {
     dispatch(AC.toggleFollowing(target, current));
+  },
+  uploadAvatar: (file) => {
+    dispatch(AC.uploadAvatar(file));
   },
 });
 

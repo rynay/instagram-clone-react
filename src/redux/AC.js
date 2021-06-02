@@ -54,7 +54,12 @@ export const setCurrentUserInformationListener = () => (dispatch, getState) => {
     .collection('users')
     .where('userId', '==', userId)
     .onSnapshot((snapshot) => {
-      dispatch(setCurrentUser(snapshot.docs[0].data()));
+      dispatch(
+        setCurrentUser({
+          ...snapshot.docs[0].data(),
+          docId: snapshot.docs[0].id,
+        })
+      );
       dispatch(setDashboardPosts());
       dispatch(setSuggestions());
     });
@@ -247,4 +252,23 @@ export const uploadPhoto = ({ photo, description }) => (dispatch, getState) => {
         });
     }
   );
+};
+
+export const uploadAvatar = (photo) => (dispatch, getState) => {
+  const {
+    currentUser: { docId },
+  } = getState();
+  const id = nanoid();
+  const filename = `images/${id}.${photo.name.split('.').reverse()[0]}`;
+  const metadata = {
+    contentType: `image/${photo.name.split('.').reverse()[0]}`,
+  };
+  const storageRef = firebase.storage().ref();
+  const uploadTask = storageRef.child(filename).put(photo, metadata);
+
+  uploadTask.on('state_changed', null, null, () => {
+    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+      firebaseService.setAvatar({ docId, downloadURL });
+    });
+  });
 };

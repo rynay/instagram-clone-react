@@ -4,6 +4,14 @@ export async function addPhoto(data) {
   return await firebase.firestore().collection('photos').add(data);
 }
 
+export function setAvatar({ docId, downloadURL }) {
+  firebase
+    .firestore()
+    .collection('users')
+    .doc(docId)
+    .update({ photo: downloadURL });
+}
+
 export async function toggleLike(userId, targetPhoto) {
   const query = await firebase
     .firestore()
