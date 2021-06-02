@@ -46,7 +46,15 @@ const Post = ({ post, currentUserId, currentUserName, poppedUp }) => {
                 </p>
               </div>
             </div>
-            <div className={s.post_image_container}>
+            <div
+              className={s.post_image_container}
+              style={
+                poppedUp && {
+                  minHeight: '35rem',
+                  minWidth: '25rem',
+                }
+              }
+            >
               <img
                 style={
                   poppedUp && {

@@ -1,15 +1,17 @@
 import { connect } from 'react-redux';
 import * as AC from './redux/AC';
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { Switch, Route, useHistory } from 'react-router-dom';
 import * as ROUTES from './constants/routes';
 import Header from './components/Header';
+import s from './app.module.scss';
 
 const Login = lazy(() => import('./pages/Login/index'));
 const SignUp = lazy(() => import('./pages/SignUp/index'));
 const Dashboard = lazy(() => import('./pages/Dashboard/index'));
 const NotFound = lazy(() => import('./pages/NotFound/index'));
 const Profile = lazy(() => import('./pages/Profile/index'));
+const PostInfoPopup = lazy(() => import('./components/PostInfoPopup'));
 
 function App({ initApp, currentUsername }) {
   const history = useHistory();
@@ -44,6 +46,9 @@ function App({ initApp, currentUsername }) {
             </Route>
             <Route path={ROUTES.PROFILE}>
               <Profile />
+              <Route path={ROUTES.PROFILE + '/:postId'} exact>
+                <PostInfoPopup s={s} />
+              </Route>
             </Route>
             <Route component={NotFound} />
           </Switch>
@@ -59,15 +64,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  // setCurrentUserAuthenticationListener: () => {
-  //   return dispatch(AC.setCurrentUserAuthenticationListener());
-  // },
-  // setCurrentUserInformationListener: () => {
-  //   return dispatch(AC.setCurrentUserInformationListener());
-  // },
-  // deleteCurrentUser: () => {
-  //   dispatch(AC.setCurrentUser(null));
-  // },
   initApp: () => {
     return dispatch(AC.initApp());
   },

@@ -1,31 +1,18 @@
 import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import * as AC from '../../redux/AC';
 import Header from './Header';
 import Photos from './Photos';
 import s from './Profile.module.scss';
-import { NewPostPopup } from './NewPostPopup';
-import PostInfoPopup from './PostInfoPopup';
 
 const Profile = ({
   deleteTargetUser,
   setTargetUserListenerByName,
-  setTargetPostId,
+  toggleNewPostPopup,
+  togglePostInfoPopup,
 }) => {
   const { userId: userName } = useParams();
-  const [isNewPostPopupOpen, setIsNewPostPopupOpen] = useState(false);
-  const [isPostInfoPopupOpen, setIsPostInfoPopupOpen] = useState(false);
-
-  const toggleNewPostPopup = () => {
-    setIsNewPostPopupOpen((state) => !state);
-  };
-  const togglePostInfoPopup = (postId) => {
-    if (postId) {
-      setTargetPostId(postId);
-    }
-    setIsPostInfoPopupOpen((state) => !state);
-  };
 
   useEffect(() => {
     document.title = `${userName} - Instagram`;
@@ -43,12 +30,6 @@ const Profile = ({
 
   return (
     <>
-      {isNewPostPopupOpen && (
-        <NewPostPopup toggleNewPostPopup={toggleNewPostPopup} s={s} />
-      )}
-      {isPostInfoPopupOpen && (
-        <PostInfoPopup togglePostInfoPopup={togglePostInfoPopup} s={s} />
-      )}
       <main className={`container ${s.container}`}>
         <Header toggleNewPostPopup={toggleNewPostPopup} s={s} />
         <Photos togglePostInfoPopup={togglePostInfoPopup} s={s} />
@@ -63,9 +44,6 @@ const mapDispatchToProps = (dispatch) => ({
   },
   setTargetUserListenerByName: (name) => {
     return dispatch(AC.setTargetUserListenerByName(name));
-  },
-  setTargetPostId: (id) => {
-    dispatch(AC.setTargetPostId(id));
   },
 });
 

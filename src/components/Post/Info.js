@@ -117,7 +117,6 @@ const Info = ({
             overflow: 'auto',
             maxHeight: '65vh',
             maxWidth: '25rem',
-            wordBreak: 'break-word',
           }
         }
       >

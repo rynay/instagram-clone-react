@@ -1,15 +1,10 @@
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as AC from '../../redux/AC';
 import Skeleton from 'react-loading-skeleton';
 import { FaHeart, FaCommentDots } from 'react-icons/fa';
 
-const Photos = ({
-  togglePostInfoPopup,
-  s,
-  toggleLike,
-  photos,
-  currentUserId,
-}) => (
+const Photos = ({ s, toggleLike, photos, currentUserId }) => (
   <article className={s.photos}>
     {!photos && <Skeleton height={377} width={270} count={6} />}
     {photos && photos.length === 0 && <h2>User has not added photos yet</h2>}
@@ -18,48 +13,37 @@ const Photos = ({
         const isLiked = photo.likes.includes(currentUserId);
 
         return (
-          <section
-            onClick={() => {
-              togglePostInfoPopup(photo.photoId);
-            }}
-            className={s.photos__photoContainer}
-            key={photo.photoId}
-          >
-            <div className={s.photos__imageContainer}>
-              <img src={photo.imageSrc} alt={photo.caption} />
-            </div>
-            <div className={s.photos__buttonContainer}>
-              <button
-                className={s.photos__button}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleLike(photo.photoId);
-                }}
-                onKeyDown={(e) => {
-                  e.stopPropagation();
-                  if (e.key !== 'Enter') return;
-                  toggleLike(photo.photoId);
-                }}
-              >
-                {<FaHeart style={{ fill: isLiked ? 'red' : 'white' }} />}
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  togglePostInfoPopup(photo.photoId);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
+          <Link to={`/p/${photo.username}/${photo.photoId}`}>
+            <section className={s.photos__photoContainer} key={photo.photoId}>
+              <div className={s.photos__imageContainer}>
+                <img src={photo.imageSrc} alt={photo.caption} />
+              </div>
+              <div className={s.photos__buttonContainer}>
+                <button
+                  className={s.photos__button}
+                  onClick={(e) => {
                     e.stopPropagation();
-                    togglePostInfoPopup(photo.photoId);
-                  }
-                }}
-                className={s.photos__button}
-              >
-                <FaCommentDots style={{ fill: 'white' }} />
-              </button>
-            </div>
-          </section>
+                    e.preventDefault();
+                    toggleLike(photo.photoId);
+                  }}
+                  onKeyDown={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    if (e.key !== 'Enter') return;
+                    toggleLike(photo.photoId);
+                  }}
+                >
+                  {<FaHeart style={{ fill: isLiked ? 'red' : 'white' }} />}
+                </button>
+                <Link
+                  to={`/p/${photos[0].username}/${photo.photoId}`}
+                  className={s.photos__button}
+                >
+                  <FaCommentDots style={{ fill: 'white' }} />
+                </Link>
+              </div>
+            </section>
+          </Link>
         );
       })}
   </article>
