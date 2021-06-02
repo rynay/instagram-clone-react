@@ -113,9 +113,8 @@ const Info = ({
       <ul
         style={
           poppedUp && {
-            flex: 1,
+            flexGrow: 1,
             overflow: 'auto',
-            maxHeight: '65vh',
             maxWidth: '25rem',
           }
         }

@@ -16,7 +16,7 @@ const Post = ({ post, currentUserId, currentUserName, poppedUp }) => {
           style={
             poppedUp && {
               display: 'flex',
-              maxWidth: '70rem',
+              maxWidth: '75rem',
               maxHeight: '90vh',
               boxShadow: 'none',
             }
@@ -24,7 +24,7 @@ const Post = ({ post, currentUserId, currentUserName, poppedUp }) => {
           className={s.container}
           key={post.photoId}
         >
-          <div>
+          <div className={s.innerContainer}>
             <div className={s.header}>
               <Link to={`/p/${post.username}`} className={s.link}>
                 <div className={s.image_container}>
@@ -46,21 +46,13 @@ const Post = ({ post, currentUserId, currentUserName, poppedUp }) => {
                 </p>
               </div>
             </div>
-            <div
-              className={s.post_image_container}
-              style={
-                poppedUp && {
-                  minHeight: '35rem',
-                  minWidth: '25rem',
-                }
-              }
-            >
+            <div className={s.post_image_container}>
               <img
                 style={
                   poppedUp && {
-                    objectFit: 'contain',
-                    width: '100%',
                     height: '100%',
+                    width: '100%',
+                    objectFit: 'contain',
                   }
                 }
                 src={post.imageSrc}

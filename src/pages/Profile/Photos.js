@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as AC from '../../redux/AC';
 import Skeleton from 'react-loading-skeleton';
@@ -8,6 +8,8 @@ const Photos = ({ s, toggleLike, photos, currentUserId }) => {
   const photosSorted = photos?.sort((a, b) => {
     return b.dateCreated - a.dateCreated;
   });
+
+  const history = useHistory();
 
   return (
     <article className={s.photos}>
@@ -24,7 +26,10 @@ const Photos = ({ s, toggleLike, photos, currentUserId }) => {
           const isLiked = photo.likes.includes(currentUserId);
 
           return (
-            <Link to={`/p/${photo.username}/${photo.photoId}`}>
+            <Link
+              key={photo.photoId}
+              to={`/p/${photo.username}/${photo.photoId}`}
+            >
               <section className={s.photos__photoContainer} key={photo.photoId}>
                 <div className={s.photos__imageContainer}>
                   <img src={photo.imageSrc} alt={photo.caption} />
@@ -46,12 +51,14 @@ const Photos = ({ s, toggleLike, photos, currentUserId }) => {
                   >
                     {<FaHeart style={{ fill: isLiked ? 'red' : 'white' }} />}
                   </button>
-                  <Link
-                    to={`/p/${photos[0].username}/${photo.photoId}`}
+                  <button
+                    onClick={() =>
+                      history.push(`/p/${photos[0].username}/${photo.photoId}`)
+                    }
                     className={s.photos__button}
                   >
                     <FaCommentDots style={{ fill: 'white' }} />
-                  </Link>
+                  </button>
                 </div>
               </section>
             </Link>
