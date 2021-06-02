@@ -16,6 +16,9 @@ const Post = ({ post, currentUserId, currentUserName, poppedUp }) => {
           style={
             poppedUp && {
               display: 'flex',
+              maxWidth: '70rem',
+              maxHeight: '90vh',
+              boxShadow: 'none',
             }
           }
           className={s.container}
@@ -44,7 +47,17 @@ const Post = ({ post, currentUserId, currentUserName, poppedUp }) => {
               </div>
             </div>
             <div className={s.post_image_container}>
-              <img src={post.imageSrc} alt="" />
+              <img
+                style={
+                  poppedUp && {
+                    objectFit: 'contain',
+                    width: '100%',
+                    height: '100%',
+                  }
+                }
+                src={post.imageSrc}
+                alt=""
+              />
             </div>
           </div>
           <Info

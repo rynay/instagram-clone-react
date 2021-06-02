@@ -115,7 +115,9 @@ const Info = ({
           poppedUp && {
             flex: 1,
             overflow: 'auto',
-            maxHeight: '20rem',
+            maxHeight: '65vh',
+            maxWidth: '25rem',
+            wordBreak: 'break-word',
           }
         }
       >

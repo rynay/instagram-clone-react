@@ -3,9 +3,21 @@ import Post from '../../components/Post';
 
 const PostInfoPopup = ({ togglePostInfoPopup, targetPostInfo, s }) => {
   return (
-    <section className={s.PostInfo}>
-      <Post poppedUp post={targetPostInfo} />
-    </section>
+    <div
+      onClick={() => {
+        togglePostInfoPopup();
+      }}
+      className={s.overlay}
+    >
+      <section
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+        className={s.PostInfo}
+      >
+        <Post poppedUp post={targetPostInfo} />
+      </section>
+    </div>
   );
 };
 

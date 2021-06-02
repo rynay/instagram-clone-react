@@ -148,10 +148,16 @@ export const updateTargetUserPhotos = () => async (dispatch, getState) => {
 };
 
 export const sendComment = ({ username, targetPhoto, comment }) => (
-  dispatch
+  dispatch,
+  getState
 ) => {
+  const { targetUser } = getState();
   firebaseService.sendComment({ username, targetPhoto, comment }).then(() => {
-    dispatch(setDashboardPosts());
+    if (!targetUser) {
+      dispatch(setDashboardPosts());
+    } else {
+      dispatch(updateTargetUserPhotos());
+    }
   });
 };
 
