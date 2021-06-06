@@ -13,14 +13,17 @@ const Post = ({ post, currentUserId, currentUserName, poppedUp }) => {
     <>
       {post && (
         <article
-          style={
-            poppedUp && {
+          style={{
+            ...(poppedUp && {
               display: 'flex',
               // maxWidth: '75rem',
               // maxHeight: '90vh',
               boxShadow: 'none',
-            }
-          }
+            }),
+            ...(!poppedUp && {
+              marginBottom: '3rem'
+            })
+          }}
           className={s.container}
           key={post.photoId}
         >
