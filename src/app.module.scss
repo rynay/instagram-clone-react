@@ -14,7 +14,11 @@
 }
 .PostInfo {
   max-height: 90vh;
-  max-width: 80vw
+  max-width: 80vw;
+
+  @media screen and (max-width: 54rem) {
+    overflow-y: scroll;
+  }
 }
 
 .NewPost {
