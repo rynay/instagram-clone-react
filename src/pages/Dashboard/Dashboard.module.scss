@@ -9,4 +9,18 @@
   & > :nth-child(2) {
     flex: 1;
   }
+
+
+  @media screen and (max-width: 48em) {
+    & {
+      flex-direction: column;
+    }
+    & > :nth-child(2) {
+      order: -1;
+      // align-self: center;
+    }
+    & > :nth-child(1) {
+      align-self: center;
+    }
+  }
 }

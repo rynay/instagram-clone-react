@@ -11,6 +11,14 @@
     & > *:not(:last-child) {
       margin-bottom: 0.5em;
     }
+
+    @media screen and (max-width: 48em) {
+      & {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+        place-content: center;
+      }
+    }
   }
 
   .list_item {
@@ -23,9 +31,16 @@
     color: inherit;
     display: flex;
     flex: 6;
+
+    h3 {
+      max-width: 15rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
   .image_container {
+    flex-basis: 4rem;
     height: 4rem;
     width: 4rem;
     border-radius: 50%;
@@ -55,6 +70,11 @@
 
     &:hover {
       color: rgba(29, 90, 202, 1);
+    }
+    @media screen and (max-width: 48em) {
+      & {
+        display: none;
+      }
     }
   }
 }

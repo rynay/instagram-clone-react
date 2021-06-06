@@ -32,6 +32,7 @@ export const setCurrentUserAuthenticationListener = () => (dispatch) => {
     }
 
     firebaseService.getUserInfoByEmail(user.email).then((userInfo) => {
+      if (!userInfo) return;
       localStorage.setItem('user', JSON.stringify(userInfo));
 
       dispatch(
@@ -54,6 +55,7 @@ export const setCurrentUserInformationListener = () => (dispatch, getState) => {
     .collection('users')
     .where('userId', '==', userId)
     .onSnapshot((snapshot) => {
+      if (!snapshot.docs.length) return;
       dispatch(
         setCurrentUser({
           ...snapshot.docs[0].data(),
@@ -69,6 +71,7 @@ export const setCurrentUserInformationListener = () => (dispatch, getState) => {
 
 export const setTargetUserListenerByName = (name) => async (dispatch) => {
   const userInfo = await firebaseService.getUserInfo(name);
+  if (!userInfo) return;
   dispatch(setTargetUser(userInfo));
   const listener = firebase
     .firestore()
@@ -116,7 +119,7 @@ const setDashboardPosts = (data) => (dispatch, getState) => {
   firebaseService.getFollowingPosts(following).then((posts) => {
     dispatch({
       type: TYPES.SET_DASHBOARD_POSTS,
-      payload: posts,
+      payload: posts.sort((a, b) => b.dateCreated- a.dateCreated ),
     });
   });
 };

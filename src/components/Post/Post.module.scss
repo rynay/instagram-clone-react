@@ -7,6 +7,12 @@
   margin-bottom: 3rem;
   box-shadow: 0 0 3rem #ddd;
 
+  @media screen and (max-width: 54rem) {
+    flex-direction: column;
+    max-height: none !important;
+    // margin-bottom: 0;
+  }
+
   .header {
     background-color: #fff;
     display: flex;
@@ -49,6 +55,11 @@
       // max-width: 100%;
       object-fit: cover;
       object-position: center;
+
+      @media screen and (max-width: 54rem) {
+        max-height: 50vh;
+      }
+      
     }
   }
 }

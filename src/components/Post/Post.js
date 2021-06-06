@@ -16,8 +16,8 @@ const Post = ({ post, currentUserId, currentUserName, poppedUp }) => {
           style={
             poppedUp && {
               display: 'flex',
-              maxWidth: '75rem',
-              maxHeight: '90vh',
+              // maxWidth: '75rem',
+              // maxHeight: '90vh',
               boxShadow: 'none',
             }
           }

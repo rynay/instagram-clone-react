@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Sidebar from '../../components/Sidebar';
 import Timeline from '../../components/Timeline';
 import s from './Dashboard.module.scss';
+import { useEffect } from 'react';
 
 const Dashboard = ({
   currentUser,
@@ -10,6 +11,9 @@ const Dashboard = ({
   dashboardPosts,
   toggleFollowing,
 }) => {
+  useEffect(() => {
+    document.title = 'Instagram'
+  }, [])
   return (
     <main className={`container ${s.container}`}>
       <Timeline

@@ -14,9 +14,11 @@ const Photos = ({ s, toggleLike, photos, currentUserId }) => {
   return (
     <article className={s.photos}>
       {!photosSorted && (
-        <div className={s.skeleton}>
-          <Skeleton height={377} width={270} count={6} />
-        </div>
+       <div  className={s.skeleton}>
+         <Skeleton className={s.skeleton__small} width={`100%`} height={377} count={6} />
+         <Skeleton className={s.skeleton__medium} width={`50%`} height={377} count={6} />
+         <Skeleton className={s.skeleton__large} width={`33%`} height={377} count={6} />
+       </div>
       )}
       {photosSorted && photosSorted.length === 0 && (
         <h2>User has not added photos yet</h2>

@@ -5,13 +5,19 @@
   padding: 2em 0;
   margin-bottom: 2rem;
 
+  @media screen and (max-width: 23.4375em) {
+    & {
+      font-size: 1.4rem;
+    }
+  }
+
   h2 {
-    font-size: 2rem;
+    font-size: 1.25em;
     line-height: 1.2;
   }
 
   h3 {
-    font-size: 1.7rem;
+    font-size: 1.0625em;
     line-height: 1.2;
     margin: 0.25em 0;
     color: #454545;
@@ -19,18 +25,12 @@
   }
 
   &__image_container {
-    margin-right: 2rem;
-    height: 10rem;
-    width: 10rem;
+    margin-right: 1.25em;
+    height: 6.25em;
+    width: 6.25em;
     border-radius: 50%;
     overflow: hidden;
     position: relative;
-
-    &:hover {
-      label {
-        opacity: 1;
-      }
-    }
 
     img {
       height: 100%;
@@ -38,14 +38,25 @@
       object-fit: cover;
     }
 
+    &:hover {
+      label {
+        opacity: 1;
+      }
+    }
+
     form {
       label {
         cursor: pointer;
-        opacity: 0;
         transition: opacity 0.2s;
         position: absolute;
-        background-color: rgba(0, 0, 0, 0.75);
-
+        background-color: rgba(0, 0, 0, 0.5);
+        @media screen and (min-width: 71.25em) {
+          & {
+            opacity: 0;
+            background-color: rgba(0, 0, 0, 0.75);
+          }
+        }
+        
         left: 0;
         right: 0;
         bottom: 0;
@@ -130,6 +141,10 @@
 
   h2 {
     grid-column: 1 / -1;
+
+    @media screen and (max-width: 23.4375em) {
+      font-size: 1.8rem;
+    }
   }
 
   &__photoContainer {
@@ -146,8 +161,13 @@
   &__imageContainer {
     height: 40rem;
 
+    @media screen and (max-width: 36.5em) {
+      height: max-content;
+    }
+
     background-color: #ccc;
     img {
+      display: block;
       height: 100%;
       width: 100%;
       object-fit: cover;
@@ -189,4 +209,46 @@
   color: #fff;
   font-weight: bold;
   background-color: rgb(29, 90, 202);
+}
+
+.skeleton {
+  &__small {
+    display: inline-block !important;
+  }
+  &__medium {
+    display: none !important;
+  }
+  &__large {
+    display: none !important;
+  }
+}
+
+@media screen and (min-width: 36.5em) {
+  .skeleton {
+    &__small {
+      display: none !important;
+    }
+    &__medium {
+      display: inline-block !important;
+    }
+    &__large {
+      display: none !important;
+    }
+  }
+}
+
+@media screen and (min-width: 53.375em) {
+  .skeleton {
+    &__small {
+      display: none !important;
+    }
+    
+    &__medium {
+      display: none !important;
+    }
+
+    &__large {
+      display: inline-block !important;
+    }
+  }
 }

@@ -64,7 +64,7 @@ const SignUp = ({ history, currentUsername }) => {
     }
   };
 
-  const [fields] = useState(() => [
+  const fields = [
     {
       className: s.form__input,
       type: 'text',
@@ -115,7 +115,7 @@ const SignUp = ({ history, currentUsername }) => {
         setRepeatPassword(e.target.value);
       },
     },
-  ]);
+  ];
 
   useEffect(() => {
     document.title = 'Sign Up - Instagram';

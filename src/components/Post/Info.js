@@ -59,14 +59,14 @@ const Info = ({
           <FaRegCommentDots />
         </button>
       </div>
-      <p>
+      {post.caption && <p>
         <strong>
           <Link to={`/p/${username}`} className={s.link}>
             {username}
           </Link>
         </strong>
         : {post.caption}
-      </p>
+      </p>}
       <div className={s.info__statistic}>
         <p>
           {likesCount} {likesCount === 1 ? 'like' : 'likes'}
