@@ -28,8 +28,7 @@ const Header = ({
                 <label
                   className={s.label}
                   htmlFor="file"
-                  aria-label="Choose an avatar from your device"
-                >
+                  aria-label="Choose an avatar from your device">
                   {' '}
                   <FaPlus /> <FaCamera />
                 </label>
@@ -80,8 +79,7 @@ const Header = ({
                     }}
                     onClick={() => {
                       toggleFollowing(targetUser, currentUser);
-                    }}
-                  >
+                    }}>
                     {targetUser?.followers.includes(currentUser?.userId)
                       ? 'Unfollow'
                       : 'Follow'}
@@ -97,8 +95,7 @@ const Header = ({
                       if (e.key === 'Enter') {
                         toggleNewPostPopup();
                       }
-                    }}
-                  >
+                    }}>
                     + Post
                   </button>
                 )}

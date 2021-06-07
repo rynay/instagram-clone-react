@@ -1,10 +1,11 @@
 .container {
   background-color: #fff;
-  max-width: 50rem;
+  // max-width: 50rem;
+  max-height: max-content;
   border-radius: 0.25rem;
   border: 1px solid #ddd;
   overflow: hidden;
-  margin-bottom: 3rem;
+  // margin-bottom: 3rem;
   box-shadow: 0 0 3rem #ddd;
 
   @media screen and (max-width: 54rem) {
@@ -50,11 +51,9 @@
   .post_image_container {
     // // display: flex;
     img {
-      max-height: 100vh;
-      // width: 100%;
-      // max-width: 100%;
       object-fit: cover;
       object-position: center;
+      max-height: max-content;
 
       @media screen and (max-width: 54rem) {
         max-height: max-content;

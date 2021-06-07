@@ -1,7 +1,7 @@
-import { FaPlus, FaImage } from 'react-icons/fa';
-import { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import * as AC from '../redux/AC';
+import { FaPlus, FaImage } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import * as AC from "../redux/AC";
 
 const NewPostPopup = ({
   s,
@@ -12,17 +12,17 @@ const NewPostPopup = ({
 }) => {
   const [photo, setPhoto] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState("");
 
   useEffect(() => {
     const onKeyDownHandler = (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         togglePopup();
       }
     };
-    document.addEventListener('keydown', onKeyDownHandler);
+    document.addEventListener("keydown", onKeyDownHandler);
 
-    return () => document.removeEventListener('keydown', onKeyDownHandler);
+    return () => document.removeEventListener("keydown", onKeyDownHandler);
   }, []);
 
   const handlePhotoChange = (e) => {
@@ -74,7 +74,7 @@ const NewPostPopup = ({
                 className={s.cancel}
                 onClick={togglePopup}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
+                  if (e.key === "Enter") {
                     togglePopup();
                   }
                 }}

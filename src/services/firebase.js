@@ -22,7 +22,7 @@ export async function toggleLike(userId, targetPhoto) {
   const target = query.docs[0];
   const currVal = target.data().likes;
   const newVal = currVal.includes(userId)
-    ? [...currVal.filter((id) => id !== userId)]
+    ? [...currVal.filter(id => id !== userId)]
     : [...currVal, userId];
   return target.ref.update({
     likes: newVal,
@@ -35,7 +35,7 @@ export async function sendComment({ username, targetPhoto, comment }) {
     .collection('photos')
     .where('photoId', '==', targetPhoto)
     .get()
-    .then((query) => {
+    .then(query => {
       const target = query.docs[0];
       const currVal = target.data().comments;
       return target.ref.update({
@@ -57,7 +57,7 @@ export async function getUserInfo(name) {
     .where('username', '==', name)
     .get();
 
-  return result.docs.map((doc) => ({
+  return result.docs.map(doc => ({
     ...doc.data(),
     docId: doc.id,
   }))[0];
@@ -70,7 +70,7 @@ export async function getUserInfoById(id) {
     .where('userId', '==', id)
     .get();
 
-  return result.docs.map((doc) => ({
+  return result.docs.map(doc => ({
     ...doc.data(),
     docId: doc.id,
   }))[0];
@@ -82,7 +82,7 @@ export async function getUserInfoByUserName(username) {
     .collection('users')
     .where('username', '==', username)
     .get();
-  return result.docs.map((doc) => ({
+  return result.docs.map(doc => ({
     ...doc.data(),
     docId: doc.id,
   }))[0];
@@ -94,7 +94,7 @@ export async function getUserInfoByEmail(email) {
     .collection('users')
     .where('emailAddress', '==', email)
     .get();
-  return result.docs.map((doc) => ({
+  return result.docs.map(doc => ({
     ...doc.data(),
     docId: doc.id,
   }))[0];
@@ -107,7 +107,7 @@ export async function getFollowingPosts(following = []) {
     .collection('photos')
     .where('userId', 'in', following)
     .get();
-  const formattedResult = results.docs.map(async (doc) => ({
+  const formattedResult = results.docs.map(async doc => ({
     ...doc.data(),
     username: await getUserNameById(doc.data().userId),
     authorAvatar: await getAvatarById(doc.data().userId),
@@ -124,7 +124,7 @@ async function getAvatarById(id) {
     .collection('users')
     .where('userId', '==', id)
     .get();
-  const formattedResult = results.docs.map((doc) => ({
+  const formattedResult = results.docs.map(doc => ({
     authorAvatar: doc.data().photo,
   }))[0].authorAvatar;
 
@@ -139,7 +139,7 @@ export async function getPosts(id) {
     .where('userId', '==', id)
     .get();
 
-  const formattedResult = results.docs.map(async (doc) => ({
+  const formattedResult = results.docs.map(async doc => ({
     ...doc.data(),
     username: await getUserNameById(doc.data().userId),
     authorAvatar: await getAvatarById(doc.data().userId),
@@ -148,14 +148,14 @@ export async function getPosts(id) {
   return Promise.all(formattedResult) || [];
 }
 
-const getUserNameById = async (id) => {
+const getUserNameById = async id => {
   if (!id) return;
   const result = await firebase
     .firestore()
     .collection('users')
     .where('userId', '==', id)
     .get();
-  return result.docs.map((doc) => ({
+  return result.docs.map(doc => ({
     ...doc.data(),
   }))[0].username;
 };
@@ -167,12 +167,12 @@ export async function toggleFollowing(target, current) {
     .where('userId', '==', target.userId)
     .limit(1)
     .get()
-    .then((query) => {
+    .then(query => {
       const thing = query.docs[0];
       var currVal = thing.data().followers;
       let newVal;
       if (currVal.includes(current.userId)) {
-        newVal = currVal.filter((val) => val !== current.userId);
+        newVal = currVal.filter(val => val !== current.userId);
       } else {
         newVal = [...currVal, current.userId];
       }
@@ -185,12 +185,12 @@ export async function toggleFollowing(target, current) {
     .where('userId', '==', current.userId)
     .limit(1)
     .get()
-    .then((query) => {
+    .then(query => {
       const thing = query.docs[0];
       var currVal = thing.data().following;
       let newVal;
       if (currVal.includes(target.userId)) {
-        newVal = currVal.filter((val) => val !== target.userId);
+        newVal = currVal.filter(val => val !== target.userId);
       } else {
         newVal = [...currVal, target.userId];
       }
@@ -208,10 +208,10 @@ export async function getSuggestions(uid = '') {
     .limit(10)
     .get();
   const formatted = results.docs
-    .map((doc) => ({
+    .map(doc => ({
       ...doc.data(),
     }))
-    .filter((doc) => !doc.followers.includes(uid));
+    .filter(doc => !doc.followers.includes(uid));
   if (!formatted.length) return null;
   return formatted;
 }

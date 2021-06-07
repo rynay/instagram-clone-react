@@ -21,12 +21,11 @@ const Post = ({ post, currentUserId, currentUserName, poppedUp }) => {
               boxShadow: 'none',
             }),
             ...(!poppedUp && {
-              marginBottom: '3rem'
-            })
+              marginBottom: '3rem',
+            }),
           }}
           className={s.container}
-          key={post.photoId}
-        >
+          key={post.photoId}>
           <div className={s.innerContainer}>
             <div className={s.header}>
               <Link to={`/p/${post.username}`} className={s.link}>

@@ -14,11 +14,26 @@ const Photos = ({ s, toggleLike, photos, currentUserId }) => {
   return (
     <article className={s.photos}>
       {!photosSorted && (
-       <div  className={s.skeleton}>
-         <Skeleton className={s.skeleton__small} width={`100%`} height={377} count={6} />
-         <Skeleton className={s.skeleton__medium} width={`50%`} height={377} count={6} />
-         <Skeleton className={s.skeleton__large} width={`33%`} height={377} count={6} />
-       </div>
+        <div className={s.skeleton}>
+          <Skeleton
+            className={s.skeleton__small}
+            width={`100%`}
+            height={377}
+            count={6}
+          />
+          <Skeleton
+            className={s.skeleton__medium}
+            width={`50%`}
+            height={377}
+            count={6}
+          />
+          <Skeleton
+            className={s.skeleton__large}
+            width={`33%`}
+            height={377}
+            count={6}
+          />
+        </div>
       )}
       {photosSorted && photosSorted.length === 0 && (
         <h2>User has not added photos yet</h2>
@@ -30,8 +45,7 @@ const Photos = ({ s, toggleLike, photos, currentUserId }) => {
           return (
             <Link
               key={photo.photoId}
-              to={`/p/${photo.username}/${photo.photoId}`}
-            >
+              to={`/p/${photo.username}/${photo.photoId}`}>
               <section className={s.photos__photoContainer} key={photo.photoId}>
                 <div className={s.photos__imageContainer}>
                   <img src={photo.imageSrc} alt={photo.caption} />
@@ -49,16 +63,14 @@ const Photos = ({ s, toggleLike, photos, currentUserId }) => {
                       e.preventDefault();
                       if (e.key !== 'Enter') return;
                       toggleLike(photo.photoId);
-                    }}
-                  >
+                    }}>
                     {<FaHeart style={{ fill: isLiked ? 'red' : 'white' }} />}
                   </button>
                   <button
                     onClick={() =>
                       history.push(`/p/${photos[0].username}/${photo.photoId}`)
                     }
-                    className={s.photos__button}
-                  >
+                    className={s.photos__button}>
                     <FaCommentDots style={{ fill: 'white' }} />
                   </button>
                 </div>

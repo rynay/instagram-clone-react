@@ -1,7 +1,7 @@
-import { useHistory, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import Post from './Post';
+import { useHistory, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import Post from "./Post";
 
 const PostInfoPopup = ({ s, targetUser }) => {
   const [targetPostInfo, setTargetPostInfo] = useState(null);
@@ -13,12 +13,12 @@ const PostInfoPopup = ({ s, targetUser }) => {
   }, [targetUser]);
   useEffect(() => {
     const onKeyDownHandler = (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         history.goBack();
       }
     };
-    document.addEventListener('keydown', onKeyDownHandler);
-    return () => document.removeEventListener('keydown', onKeyDownHandler);
+    document.addEventListener("keydown", onKeyDownHandler);
+    return () => document.removeEventListener("keydown", onKeyDownHandler);
   }, []);
   return (
     <div onClick={() => history.goBack()} className={s.overlay}>

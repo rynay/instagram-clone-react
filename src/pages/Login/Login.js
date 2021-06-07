@@ -16,7 +16,7 @@ const Login = ({ history, currentUsername }) => {
     if (currentUsername) history.push('/');
   }, [currentUsername]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
     try {
       firebase
@@ -25,7 +25,7 @@ const Login = ({ history, currentUsername }) => {
         .then(() => {
           history.push(ROUTES.DASHBOARD);
         })
-        .catch((error) => {
+        .catch(error => {
           setError(error.message);
         });
     } catch (error) {
@@ -89,9 +89,8 @@ const Login = ({ history, currentUsername }) => {
             <form
               className={`${s.content__form} ${s.form}`}
               onSubmit={handleSubmit}
-              method="POST"
-            >
-              {fields.map((field) => (
+              method="POST">
+              {fields.map(field => (
                 <InputField key={field.placeholder} {...field} />
               ))}
 
