@@ -4,7 +4,7 @@ import * as firebaseService from '../services/firebase';
 import * as TYPES from './TYPES';
 import { nanoid } from 'nanoid';
 
-export const initApp = () => dispatch => {
+export const initApp = () => (dispatch) => {
   const localUser = JSON.parse(localStorage.getItem('user'));
   let authListener;
   let currentInfoListener;
@@ -19,8 +19,9 @@ export const initApp = () => dispatch => {
   };
 };
 
-export const setCurrentUserAuthenticationListener = () => dispatch => {
-  const authListener = firebase.auth().onAuthStateChanged(user => {
+export const setCurrentUserAuthenticationListener = () => (dispatch) => {
+  let currentInfoListener = () => {};
+  const authListener = firebase.auth().onAuthStateChanged((user) => {
     // const localUser = JSON.parse(localStorage.getItem('user'));
     // &&  !localUser
     if (!user) {
@@ -31,7 +32,7 @@ export const setCurrentUserAuthenticationListener = () => dispatch => {
       return;
     }
 
-    firebaseService.getUserInfoByEmail(user.email).then(userInfo => {
+    firebaseService.getUserInfoByEmail(user.email).then((userInfo) => {
       if (!userInfo) return;
       localStorage.setItem('user', JSON.stringify(userInfo));
 
@@ -40,12 +41,16 @@ export const setCurrentUserAuthenticationListener = () => dispatch => {
           ...userInfo,
         })
       );
+      currentInfoListener = dispatch(setCurrentUserInformationListener());
       dispatch(setDashboardPosts());
       dispatch(setSuggestions());
     });
   });
 
-  return authListener;
+  return () => {
+    authListener();
+    currentInfoListener();
+  };
 };
 
 export const setCurrentUserInformationListener = () => (dispatch, getState) => {
@@ -54,7 +59,7 @@ export const setCurrentUserInformationListener = () => (dispatch, getState) => {
     .firestore()
     .collection('users')
     .where('userId', '==', userId)
-    .onSnapshot(snapshot => {
+    .onSnapshot((snapshot) => {
       if (!snapshot.docs.length) return;
       dispatch(
         setCurrentUser({
@@ -69,7 +74,7 @@ export const setCurrentUserInformationListener = () => (dispatch, getState) => {
   return userListener;
 };
 
-export const setTargetUserListenerByName = name => async dispatch => {
+export const setTargetUserListenerByName = (name) => async (dispatch) => {
   const userInfo = await firebaseService.getUserInfo(name);
   if (!userInfo) return;
   dispatch(setTargetUser(userInfo));
@@ -77,7 +82,7 @@ export const setTargetUserListenerByName = name => async dispatch => {
     .firestore()
     .collection('users')
     .doc(userInfo.docId)
-    .onSnapshot(async doc => {
+    .onSnapshot(async (doc) => {
       const data = {
         ...doc.data(),
         docId: userInfo.docId,
@@ -90,12 +95,12 @@ export const setTargetUserListenerByName = name => async dispatch => {
   };
 };
 
-export const setTargetUser = targetUserInfo => ({
+export const setTargetUser = (targetUserInfo) => ({
   type: TYPES.SET_TARGET_USER,
   payload: targetUserInfo,
 });
 
-export const logout = () => dispatch => {
+export const logout = () => (dispatch) => {
   localStorage.removeItem('user');
   firebase
     .auth()
@@ -107,7 +112,7 @@ export const logout = () => dispatch => {
     });
 };
 
-const setDashboardPosts = data => (dispatch, getState) => {
+const setDashboardPosts = (data) => (dispatch, getState) => {
   if (data === null) {
     dispatch({
       type: TYPES.SET_DASHBOARD_POSTS,
@@ -116,7 +121,7 @@ const setDashboardPosts = data => (dispatch, getState) => {
     return;
   }
   const { following } = getState().currentUser;
-  firebaseService.getFollowingPosts(following).then(posts => {
+  firebaseService.getFollowingPosts(following).then((posts) => {
     dispatch({
       type: TYPES.SET_DASHBOARD_POSTS,
       payload: posts.sort((a, b) => b.dateCreated - a.dateCreated),
@@ -124,7 +129,7 @@ const setDashboardPosts = data => (dispatch, getState) => {
   });
 };
 
-const setSuggestions = data => (dispatch, getState) => {
+const setSuggestions = (data) => (dispatch, getState) => {
   if (data === null) {
     dispatch({
       type: TYPES.SET_SUGGESTIONS,
@@ -133,7 +138,7 @@ const setSuggestions = data => (dispatch, getState) => {
     return;
   }
   const { userId } = getState().currentUser;
-  firebaseService.getSuggestions(userId).then(suggestions => {
+  firebaseService.getSuggestions(userId).then((suggestions) => {
     dispatch({
       type: TYPES.SET_SUGGESTIONS,
       payload: suggestions,
@@ -141,16 +146,17 @@ const setSuggestions = data => (dispatch, getState) => {
   });
 };
 
-export const setCurrentUser = userInfo => ({
+export const setCurrentUser = (userInfo) => ({
   type: TYPES.SET_CURRENT_USER,
   payload: userInfo,
 });
 
-export const toggleFollowing = (target, current) => dispatch => {
-  firebaseService.toggleFollowing(target, current);
+export const toggleFollowing = (target) => (dispatch, getState) => {
+  const { currentUser } = getState();
+  firebaseService.toggleFollowing(target, currentUser);
 };
 
-export const toggleLike = targetPost => (dispatch, getState) => {
+export const toggleLike = (targetPost) => (dispatch, getState) => {
   const {
     currentUser: { userId, following },
     targetUser,
@@ -197,16 +203,16 @@ export const sendComment = ({ username, targetPhoto, comment }) => (
   });
 };
 
-export const setTargetPostId = id => ({
+export const setTargetPostId = (id) => ({
   type: TYPES.SET_TARGET_POST_ID,
   payload: id,
 });
 
-const setIsPhotoUploading = state => ({
+const setIsPhotoUploading = (state) => ({
   type: TYPES.SET_IS_PHOTO_UPLOADING,
   payload: state,
 });
-const setUploadError = error => ({
+const setUploadError = (error) => ({
   type: TYPES.SET_UPLOAD_ERROR,
   payload: error,
 });
@@ -225,20 +231,20 @@ export const uploadPhoto = ({ photo, description }) => (dispatch, getState) => {
 
   uploadTask.on(
     'state_changed',
-    snapshot => {
+    (snapshot) => {
       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
       if (progress != 100) {
         dispatch(setIsPhotoUploading(true));
       }
     },
-    error => {
+    (error) => {
       dispatch(setIsPhotoUploading(false));
       dispatch(setUploadError(error.message));
     },
     () => {
       uploadTask.snapshot.ref
         .getDownloadURL()
-        .then(downloadURL => {
+        .then((downloadURL) => {
           dispatch(setIsPhotoUploading(false));
           firebaseService.addPhoto({
             caption: description,
@@ -257,7 +263,7 @@ export const uploadPhoto = ({ photo, description }) => (dispatch, getState) => {
   );
 };
 
-export const uploadAvatar = photo => (dispatch, getState) => {
+export const uploadAvatar = (photo) => (dispatch, getState) => {
   const {
     currentUser: { docId },
   } = getState();
@@ -270,7 +276,7 @@ export const uploadAvatar = photo => (dispatch, getState) => {
   const uploadTask = storageRef.child(filename).put(photo, metadata);
 
   uploadTask.on('state_changed', null, null, () => {
-    uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
       firebaseService.setAvatar({ docId, downloadURL });
     });
   });

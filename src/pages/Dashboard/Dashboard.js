@@ -30,15 +30,15 @@ const Dashboard = ({
   );
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   currentUser: state.currentUser,
   suggestions: state.suggestions,
   dashboardPosts: state.dashboardPosts,
 });
 
-const mapDispatchToProps = dispatch => ({
-  toggleFollowing: (target, current) => {
-    dispatch(AC.toggleFollowing(target, current));
+const mapDispatchToProps = (dispatch) => ({
+  toggleFollowing: (target) => {
+    dispatch(AC.toggleFollowing(target));
   },
 });
 
