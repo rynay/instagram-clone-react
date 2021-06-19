@@ -55,6 +55,7 @@ export const setCurrentUserAuthenticationListener = () => (dispatch) => {
 
 export const setCurrentUserInformationListener = () => (dispatch, getState) => {
   const { userId } = getState().currentUser;
+  if (!userId) return;
   const userListener = firebase
     .firestore()
     .collection('users')
@@ -102,7 +103,7 @@ export const setTargetUser = (targetUserInfo) => ({
 
 export const logout = () => (dispatch) => {
   localStorage.removeItem('user');
-  firebase
+  return firebase
     .auth()
     .signOut()
     .then(() => {
@@ -121,7 +122,7 @@ const setDashboardPosts = (data) => (dispatch, getState) => {
     return;
   }
   const { following } = getState().currentUser;
-  firebaseService.getFollowingPosts(following).then((posts) => {
+  return firebaseService.getFollowingPosts(following).then((posts) => {
     dispatch({
       type: TYPES.SET_DASHBOARD_POSTS,
       payload: posts.sort((a, b) => b.dateCreated - a.dateCreated),
@@ -138,7 +139,7 @@ const setSuggestions = (data) => (dispatch, getState) => {
     return;
   }
   const { userId } = getState().currentUser;
-  firebaseService.getSuggestions(userId).then((suggestions) => {
+  return firebaseService.getSuggestions(userId).then((suggestions) => {
     dispatch({
       type: TYPES.SET_SUGGESTIONS,
       payload: suggestions,
@@ -153,7 +154,7 @@ export const setCurrentUser = (userInfo) => ({
 
 export const toggleFollowing = (target) => (dispatch, getState) => {
   const { currentUser } = getState();
-  firebaseService.toggleFollowing(target, currentUser);
+  return firebaseService.toggleFollowing(target, currentUser);
 };
 
 export const toggleLike = (targetPost) => (dispatch, getState) => {
@@ -161,26 +162,28 @@ export const toggleLike = (targetPost) => (dispatch, getState) => {
     currentUser: { userId, following },
     targetUser,
   } = getState();
+  let listener;
   if (!targetUser) {
     // like from dashboard
-    firebaseService.toggleLike(userId, targetPost).then(() => {
+    listener = firebaseService.toggleLike(userId, targetPost).then(() => {
       dispatch(setDashboardPosts());
     });
   } else {
     // like from profile
-    firebaseService.toggleLike(userId, targetPost).then(() => {
+    listener = firebaseService.toggleLike(userId, targetPost).then(() => {
       dispatch(updateTargetUserPhotos());
       if (following.includes(targetUser.userId)) {
         dispatch(setDashboardPosts());
       }
     });
   }
+  return () => listener();
 };
 
 export const updateTargetUserPhotos = () => async (dispatch, getState) => {
   const { targetUser } = getState();
   const photos = await firebaseService.getPosts(targetUser.userId);
-  dispatch(setTargetUser({ ...targetUser, photos }));
+  return dispatch(setTargetUser({ ...targetUser, photos }));
 };
 
 export const sendComment = ({ username, targetPhoto, comment }) => (
@@ -191,16 +194,18 @@ export const sendComment = ({ username, targetPhoto, comment }) => (
     targetUser,
     currentUser: { following },
   } = getState();
-  firebaseService.sendComment({ username, targetPhoto, comment }).then(() => {
-    if (!targetUser) {
-      dispatch(setDashboardPosts());
-    } else {
-      dispatch(updateTargetUserPhotos());
-      if (following.includes(targetUser.userId)) {
+  return firebaseService
+    .sendComment({ username, targetPhoto, comment })
+    .then(() => {
+      if (!targetUser) {
         dispatch(setDashboardPosts());
+      } else {
+        dispatch(updateTargetUserPhotos());
+        if (following.includes(targetUser.userId)) {
+          dispatch(setDashboardPosts());
+        }
       }
-    }
-  });
+    });
 };
 
 export const setTargetPostId = (id) => ({
@@ -229,7 +234,7 @@ export const uploadPhoto = ({ photo, description }) => (dispatch, getState) => {
   const storageRef = firebase.storage().ref();
   const uploadTask = storageRef.child(filename).put(photo, metadata);
 
-  uploadTask.on(
+  return uploadTask.on(
     'state_changed',
     (snapshot) => {
       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -275,7 +280,7 @@ export const uploadAvatar = (photo) => (dispatch, getState) => {
   const storageRef = firebase.storage().ref();
   const uploadTask = storageRef.child(filename).put(photo, metadata);
 
-  uploadTask.on('state_changed', null, null, () => {
+  return uploadTask.on('state_changed', null, null, () => {
     uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
       firebaseService.setAvatar({ docId, downloadURL });
     });

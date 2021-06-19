@@ -28,7 +28,7 @@ const Suggestions = ({ suggestions, follow }) => {
                   className={s.button}
                   onKeyDown={(e) => {
                     if (e.key !== 'Enter') return;
-                    follow(sug);
+                    return follow(sug);
                   }}
                   onClick={() => follow(sug)}>
                   follow

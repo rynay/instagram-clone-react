@@ -16,16 +16,16 @@ const Login = ({ history, currentUsername }) => {
     if (currentUsername) history.push('/');
   }, [currentUsername]);
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     try {
-      firebase
+      return firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(() => {
           history.push(ROUTES.DASHBOARD);
         })
-        .catch(error => {
+        .catch((error) => {
           setError(error.message);
         });
     } catch (error) {
@@ -83,14 +83,14 @@ const Login = ({ history, currentUsername }) => {
           <div className={s.content__fields}>
             <div className={s.content__logo}>
               {/* <img alt="Instagram" src="/images/logo.png" /> */}
-              <h2>Fake Instagram</h2>
+              <h2>Fakegram</h2>
             </div>
             {error && <p className={s.error}>{error}</p>}
             <form
               className={`${s.content__form} ${s.form}`}
               onSubmit={handleSubmit}
               method="POST">
-              {fields.map(field => (
+              {fields.map((field) => (
                 <InputField key={field.placeholder} {...field} />
               ))}
 

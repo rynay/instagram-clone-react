@@ -39,7 +39,7 @@ const Profile = ({
 
 const mapDispatchToProps = (dispatch) => ({
   deleteTargetUser: () => {
-    dispatch(AC.setTargetUser(null));
+    return dispatch(AC.setTargetUser(null));
   },
   setTargetUserListenerByName: (name) => {
     return dispatch(AC.setTargetUserListenerByName(name));

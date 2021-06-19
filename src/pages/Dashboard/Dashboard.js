@@ -37,9 +37,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  toggleFollowing: (target) => {
-    dispatch(AC.toggleFollowing(target));
-  },
+  toggleFollowing: (target) => dispatch(AC.toggleFollowing(target)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

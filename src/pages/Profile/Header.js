@@ -14,8 +14,8 @@ const Header = ({
 }) => {
   const [photoPreview, setPhotoPreview] = useState(null);
   const handlePhotoChange = (e) => {
-    uploadAvatar(e.target.files[0]);
     setPhotoPreview(URL.createObjectURL(e.target.files[0]));
+    return uploadAvatar(e.target.files[0]);
   };
   return (
     <>
@@ -75,10 +75,10 @@ const Header = ({
                     }`}
                     onKeyDown={(e) => {
                       if (e.key !== 'Enter') return;
-                      toggleFollowing(targetUser, currentUser);
+                      return toggleFollowing(targetUser, currentUser);
                     }}
                     onClick={() => {
-                      toggleFollowing(targetUser, currentUser);
+                      return toggleFollowing(targetUser, currentUser);
                     }}>
                     {targetUser?.followers.includes(currentUser?.userId)
                       ? 'Unfollow'
@@ -93,7 +93,7 @@ const Header = ({
                     onClick={toggleNewPostPopup}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
-                        toggleNewPostPopup();
+                        return toggleNewPostPopup();
                       }
                     }}>
                     + Post
@@ -138,10 +138,10 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   toggleFollowing: (target, current) => {
-    dispatch(AC.toggleFollowing(target, current));
+    return dispatch(AC.toggleFollowing(target, current));
   },
   uploadAvatar: (file) => {
-    dispatch(AC.uploadAvatar(file));
+    return dispatch(AC.uploadAvatar(file));
   },
 });
 

@@ -34,39 +34,38 @@ const Info = ({
           flexDirection: 'column',
         }
       }
-      className={s.info}
-    >
+      className={s.info}>
       <div
         style={
           poppedUp && {
             order: 2,
           }
-        }
-      >
+        }>
         <button
           className={s.info__button}
           onClick={() => {
-            toggleLike(post.photoId);
+            return toggleLike(post.photoId);
           }}
           onKeyDown={(e) => {
             if (e.key !== 'Enter') return;
-            toggleLike(post.photoId);
-          }}
-        >
+            return toggleLike(post.photoId);
+          }}>
           {isLiked ? <FaHeart style={{ fill: 'red' }} /> : <FaRegHeart />}
         </button>
         <button onClick={handleFocus} className={s.info__button}>
           <FaRegCommentDots />
         </button>
       </div>
-      {post.caption && <p>
-        <strong>
-          <Link to={`/p/${username}`} className={s.link}>
-            {username}
-          </Link>
-        </strong>
-        : {post.caption}
-      </p>}
+      {post.caption && (
+        <p>
+          <strong>
+            <Link to={`/p/${username}`} className={s.link}>
+              {username}
+            </Link>
+          </strong>
+          : {post.caption}
+        </p>
+      )}
       <div className={s.info__statistic}>
         <p>
           {likesCount} {likesCount === 1 ? 'like' : 'likes'}
@@ -103,8 +102,7 @@ const Info = ({
             } else {
               setShowingComments(post.comments);
             }
-          }}
-        >
+          }}>
           {showingComments.length === post.comments.length
             ? 'Hide comments'
             : 'View all comments'}
@@ -117,8 +115,7 @@ const Info = ({
             overflow: 'auto',
             maxWidth: '25rem',
           }
-        }
-      >
+        }>
         {!commentsCount && (
           <p style={{ color: '#666' }}>Here's no comments just yet</p>
         )}
@@ -144,11 +141,6 @@ const Info = ({
         onSubmit={(e) => {
           e.preventDefault();
           if (!comment.trim()) return;
-          sendComment({
-            username: currentUser.username,
-            targetPhoto: post.photoId,
-            comment: comment.trim(),
-          });
           setShowingComments((comments) => [
             ...comments,
             {
@@ -157,8 +149,12 @@ const Info = ({
             },
           ]);
           setComment('');
-        }}
-      >
+          return sendComment({
+            username: currentUser.username,
+            targetPhoto: post.photoId,
+            comment: comment.trim(),
+          });
+        }}>
         <input
           ref={refForInput}
           className={s.info__form_input}
@@ -175,10 +171,10 @@ const Info = ({
 
 const mapDispatchToProps = (dispatch) => ({
   toggleLike: (post) => {
-    dispatch(AC.toggleLike(post));
+    return dispatch(AC.toggleLike(post));
   },
   sendComment: ({ username, targetPhoto, comment }) => {
-    dispatch(AC.sendComment({ username, targetPhoto, comment }));
+    return dispatch(AC.sendComment({ username, targetPhoto, comment }));
   },
 });
 

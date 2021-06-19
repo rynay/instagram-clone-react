@@ -10,8 +10,7 @@ const Header = ({ logout, user }) => {
       <div className={`container ${s.container}`}>
         <div className={s.header__logo}>
           <Link to={user ? ROUTES.DASHBOARD : ROUTES.LOGIN}>
-            {/* <img alt="Instagram" src="/images/logo.png" /> */}
-            <h2>Fake Instagram</h2>
+            <h2>Fakegram</h2>
           </Link>
         </div>
         <nav>
@@ -21,8 +20,7 @@ const Header = ({ logout, user }) => {
                 <button
                   className={s.header__icon_dashboard}
                   aria-label="Dashboard"
-                  title="Dashboard"
-                >
+                  title="Dashboard">
                   <img alt="Dashboard icon" src="/icons/home.svg" />
                 </button>
               </Link>
@@ -31,20 +29,18 @@ const Header = ({ logout, user }) => {
                 onClick={logout}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    logout();
+                    return logout();
                   }
                 }}
                 className={s.header__icon_logout}
                 aria-label="Log Out"
-                title="Log Out"
-              >
+                title="Log Out">
                 <img alt="Log Out icon" src="/icons/logout.svg" />
               </button>
               <div className={s.header__profile}>
                 <Link
                   to={`/p/${user.username}`}
-                  className={s.header__profile_link}
-                >
+                  className={s.header__profile_link}>
                   <img
                     src={user.photo || `/images/avatars/${user.username}.jpg`}
                     alt=""
@@ -56,14 +52,12 @@ const Header = ({ logout, user }) => {
             <>
               <Link
                 to={ROUTES.LOGIN}
-                className={`${s.button} ${s.button__login}`}
-              >
+                className={`${s.button} ${s.button__login}`}>
                 Log In
               </Link>
               <Link
                 to={ROUTES.SIGN_UP}
-                className={`${s.button} ${s.button__signup}`}
-              >
+                className={`${s.button} ${s.button__signup}`}>
                 Sign Up
               </Link>
             </>

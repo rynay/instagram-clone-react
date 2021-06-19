@@ -56,13 +56,13 @@ const Photos = ({ s, toggleLike, photos, currentUserId }) => {
                     onClick={(e) => {
                       e.stopPropagation();
                       e.preventDefault();
-                      toggleLike(photo.photoId);
+                      return toggleLike(photo.photoId);
                     }}
                     onKeyDown={(e) => {
                       e.stopPropagation();
                       e.preventDefault();
                       if (e.key !== 'Enter') return;
-                      toggleLike(photo.photoId);
+                      return toggleLike(photo.photoId);
                     }}>
                     {<FaHeart style={{ fill: isLiked ? 'red' : 'white' }} />}
                   </button>

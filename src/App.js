@@ -76,9 +76,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  initApp: () => {
-    return dispatch(AC.initApp());
-  },
+  initApp: () => dispatch(AC.initApp()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

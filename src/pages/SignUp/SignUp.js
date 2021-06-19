@@ -1,5 +1,5 @@
 import InputField from '../../components/InputField';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 import s from '../Login-SignUp.module.scss';
@@ -36,18 +36,22 @@ const SignUp = ({ history, currentUsername }) => {
         const userCreated = await firebase
           .auth()
           .createUserWithEmailAndPassword(email, password);
-        firebase.firestore().collection('users').add({
-          dateCreated: Date.now(),
-          emailAddress: email,
-          followers: [],
-          following: [],
-          fullName,
-          userId: userCreated.user.uid,
-          username: userName,
-          photo: '/images/avatars/default.png',
-        });
-
-        history.push(ROUTES.DASHBOARD);
+        return firebase
+          .firestore()
+          .collection('users')
+          .add({
+            dateCreated: Date.now(),
+            emailAddress: email,
+            followers: [],
+            following: [],
+            fullName,
+            userId: userCreated.user.uid,
+            username: userName,
+            photo: '/images/avatars/default.png',
+          })
+          .then(() => {
+            history.push(ROUTES.DASHBOARD);
+          });
       } catch (error) {
         setError(error.message);
       }
@@ -64,58 +68,61 @@ const SignUp = ({ history, currentUsername }) => {
     }
   };
 
-  const fields = [
-    {
-      className: s.form__input,
-      type: 'text',
-      placeholder: 'Username',
-      'aria-label': 'Enter your username here',
-      value: userName,
-      onChange(e) {
-        setUserName(e.target.value.toLowerCase());
+  const fields = useMemo(
+    () => [
+      {
+        className: s.form__input,
+        type: 'text',
+        placeholder: 'Username',
+        'aria-label': 'Enter your username here',
+        value: userName,
+        onChange(e) {
+          setUserName(e.target.value.toLowerCase());
+        },
       },
-    },
-    {
-      className: s.form__input,
-      type: 'text',
-      placeholder: 'Full name',
-      'aria-label': 'Enter your full name here',
-      value: fullName,
-      onChange(e) {
-        setFullName(e.target.value);
+      {
+        className: s.form__input,
+        type: 'text',
+        placeholder: 'Full name',
+        'aria-label': 'Enter your full name here',
+        value: fullName,
+        onChange(e) {
+          setFullName(e.target.value);
+        },
       },
-    },
-    {
-      className: s.form__input,
-      type: 'email',
-      placeholder: 'Email address',
-      'aria-label': 'Enter your email address here',
-      value: email,
-      onChange(e) {
-        setEmail(e.target.value.toLowerCase());
+      {
+        className: s.form__input,
+        type: 'email',
+        placeholder: 'Email address',
+        'aria-label': 'Enter your email address here',
+        value: email,
+        onChange(e) {
+          setEmail(e.target.value.toLowerCase());
+        },
       },
-    },
-    {
-      className: s.form__input,
-      type: 'password',
-      placeholder: 'Password',
-      'aria-label': 'Enter your password here',
-      value: password,
-      onChange(e) {
-        setPassword(e.target.value);
+      {
+        className: s.form__input,
+        type: 'password',
+        placeholder: 'Password',
+        'aria-label': 'Enter your password here',
+        value: password,
+        onChange(e) {
+          setPassword(e.target.value);
+        },
       },
-    },
-    {
-      className: s.form__input,
-      type: 'password',
-      placeholder: 'Repeat password',
-      'aria-label': 'Please repeat password',
-      value: repeatPassword,
-      onChange(e) {
-        setRepeatPassword(e.target.value);
+      {
+        className: s.form__input,
+        type: 'password',
+        placeholder: 'Repeat password',
+        'aria-label': 'Please repeat password',
+        value: repeatPassword,
+        onChange(e) {
+          setRepeatPassword(e.target.value);
+        },
       },
-    },
-  ];
+    ],
+    []
+  );
 
   useEffect(() => {
     document.title = 'Sign Up - Instagram';
@@ -148,14 +155,13 @@ const SignUp = ({ history, currentUsername }) => {
           <div className={s.content__fields}>
             <div className={s.content__logo}>
               {/* <img alt="Instagram" src="/images/logo.png" /> */}
-              <h2>Fake Instagram</h2>
+              <h2>Fakegram</h2>
             </div>
             {error && <p className={s.error}>{error}</p>}
             <form
               className={`${s.content__form} ${s.form}`}
               onSubmit={handleSubmit}
-              method="POST"
-            >
+              method="POST">
               {fields.map((field) => (
                 <InputField key={field.placeholder} {...field} />
               ))}
