@@ -1,11 +1,19 @@
 import * as TYPES from '../TYPES';
 
-const initialState = {
+type InitialStateType = {
+  error: null | object;
+  isPhotoUploading: null | boolean;
+};
+
+const initialState: InitialStateType = {
   error: null,
   isPhotoUploading: null,
 };
 
-const photoUploadingReducer = (state = initialState, action) => {
+const photoUploadingReducer = (
+  state = initialState,
+  action: { type: string; payload?: any }
+) => {
   switch (action.type) {
     case TYPES.SET_IS_PHOTO_UPLOADING:
       return {
