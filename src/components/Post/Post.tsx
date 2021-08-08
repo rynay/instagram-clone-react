@@ -1,13 +1,23 @@
-import { formatDistance } from 'date-fns';
-import { createRef } from 'react';
-import s from './Post.module.scss';
-import Info from './Info';
-import { Link } from 'react-router-dom';
+import React from 'react'
+import { formatDistance } from 'date-fns'
+import { createRef } from 'react'
+import s from './Post.module.scss'
+import Info from './Info'
+import { Link } from 'react-router-dom'
 
-const Post = ({ post, currentUserId, currentUserName, poppedUp }) => {
-  const ref = createRef();
+type Props = {
+  post: TFormattedPost
+  currentUserId: TUser['userId']
+  currentUserName: TUser['username']
+  poppedUp: boolean
+}
+
+const Post = ({ post, currentUserId, currentUserName, poppedUp }: Props) => {
+  const ref = createRef<HTMLInputElement>()
   function handleFocus() {
-    ref.current.focus();
+    if (ref.current) {
+      ref.current.focus()
+    }
   }
   return (
     <>
@@ -51,11 +61,13 @@ const Post = ({ post, currentUserId, currentUserName, poppedUp }) => {
             <div className={s.post_image_container}>
               <img
                 style={
-                  poppedUp && {
-                    height: '100%',
-                    width: '100%',
-                    objectFit: 'contain',
-                  }
+                  poppedUp
+                    ? {
+                        height: '100%',
+                        width: '100%',
+                        objectFit: 'contain',
+                      }
+                    : undefined
                 }
                 src={post.imageSrc}
                 alt=""
@@ -75,7 +87,7 @@ const Post = ({ post, currentUserId, currentUserName, poppedUp }) => {
         </article>
       )}
     </>
-  );
-};
+  )
+}
 
-export default Post;
+export default Post

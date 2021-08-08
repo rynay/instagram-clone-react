@@ -11,6 +11,8 @@ type Props = {
   handleFocus: () => void
   s: any
   currentUser: TUser
+  currentUserName: TUser['username']
+  currentUserId: TUser['userId']
   post: TPost
   username: TUser['username']
   toggleLike: (id: TPost['photoId']) => void
