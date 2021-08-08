@@ -4,8 +4,14 @@ import { logout } from '../../redux/AC'
 import { Link } from 'react-router-dom'
 import * as ROUTES from '../../constants/routes'
 import s from './Header.module.scss'
+import { Dispatch } from 'redux'
 
-const Header = ({ logout, user }) => {
+type Props = {
+  logout: () => Dispatch
+  user: TUser
+}
+
+const Header = ({ logout, user }: Props) => {
   return (
     <header className={s.header}>
       <div className={`container ${s.container}`}>
@@ -69,11 +75,11 @@ const Header = ({ logout, user }) => {
   )
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: TState) => ({
   user: state.currentUser,
 })
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   logout: () => dispatch(logout()),
 })
 

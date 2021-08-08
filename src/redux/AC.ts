@@ -5,6 +5,7 @@ import * as TYPES from './TYPES'
 import { nanoid } from 'nanoid'
 import { Dispatch } from 'redux'
 import { TAction } from '../actions'
+import { ThunkAction } from 'redux-thunk'
 
 export const initApp = () => (dispatch: Dispatch) => {
   const localUser: TUser | null = JSON.parse(localStorage.getItem('user') || '')
