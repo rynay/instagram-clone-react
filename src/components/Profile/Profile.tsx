@@ -1,8 +1,15 @@
-import Skeleton from 'react-loading-skeleton';
-import { Link } from 'react-router-dom';
-import s from './Profile.module.scss';
+import React from 'react'
+import Skeleton from 'react-loading-skeleton'
+import { Link } from 'react-router-dom'
+import s from './Profile.module.scss'
 
-const Profile = ({ username, avatar, fullName }) => {
+type Props = {
+  username: string
+  avatar: string
+  fullName: string
+}
+
+const Profile = ({ username, avatar, fullName }: Props) => {
   return (
     <>
       {!username && <Skeleton count={1} height={60} />}
@@ -18,7 +25,7 @@ const Profile = ({ username, avatar, fullName }) => {
         </Link>
       )}
     </>
-  );
-};
+  )
+}
 
-export default Profile;
+export default Profile
