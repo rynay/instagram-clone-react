@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom'
 import s from './Suggestions.module.scss'
 
 type Props = {
-  suggestions: Suggestion[]
-  follow: (sug: Suggestion) => any
+  suggestions: TSuggestion[]
+  follow: (sug: TSuggestion) => any
 }
 
 const Suggestions = ({ suggestions, follow }: Props) => {

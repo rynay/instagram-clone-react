@@ -1,6 +1,6 @@
-import Firebase from 'firebase/app';
-import 'firebase/firestore';
-import 'firebase/auth';
+import Firebase from 'firebase/app'
+import 'firebase/firestore'
+import 'firebase/auth'
 
 const config = {
   apiKey: 'AIzaSyATld-u6gqi5EjqFYhPr-DdwcxgfcCGxGw',
@@ -9,8 +9,8 @@ const config = {
   storageBucket: 'instagram-clone-react-cb1af.appspot.com',
   messagingSenderId: '594930572939',
   appId: '1:594930572939:web:f7422881a0ea7814e73e8e',
-};
+}
 
-const firebase = Firebase.initializeApp(config);
-const { FieldValue } = firebase.firestore;
-export { firebase, FieldValue };
+const firebase = Firebase.initializeApp(config)
+const { FieldValue }: any = firebase.firestore
+export { firebase, FieldValue }

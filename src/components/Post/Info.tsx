@@ -1,8 +1,22 @@
-import { useState } from 'react';
-import { FaRegHeart, FaHeart, FaRegCommentDots } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-import * as AC from '../../redux/AC';
-import { connect } from 'react-redux';
+import React, { Ref } from 'react'
+import { useState } from 'react'
+import { FaRegHeart, FaHeart, FaRegCommentDots } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
+import * as AC from '../../redux/AC'
+import { connect } from 'react-redux'
+import { Dispatch } from 'redux'
+
+type Props = {
+  refForInput: Ref<HTMLInputElement>
+  handleFocus: () => void
+  s: any
+  currentUser: TUser
+  post: TPost
+  username: TUser['username']
+  toggleLike: (id: TPost['photoId']) => void
+  sendComment: ({ comment, displayName, targetPhoto }: TSendingComment) => void
+  poppedUp: boolean
+}
 
 const Info = ({
   refForInput,
@@ -14,41 +28,45 @@ const Info = ({
   toggleLike,
   sendComment,
   poppedUp,
-}) => {
-  const isLiked = post.likes.includes(currentUser?.userId);
+}: Props) => {
+  const isLiked = post.likes.includes(currentUser?.userId)
 
-  const likesCount = post.likes.length;
-  const commentsCount = post.comments.length;
+  const likesCount = post.likes.length
+  const commentsCount = post.comments.length
   const [showingComments, setShowingComments] = useState(
     post.comments.length >= 3
       ? post.comments.slice(post.comments.length - 3, post.comments.length)
       : post.comments
-  );
-  const [comment, setComment] = useState('');
+  )
+  const [comment, setComment] = useState('')
 
   return (
     <div
       style={
-        poppedUp && {
-          display: 'flex',
-          flexDirection: 'column',
-        }
+        poppedUp
+          ? {
+              display: 'flex',
+              flexDirection: 'column',
+            }
+          : undefined
       }
       className={s.info}>
       <div
         style={
-          poppedUp && {
-            order: 2,
-          }
+          poppedUp
+            ? {
+                order: 2,
+              }
+            : undefined
         }>
         <button
           className={s.info__button}
           onClick={() => {
-            return toggleLike(post.photoId);
+            return toggleLike(post.photoId)
           }}
           onKeyDown={(e) => {
-            if (e.key !== 'Enter') return;
-            return toggleLike(post.photoId);
+            if (e.key !== 'Enter') return
+            return toggleLike(post.photoId)
           }}>
           {isLiked ? <FaHeart style={{ fill: 'red' }} /> : <FaRegHeart />}
         </button>
@@ -79,16 +97,16 @@ const Info = ({
           className={s.toggleComments}
           aria-label="toggle comments"
           onKeyDown={(e) => {
-            if (e.key !== 'Enter') return;
+            if (e.key !== 'Enter') return
             if (showingComments.length === post.comments.length) {
               setShowingComments(
                 post.comments.slice(
                   post.comments.length - 3,
                   post.comments.length
                 )
-              );
+              )
             } else {
-              setShowingComments(post.comments);
+              setShowingComments(post.comments)
             }
           }}
           onClick={() => {
@@ -98,9 +116,9 @@ const Info = ({
                   post.comments.length - 3,
                   post.comments.length
                 )
-              );
+              )
             } else {
-              setShowingComments(post.comments);
+              setShowingComments(post.comments)
             }
           }}>
           {showingComments.length === post.comments.length
@@ -110,11 +128,13 @@ const Info = ({
       )}
       <ul
         style={
-          poppedUp && {
-            flexGrow: 1,
-            overflow: 'auto',
-            maxWidth: '25rem',
-          }
+          poppedUp
+            ? {
+                flexGrow: 1,
+                overflow: 'auto',
+                maxWidth: '25rem',
+              }
+            : undefined
         }>
         {!commentsCount && (
           <p style={{ color: '#666' }}>Here's no comments just yet</p>
@@ -133,27 +153,29 @@ const Info = ({
       </ul>
       <form
         style={
-          poppedUp && {
-            order: 2,
-          }
+          poppedUp
+            ? {
+                order: 2,
+              }
+            : undefined
         }
         className={s.info__form}
         onSubmit={(e) => {
-          e.preventDefault();
-          if (!comment.trim()) return;
+          e.preventDefault()
+          if (!comment.trim()) return
           setShowingComments((comments) => [
             ...comments,
             {
               comment,
               displayName: currentUser.username,
             },
-          ]);
-          setComment('');
+          ])
+          setComment('')
           return sendComment({
-            username: currentUser.username,
+            displayName: currentUser.username,
             targetPhoto: post.photoId,
             comment: comment.trim(),
-          });
+          })
         }}>
         <input
           ref={refForInput}
@@ -166,20 +188,20 @@ const Info = ({
         <button className={s.info__form_button}>POST</button>
       </form>
     </div>
-  );
-};
+  )
+}
 
-const mapDispatchToProps = (dispatch) => ({
-  toggleLike: (post) => {
-    return dispatch(AC.toggleLike(post));
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  toggleLike: (post: TPost) => {
+    return dispatch(AC.toggleLike(post))
   },
-  sendComment: ({ username, targetPhoto, comment }) => {
-    return dispatch(AC.sendComment({ username, targetPhoto, comment }));
+  sendComment: ({ displayName, targetPhoto, comment }: TSendingComment) => {
+    return dispatch(AC.sendComment({ displayName, targetPhoto, comment }))
   },
-});
+})
 
 const mapStateToProps = (state) => ({
   currentUser: state.currentUser,
-});
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(Info);
+export default connect(mapStateToProps, mapDispatchToProps)(Info)

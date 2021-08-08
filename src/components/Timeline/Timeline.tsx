@@ -4,9 +4,9 @@ import Skeleton from 'react-loading-skeleton'
 import s from './Timeline.module.scss'
 
 type Props = {
-  posts: Post[]
-  currentUserName: User['username']
-  currentUserId: User['userId']
+  posts: TPost[]
+  currentUserName: TUser['username']
+  currentUserId: TUser['userId']
 }
 
 const Timeline = ({ currentUserName, posts, currentUserId }: Props) => {
