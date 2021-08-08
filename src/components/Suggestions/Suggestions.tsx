@@ -1,8 +1,19 @@
-import Skeleton from 'react-loading-skeleton';
-import { Link } from 'react-router-dom';
-import s from './Suggestions.module.scss';
+import React from 'react'
+import Skeleton from 'react-loading-skeleton'
+import { Link } from 'react-router-dom'
+import s from './Suggestions.module.scss'
 
-const Suggestions = ({ suggestions, follow }) => {
+type Suggestion = {
+  username: string
+  photo: string
+}
+
+type Props = {
+  suggestions: Suggestion[]
+  follow: (sug: Suggestion) => any
+}
+
+const Suggestions = ({ suggestions, follow }: Props) => {
   return (
     <section className={s.container}>
       {suggestions && (
@@ -27,8 +38,8 @@ const Suggestions = ({ suggestions, follow }) => {
                 <button
                   className={s.button}
                   onKeyDown={(e) => {
-                    if (e.key !== 'Enter') return;
-                    return follow(sug);
+                    if (e.key !== 'Enter') return
+                    return follow(sug)
                   }}
                   onClick={() => follow(sug)}>
                   follow
@@ -39,7 +50,7 @@ const Suggestions = ({ suggestions, follow }) => {
         </>
       )}
     </section>
-  );
-};
+  )
+}
 
-export default Suggestions;
+export default Suggestions
