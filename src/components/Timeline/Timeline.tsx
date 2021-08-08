@@ -1,8 +1,15 @@
-import Post from '../Post';
-import Skeleton from 'react-loading-skeleton';
-import s from './Timeline.module.scss';
+import React from 'react'
+import Post from '../Post'
+import Skeleton from 'react-loading-skeleton'
+import s from './Timeline.module.scss'
 
-const Timeline = ({ currentUserName, posts, currentUserId }) => {
+type Props = {
+  posts: Post[]
+  currentUserName: User['username']
+  currentUserId: User['userId']
+}
+
+const Timeline = ({ currentUserName, posts, currentUserId }: Props) => {
   return (
     <section className={s.container}>
       {posts?.length === 0 && <h2>Here's no posts just yet</h2>}
@@ -24,7 +31,7 @@ const Timeline = ({ currentUserName, posts, currentUserId }) => {
           />
         ))}
     </section>
-  );
-};
+  )
+}
 
-export default Timeline;
+export default Timeline

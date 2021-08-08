@@ -3,11 +3,6 @@ import Skeleton from 'react-loading-skeleton'
 import { Link } from 'react-router-dom'
 import s from './Suggestions.module.scss'
 
-type Suggestion = {
-  username: string
-  photo: string
-}
-
 type Props = {
   suggestions: Suggestion[]
   follow: (sug: Suggestion) => any
