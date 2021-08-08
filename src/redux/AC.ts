@@ -1,11 +1,10 @@
-import { setCurrentUserInformationListener } from './AC'
 import firebase from 'firebase/app'
 import 'firebase/storage'
 import * as firebaseService from '../services/firebase'
 import * as TYPES from './TYPES'
 import { nanoid } from 'nanoid'
-import { Action, Dispatch } from 'redux'
-import { ThunkAction, ThunkDispatch } from 'redux-thunk'
+import { Dispatch } from 'redux'
+import { TAction } from '../actions'
 
 export const initApp = () => (dispatch: Dispatch) => {
   const localUser: TUser | null = JSON.parse(localStorage.getItem('user') || '')
@@ -23,7 +22,7 @@ export const initApp = () => (dispatch: Dispatch) => {
 }
 
 export const setCurrentUserAuthenticationListener = () => (
-  dispatch: Function
+  dispatch: Dispatch
 ) => {
   let currentInfoListener = () => {}
   const authListener: Function = firebase.auth().onAuthStateChanged((user) => {
@@ -74,7 +73,7 @@ export const setCurrentUserInformationListener = () => (
         setCurrentUser({
           ...snapshot.docs[0].data(),
           docId: snapshot.docs[0].id,
-        })
+        } as TUser)
       )
       dispatch(setDashboardPosts())
       dispatch(setSuggestions())
@@ -98,7 +97,7 @@ export const setTargetUserListenerByName = (name: TUser['username']) => async (
         ...doc.data(),
         docId: userInfo.docId,
         photos: await firebaseService.getPosts(userInfo.userId),
-      }
+      } as TUser
       dispatch(setTargetUser({ ...data }))
     })
   return () => {
@@ -106,7 +105,7 @@ export const setTargetUserListenerByName = (name: TUser['username']) => async (
   }
 }
 
-export const setTargetUser = (targetUserInfo: TUser) => ({
+export const setTargetUser = (targetUserInfo: TUser): TAction => ({
   type: TYPES.SET_TARGET_USER,
   payload: targetUserInfo,
 })
@@ -169,12 +168,7 @@ const setSuggestions = (data: TUser[] | null) => (
   })
 }
 
-type SetCurrentUserType = (
-  userInfo: TUser | null
-) => {
-  type: string
-  payload: TUser | null
-}
+type SetCurrentUserType = (userInfo: TUser | null) => TAction
 export const setCurrentUser: SetCurrentUserType = (userInfo) => ({
   type: TYPES.SET_CURRENT_USER,
   payload: userInfo,

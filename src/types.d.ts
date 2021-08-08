@@ -1,4 +1,5 @@
 type TUser = {
+  photos: TPost[] | null
   username: string
   userId: string
   displayName: string
@@ -7,6 +8,7 @@ type TUser = {
   email: string
   following: TUser['userId'][]
   followers: TUser['userId'][]
+  fullName: string
 }
 
 type TPost = {
@@ -34,8 +36,3 @@ type TSendingComment = {
 }
 
 type TError = string
-
-type TAction = {
-  type: any
-  payload: any
-}
