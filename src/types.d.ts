@@ -18,6 +18,8 @@ type TPost = {
   }[]
   caption: string
   userId: TUser['userId']
+  dateCreated: number
+  imageSrc: string
 }
 
 type TFormattedPost = TPost & {
@@ -29,4 +31,11 @@ type TSendingComment = {
   comment: string
   displayName: TUser['displayName']
   targetPhoto: TPost['photoId']
+}
+
+type TError = string
+
+type TAction = {
+  type: any
+  payload: any
 }
