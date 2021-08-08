@@ -1,8 +1,9 @@
-import { connect } from 'react-redux';
-import { logout } from '../../redux/AC';
-import { Link } from 'react-router-dom';
-import * as ROUTES from '../../constants/routes';
-import s from './Header.module.scss';
+import React from 'react'
+import { connect } from 'react-redux'
+import { logout } from '../../redux/AC'
+import { Link } from 'react-router-dom'
+import * as ROUTES from '../../constants/routes'
+import s from './Header.module.scss'
 
 const Header = ({ logout, user }) => {
   return (
@@ -29,7 +30,7 @@ const Header = ({ logout, user }) => {
                 onClick={logout}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    return logout();
+                    return logout()
                   }
                 }}
                 className={s.header__icon_logout}
@@ -65,15 +66,15 @@ const Header = ({ logout, user }) => {
         </nav>
       </div>
     </header>
-  );
-};
+  )
+}
 
 const mapStateToProps = (state) => ({
   user: state.currentUser,
-});
+})
 
 const mapDispatchToProps = (dispatch) => ({
   logout: () => dispatch(logout()),
-});
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(Header)
