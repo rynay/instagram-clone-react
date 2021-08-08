@@ -1,11 +1,17 @@
 import { firebase } from '../lib/firebase'
 
-export async function addPhoto(data) {
+export async function addPhoto(data: TPost) {
   return await firebase.firestore().collection('photos').add(data)
 }
 
-type SetAvatar = ({}: { docId: TUser['docId'] }) => Promise<void>
-export function setAvatar({ docId, downloadURL }) {
+type SetAvatar = ({
+  docId,
+  downloadURL,
+}: {
+  docId: TUser['docId']
+  downloadURL: TUser['photo']
+}) => Promise<void>
+export const setAvatar: SetAvatar = ({ docId, downloadURL }) => {
   return firebase
     .firestore()
     .collection('users')
@@ -13,7 +19,10 @@ export function setAvatar({ docId, downloadURL }) {
     .update({ photo: downloadURL })
 }
 
-export async function toggleLike(userId, targetPhoto) {
+export const toggleLike = async (
+  userId: TUser['userId'],
+  targetPhoto: TPost['photoId']
+): Promise<void> => {
   const query = await firebase
     .firestore()
     .collection('photos')
@@ -21,7 +30,7 @@ export async function toggleLike(userId, targetPhoto) {
     .get()
 
   const target = query.docs[0]
-  const currVal = target.data().likes
+  const currVal: TPost['likes'] = target.data().likes
   const newVal = currVal.includes(userId)
     ? [...currVal.filter((id) => id !== userId)]
     : [...currVal, userId]
@@ -30,7 +39,12 @@ export async function toggleLike(userId, targetPhoto) {
   })
 }
 
-export async function sendComment({ username, targetPhoto, comment }) {
+type SendComment = (comment: TSendingComment) => Promise<void>
+export const sendComment: SendComment = async ({
+  displayName,
+  targetPhoto,
+  comment,
+}) => {
   return firebase
     .firestore()
     .collection('photos')
@@ -44,14 +58,14 @@ export async function sendComment({ username, targetPhoto, comment }) {
           ...currVal,
           {
             comment,
-            displayName: username,
+            displayName: displayName,
           },
         ],
       })
     })
 }
 
-export async function getUserInfo(name) {
+export async function getUserInfo(name: TUser['username']): Promise<TUser> {
   const result = await firebase
     .firestore()
     .collection('users')
@@ -61,10 +75,10 @@ export async function getUserInfo(name) {
   return result.docs.map((doc) => ({
     ...doc.data(),
     docId: doc.id,
-  }))[0]
+  }))[0] as TUser
 }
 
-export async function getUserInfoById(id) {
+export async function getUserInfoById(id: TUser['docId']): Promise<TUser> {
   const result = await firebase
     .firestore()
     .collection('users')
@@ -74,10 +88,12 @@ export async function getUserInfoById(id) {
   return result.docs.map((doc) => ({
     ...doc.data(),
     docId: doc.id,
-  }))[0]
+  }))[0] as TUser
 }
 
-export async function getUserInfoByUserName(username) {
+export async function getUserInfoByUserName(
+  username: TUser['username']
+): Promise<TUser> {
   const result = await firebase
     .firestore()
     .collection('users')
@@ -86,10 +102,12 @@ export async function getUserInfoByUserName(username) {
   return result.docs.map((doc) => ({
     ...doc.data(),
     docId: doc.id,
-  }))[0]
+  }))[0] as TUser
 }
 
-export async function getUserInfoByEmail(email) {
+export async function getUserInfoByEmail(
+  email: TUser['email']
+): Promise<TUser> {
   const result = await firebase
     .firestore()
     .collection('users')
@@ -98,26 +116,33 @@ export async function getUserInfoByEmail(email) {
   return result.docs.map((doc) => ({
     ...doc.data(),
     docId: doc.id,
-  }))[0]
+  }))[0] as TUser
 }
 
-export async function getFollowingPosts(following = []) {
+export async function getFollowingPosts(
+  following: TUser['following'] = []
+): Promise<TFormattedPost[] | []> {
   if (!following.length) return []
   const results = await firebase
     .firestore()
     .collection('photos')
     .where('userId', 'in', following)
     .get()
-  const formattedResult = results.docs.map(async (doc) => ({
-    ...doc.data(),
-    username: await getUserNameById(doc.data().userId),
-    authorAvatar: await getAvatarById(doc.data().userId),
-  }))
+  const formattedResult = results.docs.map(
+    async (doc) =>
+      ({
+        ...doc.data(),
+        username: await getUserNameById(doc.data().userId),
+        authorAvatar: await getAvatarById(doc.data().userId),
+      } as TFormattedPost)
+  )
 
   return Promise.all(formattedResult) || []
 }
 
-async function getAvatarById(id) {
+async function getAvatarById(
+  id: TUser['userId']
+): Promise<TUser['photo'] | void> {
   if (!id) return
 
   const results = await firebase
@@ -125,14 +150,16 @@ async function getAvatarById(id) {
     .collection('users')
     .where('userId', '==', id)
     .get()
-  const formattedResult = results.docs.map((doc) => ({
+  const formattedResult: TUser['photo'] = results.docs.map((doc) => ({
     authorAvatar: doc.data().photo,
   }))[0].authorAvatar
 
   return formattedResult
 }
 
-export async function getPosts(id) {
+export async function getPosts(
+  id: TUser['userId']
+): Promise<TFormattedPost[] | null> {
   if (!id) return null
   const results = await firebase
     .firestore()
@@ -140,16 +167,21 @@ export async function getPosts(id) {
     .where('userId', '==', id)
     .get()
 
-  const formattedResult = results.docs.map(async (doc) => ({
-    ...doc.data(),
-    username: await getUserNameById(doc.data().userId),
-    authorAvatar: await getAvatarById(doc.data().userId),
-  }))
+  const formattedResult = results.docs.map(
+    async (doc) =>
+      ({
+        ...doc.data(),
+        username: await getUserNameById(doc.data().userId),
+        authorAvatar: await getAvatarById(doc.data().userId),
+      } as TFormattedPost)
+  )
 
   return Promise.all(formattedResult) || []
 }
 
-const getUserNameById = async (id) => {
+const getUserNameById = async (
+  id: TUser['userId']
+): Promise<TUser['username'] | void> => {
   if (!id) return
   const result = await firebase
     .firestore()
@@ -158,10 +190,10 @@ const getUserNameById = async (id) => {
     .get()
   return result.docs.map((doc) => ({
     ...doc.data(),
-  }))[0].username
+  }))[0].username as TUser['username']
 }
 
-export async function toggleFollowing(target, current) {
+export async function toggleFollowing(target: TUser, current: TUser) {
   const result1 = await firebase
     .firestore()
     .collection('users')
@@ -170,7 +202,7 @@ export async function toggleFollowing(target, current) {
     .get()
     .then((query) => {
       const thing = query.docs[0]
-      var currVal = thing.data().followers
+      var currVal: TUser['followers'] = thing.data().followers
       let newVal
       if (currVal.includes(current.userId)) {
         newVal = currVal.filter((val) => val !== current.userId)
@@ -188,7 +220,7 @@ export async function toggleFollowing(target, current) {
     .get()
     .then((query) => {
       const thing = query.docs[0]
-      var currVal = thing.data().following
+      var currVal: TUser['following'] = thing.data().following
       let newVal
       if (currVal.includes(target.userId)) {
         newVal = currVal.filter((val) => val !== target.userId)
@@ -201,7 +233,7 @@ export async function toggleFollowing(target, current) {
   return [result1, result2]
 }
 
-export async function getSuggestions(uid = '') {
+export async function getSuggestions(uid = ''): Promise<TUser[] | null> {
   const results = await firebase
     .firestore()
     .collection('users')
@@ -209,15 +241,20 @@ export async function getSuggestions(uid = '') {
     .limit(10)
     .get()
   const formatted = results.docs
-    .map((doc) => ({
-      ...doc.data(),
-    }))
+    .map(
+      (doc) =>
+        ({
+          ...doc.data(),
+        } as TUser)
+    )
     .filter((doc) => !doc.followers.includes(uid))
   if (!formatted.length) return null
   return formatted
 }
 
-export async function checkIsUserNameExist(username) {
+export async function checkIsUserNameExist(
+  username: TUser['username']
+): Promise<boolean> {
   const results = await firebase
     .firestore()
     .collection('users')
@@ -227,7 +264,9 @@ export async function checkIsUserNameExist(username) {
   return !!results.docs.length
 }
 
-export async function checkIsEmailExist(email) {
+export async function checkIsEmailExist(
+  email: TUser['email']
+): Promise<boolean> {
   const results = await firebase
     .firestore()
     .collection('users')

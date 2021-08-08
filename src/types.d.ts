@@ -1,13 +1,12 @@
-type TSuggestion = {
-  username: string
-  photo: string
-}
 type TUser = {
   username: string
   userId: string
   displayName: string
   docId: string
   photo: string
+  email: string
+  following: TUser['userId'][]
+  followers: TUser['userId'][]
 }
 
 type TPost = {
@@ -18,6 +17,12 @@ type TPost = {
     comment: string
   }[]
   caption: string
+  userId: TUser['userId']
+}
+
+type TFormattedPost = TPost & {
+  username: TUser['username']
+  authorAvatar: TUser['photo']
 }
 
 type TSendingComment = {
