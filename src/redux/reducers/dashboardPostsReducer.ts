@@ -1,15 +1,12 @@
-import * as TYPES from '../TYPES';
+import * as TYPES from '../TYPES'
 
-const dashboardPostsReducer = (
-  state = null,
-  action: { type: string; payload?: any }
-) => {
+const dashboardPostsReducer = (state = null, action: TAction) => {
   switch (action.type) {
     case TYPES.SET_DASHBOARD_POSTS:
-      return action.payload;
+      return action.payload
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default dashboardPostsReducer;
+export default dashboardPostsReducer

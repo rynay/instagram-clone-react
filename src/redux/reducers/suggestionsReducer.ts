@@ -1,15 +1,12 @@
-import * as TYPES from '../TYPES';
+import * as TYPES from '../TYPES'
 
-const suggestionsReducer = (
-  state = null,
-  action: { type: string; payload?: any }
-) => {
+const suggestionsReducer = (state = null, action: TAction) => {
   switch (action.type) {
     case TYPES.SET_SUGGESTIONS:
-      return action.payload;
+      return action.payload
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default suggestionsReducer;
+export default suggestionsReducer

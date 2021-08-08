@@ -1,15 +1,12 @@
-import * as TYPES from '../TYPES';
+import * as TYPES from '../TYPES'
 
-const targetUserNameReducer = (
-  state = null,
-  action: { type: string; payload?: any }
-) => {
+const targetUserNameReducer = (state = null, action: TAction) => {
   switch (action.type) {
     case TYPES.SET_TARGET_USERNAME:
-      return action.payload;
+      return action.payload
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default targetUserNameReducer;
+export default targetUserNameReducer

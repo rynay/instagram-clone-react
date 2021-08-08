@@ -1,14 +1,11 @@
-import * as TYPES from '../TYPES';
+import * as TYPES from '../TYPES'
 
-const currentUserReducer = (
-  state = null,
-  action: { type: string; payload?: any }
-) => {
+const currentUserReducer = (state = null, action: TAction) => {
   switch (action.type) {
     case TYPES.SET_CURRENT_USER:
-      return action.payload || null;
+      return action.payload || null
     default:
-      return state;
+      return state
   }
-};
-export default currentUserReducer;
+}
+export default currentUserReducer
