@@ -1,16 +1,16 @@
-import React, { Ref } from 'react'
+import { Ref } from 'react'
 import { useState } from 'react'
 import { FaRegHeart, FaHeart, FaRegCommentDots } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
-import * as AC from '../../redux/AC'
 import { connect } from 'react-redux'
-import { Dispatch } from 'redux'
+import { AppDispatch, RootStore } from '../../redux/store'
+import { sendComment, toggleLike } from '../../redux/AC'
 
 type Props = {
   refForInput: Ref<HTMLInputElement>
   handleFocus: () => void
   s: any
-  currentUser: TUser
+  currentUser: TUser | null
   currentUserName?: TUser['username']
   currentUserId?: TUser['userId']
   post: TPost
@@ -31,7 +31,7 @@ const Info = ({
   sendComment,
   poppedUp,
 }: Props) => {
-  const isLiked = post.likes.includes(currentUser?.userId)
+  const isLiked = post.likes.includes(currentUser?.userId || '')
 
   const likesCount = post.likes.length
   const commentsCount = post.comments.length
@@ -165,6 +165,7 @@ const Info = ({
         onSubmit={(e) => {
           e.preventDefault()
           if (!comment.trim()) return
+          if (!currentUser) return
           setShowingComments((comments) => [
             ...comments,
             {
@@ -193,16 +194,16 @@ const Info = ({
   )
 }
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  toggleLike: (post: TPost) => {
-    return dispatch(AC.toggleLike(post))
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
+  toggleLike: (postId: TPost['userId']) => {
+    return dispatch(toggleLike(postId))
   },
   sendComment: ({ displayName, targetPhoto, comment }: TSendingComment) => {
-    return dispatch(AC.sendComment({ displayName, targetPhoto, comment }))
+    return dispatch(sendComment({ displayName, targetPhoto, comment }))
   },
 })
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: RootStore) => ({
   currentUser: state.currentUser,
 })
 

@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from 'react'
+import { HTMLAttributes } from 'react'
 
 const InputField = (props: HTMLAttributes<HTMLInputElement>) => {
   return <input {...props} />

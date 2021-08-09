@@ -1,4 +1,3 @@
-import React from 'react'
 import { formatDistance } from 'date-fns'
 import { createRef } from 'react'
 import s from './Post.module.scss'
@@ -26,8 +25,6 @@ const Post = ({ post, currentUserId, currentUserName, poppedUp }: Props) => {
           style={{
             ...(poppedUp && {
               display: 'flex',
-              // maxWidth: '75rem',
-              // maxHeight: '90vh',
               boxShadow: 'none',
             }),
             ...(!poppedUp && {
