@@ -1,5 +1,5 @@
 type TUser = {
-  photos: TPost[] | null
+  photos: TFormattedPost[] | null
   username: string
   userId: string
   displayName: string

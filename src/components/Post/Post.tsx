@@ -7,8 +7,8 @@ import { Link } from 'react-router-dom'
 
 type Props = {
   post: TFormattedPost
-  currentUserId: TUser['userId']
-  currentUserName: TUser['username']
+  currentUserId?: TUser['userId']
+  currentUserName?: TUser['username']
   poppedUp: boolean
 }
 
