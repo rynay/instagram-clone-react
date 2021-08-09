@@ -1,9 +1,10 @@
-import currentUser from './reducers/currentUserReducer'
-import targetUser from './reducers/targetUserReducer'
-import suggestions from './reducers/suggestionsReducer'
-import dashboardPosts from './reducers/dashboardPostsReducer'
-import targetPostId from './reducers/targetPostIdReducer'
-import photoUploading from './reducers/photoUploadingReducer'
+import currentUser from './slices/currentUserSlice'
+import targetUser from './slices/targetUserSlice'
+import suggestions from './slices/suggestionsSlice'
+import dashboardPosts from './slices/dashboardPostsSlice'
+import targetPostId from './slices/targetPostIdSlice'
+import photoUploading from './slices/photoUploadingSlice'
+import targetUsername from './slices/targetUsernameSlice'
 
 import { configureStore } from '@reduxjs/toolkit'
 
@@ -15,6 +16,7 @@ export const store = configureStore({
     dashboardPosts,
     targetPostId,
     photoUploading,
+    targetUsername,
   },
 })
 

@@ -3,17 +3,24 @@ import 'firebase/storage'
 import * as firebaseService from '../services/firebase'
 import * as TYPES from './TYPES'
 import { nanoid } from 'nanoid'
-import { Dispatch } from 'redux'
-import { TAction } from '../actions'
-import { ThunkAction } from 'redux-thunk'
+import { AppDispatch, RootStore } from './store'
+import { setTargetUser } from './slices/targetUserSlice'
+import { setSuggestions } from './slices/suggestionsSlice'
+import { setDashboardPosts } from './slices/dashboardPostsSlice'
+import {
+  setIsPhotoUploading,
+  setUploadError,
+} from './slices/photoUploadingSlice'
+import { setCurrentUser } from './slices/currentUserSlice'
 
-export const initApp = () => (dispatch: Dispatch) => {
+export const initApp = () => (dispatch: AppDispatch) => {
   const localUser: TUser | null = JSON.parse(localStorage.getItem('user') || '')
-  let authListener: Function
-  let currentInfoListener: Function
+  let authListener: () => void
+  let currentInfoListener: () => void
   if (localUser) {
     dispatch(setCurrentUser(localUser))
-    currentInfoListener = dispatch(setCurrentUserInformationListener())
+    currentInfoListener =
+      dispatch(setCurrentUserInformationListener()) || (() => {})
   }
   authListener = dispatch(setCurrentUserAuthenticationListener())
   return () => {
@@ -23,10 +30,10 @@ export const initApp = () => (dispatch: Dispatch) => {
 }
 
 export const setCurrentUserAuthenticationListener = () => (
-  dispatch: Dispatch
+  dispatch: AppDispatch
 ) => {
   let currentInfoListener = () => {}
-  const authListener: Function = firebase.auth().onAuthStateChanged((user) => {
+  const authListener = firebase.auth().onAuthStateChanged((user) => {
     // const localUser = JSON.parse(localStorage.getItem('user'));
     // &&  !localUser
     if (!user) {
@@ -37,6 +44,8 @@ export const setCurrentUserAuthenticationListener = () => (
       return
     }
 
+    if (!user.email) return
+
     firebaseService.getUserInfoByEmail(user.email).then((userInfo) => {
       if (!userInfo) return
       localStorage.setItem('user', JSON.stringify(userInfo))
@@ -46,9 +55,10 @@ export const setCurrentUserAuthenticationListener = () => (
           ...userInfo,
         })
       )
-      currentInfoListener = dispatch(setCurrentUserInformationListener())
-      dispatch(setDashboardPosts())
-      dispatch(setSuggestions())
+      currentInfoListener =
+        dispatch(setCurrentUserInformationListener()) || (() => {})
+      dispatch(handleDashboardPosts())
+      dispatch(handleSuggestions())
     })
   })
 
@@ -59,12 +69,12 @@ export const setCurrentUserAuthenticationListener = () => (
 }
 
 export const setCurrentUserInformationListener = () => (
-  dispatch: Dispatch,
-  getState: () => TState
+  dispatch: AppDispatch,
+  getState: () => RootStore
 ) => {
-  const userId: string = getState().currentUser.userId
+  const userId = getState().currentUser?.userId
   if (!userId) return
-  const userListener: Function = firebase
+  const userListener = firebase
     .firestore()
     .collection('users')
     .where('userId', '==', userId)
@@ -76,20 +86,20 @@ export const setCurrentUserInformationListener = () => (
           docId: snapshot.docs[0].id,
         } as TUser)
       )
-      dispatch(setDashboardPosts())
-      dispatch(setSuggestions())
+      dispatch(handleDashboardPosts())
+      dispatch(handleSuggestions())
     })
 
   return userListener
 }
 
 export const setTargetUserListenerByName = (name: TUser['username']) => async (
-  dispatch: Dispatch
+  dispatch: AppDispatch
 ) => {
-  const userInfo: TUser = await firebaseService.getUserInfo(name)
+  const userInfo = await firebaseService.getUserInfo(name)
   if (!userInfo) return
   dispatch(setTargetUser(userInfo))
-  const listener: Function = firebase
+  const listener = firebase
     .firestore()
     .collection('users')
     .doc(userInfo.docId)
@@ -106,12 +116,7 @@ export const setTargetUserListenerByName = (name: TUser['username']) => async (
   }
 }
 
-export const setTargetUser = (targetUserInfo: TUser): TAction => ({
-  type: TYPES.SET_TARGET_USER,
-  payload: targetUserInfo,
-})
-
-export const logout = () => (dispatch: Dispatch) => {
+export const logout = () => (dispatch: AppDispatch) => {
   localStorage.removeItem('user')
   return firebase
     .auth()
@@ -119,140 +124,108 @@ export const logout = () => (dispatch: Dispatch) => {
     .then(() => {
       dispatch(setCurrentUser(null))
       dispatch(setDashboardPosts(null))
-      dispatch(setSuggestions(null))
+      dispatch(handleSuggestions(null))
     })
 }
 
-const setDashboardPosts = (data: TPost[] | null) => (
-  dispatch: Dispatch,
-  getState: () => TState
+const handleDashboardPosts = (data?: null) => (
+  dispatch: AppDispatch,
+  getState: () => RootStore
 ) => {
   if (data === null) {
-    dispatch({
-      type: TYPES.SET_DASHBOARD_POSTS,
-      payload: data,
-    })
+    dispatch(setDashboardPosts(data))
     return
   }
-  const { following } = getState().currentUser
+  const { following } = getState().currentUser || {}
   return firebaseService.getFollowingPosts(following).then((posts: TPost[]) => {
-    dispatch({
-      type: TYPES.SET_DASHBOARD_POSTS,
-      payload: posts.sort(function (a, b) {
-        if ('dateCreated' in a && 'dateCreated' in b) {
-          return b.dateCreated - a.dateCreated
-        } else {
-          return 0
-        }
-      }),
+    const sortedPosts = posts.sort(function (a, b) {
+      if ('dateCreated' in a && 'dateCreated' in b) {
+        return b.dateCreated - a.dateCreated
+      } else {
+        return 0
+      }
     })
+    dispatch(setDashboardPosts(sortedPosts))
   })
 }
 
-const setSuggestions = (data: TUser[] | null) => (
-  dispatch: Dispatch,
-  getState: () => TState
+const handleSuggestions = (data?: null) => (
+  dispatch: AppDispatch,
+  getState: () => RootStore
 ) => {
   if (data === null) {
-    dispatch({
-      type: TYPES.SET_SUGGESTIONS,
-      payload: data,
-    })
+    dispatch(setSuggestions(data))
     return
   }
-  const { userId } = getState().currentUser
+  const { userId } = getState().currentUser || {}
   return firebaseService.getSuggestions(userId).then((suggestions) => {
-    dispatch({
-      type: TYPES.SET_SUGGESTIONS,
-      payload: suggestions,
-    })
+    dispatch(setSuggestions(suggestions))
   })
 }
-
-type SetCurrentUserType = (userInfo: TUser | null) => TAction
-export const setCurrentUser: SetCurrentUserType = (userInfo) => ({
-  type: TYPES.SET_CURRENT_USER,
-  payload: userInfo,
-})
 
 export const toggleFollowing = (target: TUser) => (
-  _: Dispatch,
-  getState: () => TState
+  _: AppDispatch,
+  getState: () => RootStore
 ) => {
   const { currentUser } = getState()
-  return firebaseService.toggleFollowing(target, currentUser)
+  if (currentUser) {
+    return firebaseService.toggleFollowing(target, currentUser)
+  }
 }
 
 export const toggleLike = (targetPost: TPost['photoId']) => (
-  dispatch: Dispatch,
-  getState: () => TState
+  dispatch: AppDispatch,
+  getState: () => RootStore
 ) => {
-  const {
-    currentUser: { userId, following },
-    targetUser,
-  } = getState()
-  if (!targetUser) {
-    // like from dashboard
-    firebaseService.toggleLike(userId, targetPost).then(() => {
-      dispatch(setDashboardPosts())
-    })
-  } else {
-    // like from profile
-    firebaseService.toggleLike(userId, targetPost).then(() => {
-      dispatch(updateTargetUserPhotos())
-      if (following.includes(targetUser.userId)) {
-        dispatch(setDashboardPosts())
-      }
-    })
+  const { currentUser, targetUser } = getState()
+  const { userId, following } = currentUser || {}
+  if (userId) {
+    if (!targetUser) {
+      firebaseService.toggleLike(userId, targetPost).then(() => {
+        dispatch(handleDashboardPosts())
+      })
+    } else {
+      firebaseService.toggleLike(userId, targetPost).then(() => {
+        dispatch(updateTargetUserPhotos())
+        if (following && following.includes(targetUser.userId)) {
+          dispatch(handleDashboardPosts())
+        }
+      })
+    }
   }
 }
 
 export const updateTargetUserPhotos = () => async (
-  dispatch: Dispatch,
-  getState: () => TState
+  dispatch: AppDispatch,
+  getState: () => RootStore
 ) => {
   const { targetUser } = getState()
-  const photos = await firebaseService.getPosts(targetUser.userId)
-  return dispatch(setTargetUser({ ...targetUser, photos }))
+  if (targetUser) {
+    const photos = await firebaseService.getPosts(targetUser.userId)
+    return dispatch(setTargetUser({ ...targetUser, photos }))
+  }
 }
 
 export const sendComment = ({
   displayName,
   targetPhoto,
   comment,
-}: TSendingComment) => (dispatch: Dispatch, getState: () => TState) => {
-  const {
-    targetUser,
-    currentUser: { following },
-  } = getState()
+}: TSendingComment) => (dispatch: AppDispatch, getState: () => RootStore) => {
+  const { targetUser, currentUser } = getState()
+  const { following } = currentUser || {}
   return firebaseService
     .sendComment({ displayName, targetPhoto, comment })
     .then(() => {
       if (!targetUser) {
-        dispatch(setDashboardPosts())
+        dispatch(handleDashboardPosts())
       } else {
         dispatch(updateTargetUserPhotos())
-        if (following.includes(targetUser.userId)) {
-          dispatch(setDashboardPosts())
+        if (following && following.includes(targetUser.userId)) {
+          dispatch(handleDashboardPosts())
         }
       }
     })
 }
-
-export const setTargetPostId = (id: TPost['photoId']): TAction => ({
-  type: TYPES.SET_TARGET_POST_ID,
-  payload: id,
-})
-
-const setIsPhotoUploading = (isLoading: boolean): TAction => ({
-  type: TYPES.SET_IS_PHOTO_UPLOADING,
-  payload: isLoading,
-})
-
-const setUploadError = (error: TError): TAction => ({
-  type: TYPES.SET_UPLOAD_ERROR,
-  payload: error,
-})
 
 export const uploadPhoto = ({
   photo,
@@ -260,10 +233,10 @@ export const uploadPhoto = ({
 }: {
   photo: PhotoType
   description: TPost['caption']
-}) => (dispatch: Function, getState: Function) => {
-  const {
-    currentUser: { userId },
-  } = getState()
+}) => (dispatch: AppDispatch, getState: () => RootStore) => {
+  const { currentUser } = getState()
+  const { userId } = currentUser || {}
+  if (!userId) return
   const id = nanoid()
   const filename = `images/${id}.${photo.name.split('.').reverse()[0]}`
   const metadata = {
@@ -312,10 +285,12 @@ interface PhotoType {
   name: string
 }
 
-export const uploadAvatar = (photo: PhotoType) => (getState: Function) => {
-  const {
-    currentUser: { docId },
-  } = getState()
+export const uploadAvatar = (photo: PhotoType) => (
+  getState: () => RootStore
+) => {
+  const { currentUser } = getState()
+  const { docId } = currentUser || {}
+  if (!docId) return
   const id = nanoid()
   const filename = `images/${id}.${photo.name.split('.').reverse()[0]}`
   const metadata = {
