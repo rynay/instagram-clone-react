@@ -1,31 +1,32 @@
-import { useParams } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { useEffect } from 'react';
-import * as AC from '../../redux/AC';
-import Header from './Header';
-import Photos from './Photos';
-import s from './Profile.module.scss';
+import { useParams } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { useEffect } from 'react'
+import Header from './Header'
+import Photos from './Photos'
+import s from './Profile.module.scss'
+import { setTargetUser } from '../../redux/slices/targetUserSlice'
+import { setTargetUserListenerByName } from '../../redux/AC'
 
 const Profile = ({
   deleteTargetUser,
   setTargetUserListenerByName,
   toggleNewPostPopup,
 }) => {
-  const { userId: userName } = useParams();
+  const { userId: userName } = useParams()
 
   useEffect(() => {
-    document.title = `${userName} - Instagram`;
-  }, []);
+    document.title = `${userName} - Instagram`
+  }, [])
 
   useEffect(() => {
-    let listener;
-    setTargetUserListenerByName(userName).then((res) => (listener = res));
+    let listener
+    setTargetUserListenerByName(userName).then((res) => (listener = res))
 
     return () => {
-      deleteTargetUser();
-      listener();
-    };
-  }, [userName]);
+      deleteTargetUser()
+      listener()
+    }
+  }, [userName])
 
   return (
     <>
@@ -34,16 +35,16 @@ const Profile = ({
         <Photos s={s} />
       </main>
     </>
-  );
-};
+  )
+}
 
 const mapDispatchToProps = (dispatch) => ({
   deleteTargetUser: () => {
-    return dispatch(AC.setTargetUser(null));
+    return dispatch(setTargetUser(null))
   },
   setTargetUserListenerByName: (name) => {
-    return dispatch(AC.setTargetUserListenerByName(name));
+    return dispatch(setTargetUserListenerByName(name))
   },
-});
+})
 
-export default connect(null, mapDispatchToProps)(Profile);
+export default connect(null, mapDispatchToProps)(Profile)
