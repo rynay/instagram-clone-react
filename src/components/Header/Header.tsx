@@ -1,14 +1,13 @@
-import React from 'react'
 import { connect } from 'react-redux'
 import { logout } from '../../redux/AC'
 import { Link } from 'react-router-dom'
 import * as ROUTES from '../../constants/routes'
 import s from './Header.module.scss'
-import { Dispatch } from 'redux'
+import { AppDispatch, RootStore } from '../../redux/store'
 
 type Props = {
-  logout: () => Dispatch
-  user: TUser
+  logout: () => void
+  user: TUser | null
 }
 
 const Header = ({ logout, user }: Props) => {
@@ -75,11 +74,11 @@ const Header = ({ logout, user }: Props) => {
   )
 }
 
-const mapStateToProps = (state: TState) => ({
+const mapStateToProps = (state: RootStore) => ({
   user: state.currentUser,
 })
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   logout: () => dispatch(logout()),
 })
 
