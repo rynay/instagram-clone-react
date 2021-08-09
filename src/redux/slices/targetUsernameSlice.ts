@@ -6,6 +6,7 @@ const targetUsernameSlice = createSlice({
   name: 'targetUsername',
   initialState,
   reducers: {
+    // @ts-ignore
     setTargetUsername: (state, action: PayloadAction<typeof initialState>) => {
       state = action.payload
     },

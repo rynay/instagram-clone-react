@@ -6,6 +6,7 @@ const dashboardPostsSlice = createSlice({
   name: 'dashboardPosts',
   initialState,
   reducers: {
+    // @ts-ignore
     setDashboardPosts: (state, action: PayloadAction<typeof initialState>) => {
       state = action.payload
     },

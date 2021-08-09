@@ -14,7 +14,7 @@ const Sidebar = ({ suggestions, follow, currentUser }: Props) => {
     <aside className={s.container}>
       <Profile
         fullName={currentUser?.fullName}
-        avatar={currentUser?.photo}
+        avatar={currentUser?.avatar}
         username={currentUser?.username}
       />
       <Suggestions

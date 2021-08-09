@@ -26,7 +26,7 @@ const Suggestions = ({ suggestions, follow }: Props) => {
                   <div className={s.image_container}>
                     <img
                       alt=""
-                      src={sug.photo || `./images/avatars/${sug.username}.jpg`}
+                      src={sug.avatar || `./images/avatars/${sug.username}.jpg`}
                     />
                   </div>
                   <h3 className={s.username}>{sug.username}</h3>

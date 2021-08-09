@@ -6,6 +6,7 @@ const suggestionsSlice = createSlice({
   name: 'suggestions',
   initialState,
   reducers: {
+    // @ts-ignore
     setSuggestions: (state, action: PayloadAction<typeof initialState>) => {
       state = action.payload
     },

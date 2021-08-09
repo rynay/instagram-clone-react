@@ -6,6 +6,7 @@ const targetPostIdSlice = createSlice({
   name: 'targetPostId',
   initialState,
   reducers: {
+    // @ts-ignore
     setTargetPostId: (state, action: PayloadAction<typeof initialState>) => {
       state = action.payload
     },

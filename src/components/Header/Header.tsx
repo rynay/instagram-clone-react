@@ -48,7 +48,7 @@ const Header = ({ logout, user }: Props) => {
                   to={`/p/${user.username}`}
                   className={s.header__profile_link}>
                   <img
-                    src={user.photo || `/images/avatars/${user.username}.jpg`}
+                    src={user.avatar || `/images/avatars/${user.username}.jpg`}
                     alt=""
                   />
                 </Link>
