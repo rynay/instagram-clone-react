@@ -6,7 +6,7 @@ import * as ROUTES from '../../constants/routes'
 import s from '../Login-SignUp.module.scss'
 
 type Props = {
-  currentUsername: TUser['username']
+  currentUsername?: TUser['username']
 }
 
 const Login = ({ currentUsername }: Props) => {

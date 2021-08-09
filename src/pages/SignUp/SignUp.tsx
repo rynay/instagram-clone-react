@@ -7,7 +7,7 @@ import { firebase } from '../../lib/firebase'
 import * as FirebaseService from '../../services/firebase'
 
 type Props = {
-  currentUsername: TUser['username']
+  currentUsername?: TUser['username']
 }
 
 const SignUp = ({ currentUsername }: Props) => {
