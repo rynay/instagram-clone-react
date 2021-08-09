@@ -1,10 +1,10 @@
-import { BrowserRouter as Router } from 'react-router-dom';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App.js';
-import './index.scss';
-import { Provider } from 'react-redux';
-import store from './redux/store';
+import { BrowserRouter as Router } from 'react-router-dom'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './App.js'
+import './index.scss'
+import { Provider } from 'react-redux'
+import { store } from './redux/store'
 
 ReactDOM.render(
   <React.StrictMode>
@@ -15,4 +15,4 @@ ReactDOM.render(
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
-);
+)
