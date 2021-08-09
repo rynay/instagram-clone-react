@@ -9,6 +9,7 @@ type TUser = {
   followers: TUser['userId'][]
   fullName: string
   avatar: string
+  photos?: TFormattedPost[] | null
 }
 
 type TPost = {

@@ -136,16 +136,18 @@ const handleDashboardPosts = (data?: null) => (
     return
   }
   const { following } = getState().currentUser || {}
-  return firebaseService.getFollowingPosts(following).then((posts: TPost[]) => {
-    const sortedPosts = posts.sort(function (a, b) {
-      if ('dateCreated' in a && 'dateCreated' in b) {
-        return b.dateCreated - a.dateCreated
-      } else {
-        return 0
-      }
+  return firebaseService
+    .getFollowingPosts(following)
+    .then((posts: TFormattedPost[]) => {
+      const sortedPosts = posts.sort(function (a, b) {
+        if ('dateCreated' in a && 'dateCreated' in b) {
+          return b.dateCreated - a.dateCreated
+        } else {
+          return 0
+        }
+      })
+      dispatch(setDashboardPosts(sortedPosts))
     })
-    dispatch(setDashboardPosts(sortedPosts))
-  })
 }
 
 const handleSuggestions = (data?: null) => (
@@ -172,10 +174,11 @@ export const toggleFollowing = (target: TUser) => (
   }
 }
 
-export const toggleLike = (targetPost: TPost['photoId']) => (
+export const toggleLike = (targetPost: TPost['photoId'] | null) => (
   dispatch: AppDispatch,
   getState: () => RootStore
 ) => {
+  if (!targetPost) return
   const { currentUser, targetUser } = getState()
   const { userId, following } = currentUser || {}
   if (userId) {
@@ -280,7 +283,8 @@ export const uploadPhoto = ({
   )
 }
 
-export const uploadAvatar = (photo: TPhotoType) => (
+export const uploadAvatar = (photo: File) => (
+  _: AppDispatch,
   getState: () => RootStore
 ) => {
   const { currentUser } = getState()
@@ -292,7 +296,7 @@ export const uploadAvatar = (photo: TPhotoType) => (
     contentType: `image/${photo.name.split('.').reverse()[0]}`,
   }
   const storageRef = firebase.storage().ref()
-  const uploadTask = storageRef.child(filename).put(photo as any, metadata)
+  const uploadTask = storageRef.child(filename).put(photo, metadata)
 
   return uploadTask.on('state_changed', null, null, () => {
     uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {

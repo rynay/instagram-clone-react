@@ -3,6 +3,17 @@ import Skeleton from 'react-loading-skeleton'
 import { connect } from 'react-redux'
 import { FaCamera, FaPlus } from 'react-icons/fa'
 import { toggleFollowing, uploadAvatar } from '../../redux/AC'
+import { AppDispatch, RootStore } from '../../redux/store'
+import { ChangeEvent } from 'react'
+
+type Props = {
+  s: any
+  currentUser: RootStore['currentUser']
+  targetUser: RootStore['targetUser']
+  toggleFollowing: (target: TUser) => void
+  uploadAvatar: (file: File) => void
+  toggleNewPostPopup: () => void
+}
 
 const Header = ({
   s,
@@ -11,11 +22,11 @@ const Header = ({
   toggleFollowing,
   toggleNewPostPopup,
   uploadAvatar,
-}) => {
-  const [photoPreview, setPhotoPreview] = useState(null)
-  const handlePhotoChange = (e) => {
-    setPhotoPreview(URL.createObjectURL(e.target.files[0]))
-    return uploadAvatar(e.target.files[0])
+}: Props) => {
+  const [photoPreview, setPhotoPreview] = useState<string>()
+  const handlePhotoChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPhotoPreview(URL.createObjectURL(e.target.files![0]))
+    return uploadAvatar(e.target.files![0])
   }
   return (
     <>
@@ -45,7 +56,7 @@ const Header = ({
             <img
               src={
                 photoPreview ||
-                targetUser.photo ||
+                targetUser.avatar ||
                 `/images/avatars/${targetUser.username}.jpg`
               }
               alt=""
@@ -75,10 +86,10 @@ const Header = ({
                     }`}
                     onKeyDown={(e) => {
                       if (e.key !== 'Enter') return
-                      return toggleFollowing(targetUser, currentUser)
+                      return toggleFollowing(targetUser)
                     }}
                     onClick={() => {
-                      return toggleFollowing(targetUser, currentUser)
+                      return toggleFollowing(targetUser)
                     }}>
                     {targetUser?.followers.includes(currentUser?.userId)
                       ? 'Unfollow'
@@ -131,16 +142,16 @@ const Header = ({
   )
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: RootStore) => ({
   currentUser: state.currentUser,
   targetUser: state.targetUser,
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  toggleFollowing: (target, current) => {
-    return dispatch(toggleFollowing(target, current))
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
+  toggleFollowing: (target: TUser) => {
+    return dispatch(toggleFollowing(target))
   },
-  uploadAvatar: (file) => {
+  uploadAvatar: (file: File) => {
     return dispatch(uploadAvatar(file))
   },
 })

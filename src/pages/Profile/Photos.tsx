@@ -3,8 +3,16 @@ import { connect } from 'react-redux'
 import Skeleton from 'react-loading-skeleton'
 import { FaHeart, FaCommentDots } from 'react-icons/fa'
 import { toggleLike } from '../../redux/AC'
+import { AppDispatch, RootStore } from '../../redux/store'
 
-const Photos = ({ s, toggleLike, photos, currentUserId }) => {
+type Props = {
+  s: any
+  toggleLike: (targetPostId: RootStore['targetPostId']) => void
+  photos?: TUser['photos']
+  currentUserId?: TUser['userId']
+}
+
+const Photos = ({ s, toggleLike, photos, currentUserId }: Props) => {
   const photosSorted = photos?.sort((a, b) => {
     return b.dateCreated - a.dateCreated
   })
@@ -40,7 +48,7 @@ const Photos = ({ s, toggleLike, photos, currentUserId }) => {
       )}
       {photosSorted &&
         photosSorted.map((photo) => {
-          const isLiked = photo.likes.includes(currentUserId)
+          const isLiked = photo.likes.includes(currentUserId || '')
 
           return (
             <Link
@@ -67,9 +75,13 @@ const Photos = ({ s, toggleLike, photos, currentUserId }) => {
                     {<FaHeart style={{ fill: isLiked ? 'red' : 'white' }} />}
                   </button>
                   <button
-                    onClick={() =>
-                      history.push(`/p/${photos[0].username}/${photo.photoId}`)
-                    }
+                    onClick={() => {
+                      if (photos) {
+                        history.push(
+                          `/p/${photos[0].username}/${photo.photoId}`
+                        )
+                      }
+                    }}
                     className={s.photos__button}>
                     <FaCommentDots style={{ fill: 'white' }} />
                   </button>
@@ -82,13 +94,14 @@ const Photos = ({ s, toggleLike, photos, currentUserId }) => {
   )
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: RootStore) => ({
   photos: state.targetUser?.photos,
   currentUserId: state.currentUser?.userId,
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  toggleLike: (targetPostId) => dispatch(toggleLike(targetPostId)),
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
+  toggleLike: (targetPostId: RootStore['targetPostId']) =>
+    dispatch(toggleLike(targetPostId)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Photos)

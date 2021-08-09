@@ -6,21 +6,38 @@ import Photos from './Photos'
 import s from './Profile.module.scss'
 import { setTargetUser } from '../../redux/slices/targetUserSlice'
 import { setTargetUserListenerByName } from '../../redux/AC'
+import { AppDispatch } from '../../redux/store'
+
+type Props = {
+  deleteTargetUser: () => void
+  setTargetUserListenerByName: (
+    name: TUser['username']
+  ) => Promise<(() => void) | undefined>
+  toggleNewPostPopup: () => void
+}
 
 const Profile = ({
   deleteTargetUser,
   setTargetUserListenerByName,
   toggleNewPostPopup,
-}) => {
-  const { userId: userName } = useParams()
+}: Props) => {
+  const {
+    userId: userName,
+  }: {
+    userId: TUser['username']
+  } = useParams()
 
   useEffect(() => {
     document.title = `${userName} - Instagram`
   }, [])
 
   useEffect(() => {
-    let listener
-    setTargetUserListenerByName(userName).then((res) => (listener = res))
+    let listener: () => void
+    setTargetUserListenerByName(userName).then((res) => {
+      if (res) {
+        listener = res
+      }
+    })
 
     return () => {
       deleteTargetUser()
@@ -38,11 +55,11 @@ const Profile = ({
   )
 }
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: AppDispatch) => ({
   deleteTargetUser: () => {
-    return dispatch(setTargetUser(null))
+    dispatch(setTargetUser(null))
   },
-  setTargetUserListenerByName: (name) => {
+  setTargetUserListenerByName: (name: TUser['username']) => {
     return dispatch(setTargetUserListenerByName(name))
   },
 })
