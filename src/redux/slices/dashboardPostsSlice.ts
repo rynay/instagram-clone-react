@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-const initialState = null as TPost[] | null
+const initialState = null as TFormattedPost[] | null
 
 const dashboardPostsSlice = createSlice({
   name: 'dashboardPosts',

@@ -1,11 +1,12 @@
+import { RootStore } from '../../redux/store'
 import Profile from '../Profile'
 import Suggestions from '../Suggestions'
 import s from './Sidebar.module.scss'
 
 type Props = {
-  suggestions: TUser[]
+  suggestions: RootStore['suggestions']
   follow: (target: TUser) => void
-  currentUser: TUser
+  currentUser: RootStore['currentUser']
 }
 
 const Sidebar = ({ suggestions, follow, currentUser }: Props) => {

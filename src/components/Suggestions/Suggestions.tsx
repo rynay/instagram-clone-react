@@ -1,11 +1,12 @@
 import Skeleton from 'react-loading-skeleton'
 import { Link } from 'react-router-dom'
+import { RootStore } from '../../redux/store'
 import s from './Suggestions.module.scss'
 
 type Props = {
-  suggestions: TUser[]
+  suggestions: RootStore['suggestions']
   follow: (sug: TUser) => any
-  currentUser: TUser
+  currentUser: RootStore['currentUser']
 }
 
 const Suggestions = ({ suggestions, follow }: Props) => {

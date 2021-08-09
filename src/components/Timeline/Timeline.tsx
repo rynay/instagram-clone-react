@@ -1,14 +1,14 @@
 import Post from '../Post'
 import Skeleton from 'react-loading-skeleton'
 import s from './Timeline.module.scss'
+import { RootStore } from '../../redux/store'
 
 type Props = {
-  posts: TFormattedPost[]
-  currentUserName: TUser['username']
-  currentUserId: TUser['userId']
+  posts: RootStore['dashboardPosts']
+  currentUser: RootStore['currentUser']
 }
 
-const Timeline = ({ currentUserName, posts, currentUserId }: Props) => {
+const Timeline = ({ posts, currentUser }: Props) => {
   return (
     <section className={s.container}>
       {posts?.length === 0 && <h2>Here's no posts just yet</h2>}
@@ -21,11 +21,12 @@ const Timeline = ({ currentUserName, posts, currentUserId }: Props) => {
         />
       )}
       {posts &&
+        currentUser &&
         posts.map((post) => (
           <Post
-            currentUserName={currentUserName}
+            currentUserName={currentUser.username}
             key={post.photoId}
-            currentUserId={currentUserId}
+            currentUserId={currentUser.userId}
             post={post}
           />
         ))}

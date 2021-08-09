@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 import s from './Profile.module.scss'
 
 type Props = {
-  username: string
-  avatar: string
-  fullName: string
+  username: TUser['username']
+  avatar: TUser['avatar']
+  fullName: TUser['fullName']
 }
 
 const Profile = ({ username, avatar, fullName }: Props) => {

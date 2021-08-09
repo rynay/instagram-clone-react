@@ -4,11 +4,11 @@ type TUser = {
   userId: string
   displayName: string
   docId: string
-  photo: string
   email: string
   following: TUser['userId'][]
   followers: TUser['userId'][]
   fullName: string
+  avatar: string
 }
 
 type TPost = {
