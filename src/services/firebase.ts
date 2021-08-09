@@ -9,7 +9,7 @@ type SetAvatar = ({
   downloadURL,
 }: {
   docId: TUser['docId']
-  downloadURL: TUser['photo']
+  downloadURL: TUser['avatar']
 }) => Promise<void>
 export const setAvatar: SetAvatar = ({ docId, downloadURL }) => {
   return firebase
@@ -142,7 +142,7 @@ export async function getFollowingPosts(
 
 async function getAvatarById(
   id: TUser['userId']
-): Promise<TUser['photo'] | void> {
+): Promise<TUser['avatar'] | void> {
   if (!id) return
 
   const results = await firebase
@@ -150,7 +150,7 @@ async function getAvatarById(
     .collection('users')
     .where('userId', '==', id)
     .get()
-  const formattedResult: TUser['photo'] = results.docs.map((doc) => ({
+  const formattedResult: TUser['avatar'] = results.docs.map((doc) => ({
     authorAvatar: doc.data().photo,
   }))[0].authorAvatar
 
