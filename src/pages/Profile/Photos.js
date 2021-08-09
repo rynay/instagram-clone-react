@@ -1,15 +1,15 @@
-import { Link, useHistory } from 'react-router-dom';
-import { connect } from 'react-redux';
-import * as AC from '../../redux/AC';
-import Skeleton from 'react-loading-skeleton';
-import { FaHeart, FaCommentDots } from 'react-icons/fa';
+import { Link, useHistory } from 'react-router-dom'
+import { connect } from 'react-redux'
+import Skeleton from 'react-loading-skeleton'
+import { FaHeart, FaCommentDots } from 'react-icons/fa'
+import { toggleLike } from '../../redux/AC'
 
 const Photos = ({ s, toggleLike, photos, currentUserId }) => {
   const photosSorted = photos?.sort((a, b) => {
-    return b.dateCreated - a.dateCreated;
-  });
+    return b.dateCreated - a.dateCreated
+  })
 
-  const history = useHistory();
+  const history = useHistory()
 
   return (
     <article className={s.photos}>
@@ -40,7 +40,7 @@ const Photos = ({ s, toggleLike, photos, currentUserId }) => {
       )}
       {photosSorted &&
         photosSorted.map((photo) => {
-          const isLiked = photo.likes.includes(currentUserId);
+          const isLiked = photo.likes.includes(currentUserId)
 
           return (
             <Link
@@ -54,15 +54,15 @@ const Photos = ({ s, toggleLike, photos, currentUserId }) => {
                   <button
                     className={s.photos__button}
                     onClick={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      return toggleLike(photo.photoId);
+                      e.stopPropagation()
+                      e.preventDefault()
+                      return toggleLike(photo.photoId)
                     }}
                     onKeyDown={(e) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      if (e.key !== 'Enter') return;
-                      return toggleLike(photo.photoId);
+                      e.stopPropagation()
+                      e.preventDefault()
+                      if (e.key !== 'Enter') return
+                      return toggleLike(photo.photoId)
                     }}>
                     {<FaHeart style={{ fill: isLiked ? 'red' : 'white' }} />}
                   </button>
@@ -76,19 +76,19 @@ const Photos = ({ s, toggleLike, photos, currentUserId }) => {
                 </div>
               </section>
             </Link>
-          );
+          )
         })}
     </article>
-  );
-};
+  )
+}
 
 const mapStateToProps = (state) => ({
   photos: state.targetUser?.photos,
   currentUserId: state.currentUser?.userId,
-});
+})
 
 const mapDispatchToProps = (dispatch) => ({
-  toggleLike: (targetPostId) => dispatch(AC.toggleLike(targetPostId)),
-});
+  toggleLike: (targetPostId) => dispatch(toggleLike(targetPostId)),
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(Photos);
+export default connect(mapStateToProps, mapDispatchToProps)(Photos)

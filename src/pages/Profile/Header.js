@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import Skeleton from 'react-loading-skeleton';
-import { connect } from 'react-redux';
-import * as AC from '../../redux/AC';
-import { FaCamera, FaPlus } from 'react-icons/fa';
+import { useState } from 'react'
+import Skeleton from 'react-loading-skeleton'
+import { connect } from 'react-redux'
+import { FaCamera, FaPlus } from 'react-icons/fa'
+import { toggleFollowing, uploadAvatar } from '../../redux/AC'
 
 const Header = ({
   s,
@@ -12,11 +12,11 @@ const Header = ({
   toggleNewPostPopup,
   uploadAvatar,
 }) => {
-  const [photoPreview, setPhotoPreview] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState(null)
   const handlePhotoChange = (e) => {
-    setPhotoPreview(URL.createObjectURL(e.target.files[0]));
-    return uploadAvatar(e.target.files[0]);
-  };
+    setPhotoPreview(URL.createObjectURL(e.target.files[0]))
+    return uploadAvatar(e.target.files[0])
+  }
   return (
     <>
       <section className={s.header}>
@@ -74,11 +74,11 @@ const Header = ({
                         : s.header__button_follow
                     }`}
                     onKeyDown={(e) => {
-                      if (e.key !== 'Enter') return;
-                      return toggleFollowing(targetUser, currentUser);
+                      if (e.key !== 'Enter') return
+                      return toggleFollowing(targetUser, currentUser)
                     }}
                     onClick={() => {
-                      return toggleFollowing(targetUser, currentUser);
+                      return toggleFollowing(targetUser, currentUser)
                     }}>
                     {targetUser?.followers.includes(currentUser?.userId)
                       ? 'Unfollow'
@@ -93,7 +93,7 @@ const Header = ({
                     onClick={toggleNewPostPopup}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
-                        return toggleNewPostPopup();
+                        return toggleNewPostPopup()
                       }
                     }}>
                     + Post
@@ -128,21 +128,21 @@ const Header = ({
         </div>
       </section>
     </>
-  );
-};
+  )
+}
 
 const mapStateToProps = (state) => ({
   currentUser: state.currentUser,
   targetUser: state.targetUser,
-});
+})
 
 const mapDispatchToProps = (dispatch) => ({
   toggleFollowing: (target, current) => {
-    return dispatch(AC.toggleFollowing(target, current));
+    return dispatch(toggleFollowing(target, current))
   },
   uploadAvatar: (file) => {
-    return dispatch(AC.uploadAvatar(file));
+    return dispatch(uploadAvatar(file))
   },
-});
+})
 
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(Header)
