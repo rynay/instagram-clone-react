@@ -1,41 +1,45 @@
-import InputField from '../../components/InputField';
-import { useEffect, useState, useMemo } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import * as ROUTES from '../../constants/routes';
-import s from '../Login-SignUp.module.scss';
-import { firebase } from '../../lib/firebase';
-import * as FirebaseService from '../../services/firebase';
+import InputField from '../../components/InputField'
+import { useEffect, useState, useMemo, FormEvent, ChangeEvent } from 'react'
+import { Link, useHistory } from 'react-router-dom'
+import * as ROUTES from '../../constants/routes'
+import s from '../Login-SignUp.module.scss'
+import { firebase } from '../../lib/firebase'
+import * as FirebaseService from '../../services/firebase'
 
-const SignUp = ({ history, currentUsername }) => {
-  const [userName, setUserName] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
-  const [isValid, setIsValid] = useState(false);
-  const [error, setError] = useState('');
+type Props = {
+  currentUsername: TUser['username']
+}
+
+const SignUp = ({ currentUsername }: Props) => {
+  const history = useHistory()
+  const [userName, setUserName] = useState('')
+  const [fullName, setFullName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [repeatPassword, setRepeatPassword] = useState('')
+  const [isValid, setIsValid] = useState(false)
+  const [error, setError] = useState('')
 
   useEffect(() => {
-    document.title = 'Sign Up - Instagram';
-  }, []);
+    document.title = 'Sign Up - Instagram'
+  }, [])
 
   useEffect(() => {
-    if (currentUsername) history.push('/');
-  }, [currentUsername]);
+    if (currentUsername) history.push('/')
+  }, [currentUsername])
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
 
-    const isUserNameExist = await FirebaseService.checkIsUserNameExist(
-      userName
-    );
-    const isEmailExist = await FirebaseService.checkIsEmailExist(email);
+    const isUserNameExist = await FirebaseService.checkIsUserNameExist(userName)
+    const isEmailExist = await FirebaseService.checkIsEmailExist(email)
 
     if (!isUserNameExist && !isEmailExist) {
       try {
         const userCreated = await firebase
           .auth()
-          .createUserWithEmailAndPassword(email, password);
+          .createUserWithEmailAndPassword(email, password)
+        if (!userCreated.user) return
         return firebase
           .firestore()
           .collection('users')
@@ -50,23 +54,23 @@ const SignUp = ({ history, currentUsername }) => {
             photo: '/images/avatars/default.png',
           })
           .then(() => {
-            history.push(ROUTES.DASHBOARD);
-          });
+            history.push(ROUTES.DASHBOARD)
+          })
       } catch (error) {
-        setError(error.message);
+        setError(error.message)
       }
     } else {
       if (isUserNameExist) {
         setError(
           'User with this username is already exists. Please choose another one.'
-        );
+        )
       } else if (isEmailExist) {
         setError(
           'User with this email address is already exists. Please Log In or choose another email address.'
-        );
+        )
       }
     }
-  };
+  }
 
   const fields = useMemo(
     () => [
@@ -76,8 +80,8 @@ const SignUp = ({ history, currentUsername }) => {
         placeholder: 'Username',
         'aria-label': 'Enter your username here',
         value: userName,
-        onChange(e) {
-          setUserName(e.target.value.toLowerCase());
+        onChange(e: ChangeEvent<HTMLInputElement>) {
+          setUserName(e.target.value.toLowerCase())
         },
       },
       {
@@ -86,8 +90,8 @@ const SignUp = ({ history, currentUsername }) => {
         placeholder: 'Full name',
         'aria-label': 'Enter your full name here',
         value: fullName,
-        onChange(e) {
-          setFullName(e.target.value);
+        onChange(e: ChangeEvent<HTMLInputElement>) {
+          setFullName(e.target.value)
         },
       },
       {
@@ -96,8 +100,8 @@ const SignUp = ({ history, currentUsername }) => {
         placeholder: 'Email address',
         'aria-label': 'Enter your email address here',
         value: email,
-        onChange(e) {
-          setEmail(e.target.value.toLowerCase());
+        onChange(e: ChangeEvent<HTMLInputElement>) {
+          setEmail(e.target.value.toLowerCase())
         },
       },
       {
@@ -106,8 +110,8 @@ const SignUp = ({ history, currentUsername }) => {
         placeholder: 'Password',
         'aria-label': 'Enter your password here',
         value: password,
-        onChange(e) {
-          setPassword(e.target.value);
+        onChange(e: ChangeEvent<HTMLInputElement>) {
+          setPassword(e.target.value)
         },
       },
       {
@@ -116,30 +120,30 @@ const SignUp = ({ history, currentUsername }) => {
         placeholder: 'Repeat password',
         'aria-label': 'Please repeat password',
         value: repeatPassword,
-        onChange(e) {
-          setRepeatPassword(e.target.value);
+        onChange(e: ChangeEvent<HTMLInputElement>) {
+          setRepeatPassword(e.target.value)
         },
       },
     ],
     []
-  );
+  )
 
   useEffect(() => {
-    document.title = 'Sign Up - Instagram';
-  }, []);
+    document.title = 'Sign Up - Instagram'
+  }, [])
 
   useEffect(() => {
-    setError('');
+    setError('')
     if (
       fields.every((field) => field.value.length >= 4) &&
       password === repeatPassword &&
       /^.+@.+$/.test(email)
     ) {
-      setIsValid(true);
+      setIsValid(true)
     } else {
-      setIsValid(false);
+      setIsValid(false)
     }
-  }, [userName, fullName, email, password, repeatPassword, fields]);
+  }, [userName, fullName, email, password, repeatPassword, fields])
 
   return (
     <main className={`container ${s.container}`}>
@@ -182,7 +186,7 @@ const SignUp = ({ history, currentUsername }) => {
         </section>
       </div>
     </main>
-  );
-};
+  )
+}
 
-export default withRouter(SignUp);
+export default SignUp
