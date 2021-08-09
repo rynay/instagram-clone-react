@@ -17,7 +17,7 @@ type Props = {
   username: TUser['username']
   toggleLike: (id: TPost['photoId']) => void
   sendComment: ({ comment, displayName, targetPhoto }: TSendingComment) => void
-  poppedUp: boolean
+  poppedUp?: boolean
 }
 
 const Info = ({

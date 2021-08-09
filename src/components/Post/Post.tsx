@@ -8,7 +8,7 @@ type Props = {
   post: TFormattedPost
   currentUserId?: TUser['userId']
   currentUserName?: TUser['username']
-  poppedUp: boolean
+  poppedUp?: boolean
 }
 
 const Post = ({ post, currentUserId, currentUserName, poppedUp }: Props) => {

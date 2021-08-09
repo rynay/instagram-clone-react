@@ -1,7 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/storage'
 import * as firebaseService from '../services/firebase'
-import * as TYPES from './TYPES'
 import { nanoid } from 'nanoid'
 import { AppDispatch, RootStore } from './store'
 import { setTargetUser } from './slices/targetUserSlice'
@@ -231,7 +230,7 @@ export const uploadPhoto = ({
   photo,
   description,
 }: {
-  photo: PhotoType
+  photo: TPhotoType
   description: TPost['caption']
 }) => (dispatch: AppDispatch, getState: () => RootStore) => {
   const { currentUser } = getState()
@@ -281,11 +280,7 @@ export const uploadPhoto = ({
   )
 }
 
-interface PhotoType {
-  name: string
-}
-
-export const uploadAvatar = (photo: PhotoType) => (
+export const uploadAvatar = (photo: TPhotoType) => (
   getState: () => RootStore
 ) => {
   const { currentUser } = getState()

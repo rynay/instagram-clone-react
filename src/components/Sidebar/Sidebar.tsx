@@ -1,4 +1,3 @@
-import React from 'react'
 import Profile from '../Profile'
 import Suggestions from '../Suggestions'
 import s from './Sidebar.module.scss'

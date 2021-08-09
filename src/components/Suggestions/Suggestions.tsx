@@ -1,4 +1,3 @@
-import React from 'react'
 import Skeleton from 'react-loading-skeleton'
 import { Link } from 'react-router-dom'
 import s from './Suggestions.module.scss'

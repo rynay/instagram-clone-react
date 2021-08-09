@@ -35,4 +35,11 @@ type TSendingComment = {
   targetPhoto: TPost['photoId']
 }
 
-type TError = string
+type TPhoto = {
+  photo: TPhotoType
+  description: string
+}
+
+type TPhotoType = {
+  name: string
+}

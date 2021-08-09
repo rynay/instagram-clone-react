@@ -1,10 +1,9 @@
-import React from 'react'
 import Post from '../Post'
 import Skeleton from 'react-loading-skeleton'
 import s from './Timeline.module.scss'
 
 type Props = {
-  posts: TPost[]
+  posts: TFormattedPost[]
   currentUserName: TUser['username']
   currentUserId: TUser['userId']
 }

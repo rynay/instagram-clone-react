@@ -1,12 +1,12 @@
-import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import Post from './Post'
+import { RootStore } from '../redux/store'
 
 type Props = {
   s: any
-  targetUser: TUser
+  targetUser: TUser | null
 }
 
 const PostInfoPopup = ({ s, targetUser }: Props) => {
@@ -47,7 +47,7 @@ const PostInfoPopup = ({ s, targetUser }: Props) => {
   )
 }
 
-const mapStateToProps = (state: TState) => ({
+const mapStateToProps = (state: RootStore) => ({
   targetUser: state?.targetUser,
 })
 
