@@ -1,37 +1,41 @@
-import { firebase } from '../../lib/firebase';
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import InputField from '../../components/InputField';
-import * as ROUTES from '../../constants/routes';
-import s from '../Login-SignUp.module.scss';
-import { withRouter } from 'react-router-dom';
+import { firebase } from '../../lib/firebase'
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import { Link, useHistory } from 'react-router-dom'
+import InputField from '../../components/InputField'
+import * as ROUTES from '../../constants/routes'
+import s from '../Login-SignUp.module.scss'
 
-const Login = ({ history, currentUsername }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isValid, setIsValid] = useState(false);
-  const [error, setError] = useState('');
+type Props = {
+  currentUsername: TUser['username']
+}
+
+const Login = ({ currentUsername }: Props) => {
+  const history = useHistory()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isValid, setIsValid] = useState(false)
+  const [error, setError] = useState('')
 
   useEffect(() => {
-    if (currentUsername) history.push('/');
-  }, [currentUsername]);
+    if (currentUsername) history.push('/')
+  }, [currentUsername])
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     try {
       return firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(() => {
-          history.push(ROUTES.DASHBOARD);
+          history.push(ROUTES.DASHBOARD)
         })
         .catch((error) => {
-          setError(error.message);
-        });
+          setError(error.message)
+        })
     } catch (error) {
-      setError(error.message);
+      setError(error.message)
     }
-  };
+  }
 
   const fields = [
     {
@@ -40,8 +44,8 @@ const Login = ({ history, currentUsername }) => {
       placeholder: 'Email address',
       'aria-label': 'Enter your email address here',
       value: email,
-      onChange(e) {
-        setEmail(e.target.value);
+      onChange(e: ChangeEvent<HTMLInputElement>) {
+        setEmail(e.target.value)
       },
     },
     {
@@ -50,24 +54,24 @@ const Login = ({ history, currentUsername }) => {
       placeholder: 'Password',
       'aria-label': 'Enter your password here',
       value: password,
-      onChange(e) {
-        setPassword(e.target.value);
+      onChange(e: ChangeEvent<HTMLInputElement>) {
+        setPassword(e.target.value)
       },
     },
-  ];
+  ]
 
   useEffect(() => {
-    document.title = 'Log In - Instagram';
-  }, []);
+    document.title = 'Log In - Instagram'
+  }, [])
 
   useEffect(() => {
-    setError('');
+    setError('')
     if (email && password && /^.+@.+$/.test(email) && password.length >= 4) {
-      setIsValid(true);
+      setIsValid(true)
     } else {
-      setIsValid(false);
+      setIsValid(false)
     }
-  }, [email, password]);
+  }, [email, password])
 
   return (
     <main className={`container ${s.container}`}>
@@ -110,7 +114,7 @@ const Login = ({ history, currentUsername }) => {
         </section>
       </div>
     </main>
-  );
-};
+  )
+}
 
-export default withRouter(Login);
+export default Login
