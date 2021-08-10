@@ -4,7 +4,7 @@ import s from './Profile.module.scss'
 
 type Props = {
   username?: TUser['username']
-  avatar?: TUser['avatar']
+  avatar?: TUser['photo']
   fullName?: TUser['fullName']
 }
 

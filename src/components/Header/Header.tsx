@@ -7,7 +7,7 @@ import { AppDispatch, RootStore } from '../../redux/store'
 
 type Props = {
   logout: () => void
-  user: TUser | null
+  user: RootStore['currentUser']['value']
 }
 
 const Header = ({ logout, user }: Props) => {
@@ -48,7 +48,7 @@ const Header = ({ logout, user }: Props) => {
                   to={`/p/${user.username}`}
                   className={s.header__profile_link}>
                   <img
-                    src={user.avatar || `/images/avatars/${user.username}.jpg`}
+                    src={user.photo || `/images/avatars/${user.username}.jpg`}
                     alt=""
                   />
                 </Link>

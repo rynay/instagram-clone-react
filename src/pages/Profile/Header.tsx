@@ -23,7 +23,6 @@ const Header = ({
   toggleNewPostPopup,
   uploadAvatar,
 }: Props) => {
-  console.log(targetUser)
   const [photoPreview, setPhotoPreview] = useState<string>()
   const handlePhotoChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPhotoPreview(URL.createObjectURL(e.target.files![0]))
@@ -57,7 +56,6 @@ const Header = ({
             <img
               src={
                 photoPreview ||
-                targetUser.avatar ||
                 targetUser.photo ||
                 `/images/avatars/${targetUser.username}.jpg`
               }

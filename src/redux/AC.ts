@@ -304,8 +304,17 @@ export const uploadAvatar = (photo: File) => (
   const uploadTask = storageRef.child(filename).put(photo, metadata)
 
   return uploadTask.on('state_changed', null, null, () => {
-    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-      firebaseService.setAvatar({ docId, downloadURL })
-    })
+    uploadTask.snapshot.ref
+      .getDownloadURL()
+      .then((downloadURL) => {
+        firebaseService.setAvatar({ docId, downloadURL })
+        return downloadURL
+      })
+      .then((URL: TUser['photo']) => {
+        setCurrentUser({
+          ...(currentUser.value || {}),
+          photo: URL,
+        } as TUser)
+      })
   })
 }
