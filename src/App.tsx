@@ -26,9 +26,6 @@ function App({ initApp, currentUsername }: Props) {
 
   useEffect(() => {
     document.title = 'Instagram'
-  }, [])
-
-  useEffect(() => {
     const listener = initApp()
 
     return listener()

@@ -1,14 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-const initialState = null as TUser[] | null
+const initialState = {
+  value: null as TUser[] | null,
+}
 
 const suggestionsSlice = createSlice({
   name: 'suggestions',
   initialState,
   reducers: {
-    // @ts-ignore
-    setSuggestions: (state, action: PayloadAction<typeof initialState>) => {
-      state = action.payload
+    setSuggestions: (
+      state,
+      action: PayloadAction<typeof initialState['value']>
+    ) => {
+      state.value = action.payload
     },
   },
 })

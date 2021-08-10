@@ -1,14 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-const initialState = null as TUser | null
+const initialState = {
+  value: null as TUser | null,
+}
 
 const currentUserSlice = createSlice({
   name: 'currentUser',
   initialState,
   reducers: {
-    // @ts-ignore
-    setCurrentUser: (state, action: PayloadAction<typeof initialState>) => {
-      state = action.payload
+    setCurrentUser: (
+      state,
+      action: PayloadAction<typeof initialState['value']>
+    ) => {
+      state.value = action.payload
     },
   },
 })

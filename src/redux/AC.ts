@@ -49,11 +49,7 @@ export const setCurrentUserAuthenticationListener = () => (
       if (!userInfo) return
       localStorage.setItem('user', JSON.stringify(userInfo))
 
-      dispatch(
-        setCurrentUser({
-          ...userInfo,
-        })
-      )
+      dispatch(setCurrentUser(userInfo))
       currentInfoListener =
         dispatch(setCurrentUserInformationListener()) || (() => {})
       dispatch(handleDashboardPosts())

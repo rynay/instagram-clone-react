@@ -1,14 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-const initialState = null as TFormattedPost[] | null
+const initialState = {
+  value: null as TFormattedPost[] | null,
+}
 
 const dashboardPostsSlice = createSlice({
   name: 'dashboardPosts',
   initialState,
   reducers: {
-    // @ts-ignore
-    setDashboardPosts: (state, action: PayloadAction<typeof initialState>) => {
-      state = action.payload
+    setDashboardPosts: (
+      state,
+      action: PayloadAction<typeof initialState['value']>
+    ) => {
+      state.value = action.payload
     },
   },
 })
