@@ -13,8 +13,12 @@ type Props = {
 }
 
 const Photos = ({ s, toggleLike, photos, currentUserId }: Props) => {
-  const photosSorted = photos?.sort((a, b) => {
-    return b.dateCreated - a.dateCreated
+  console.log(photos)
+  const photosSorted = [...(photos || [])]?.sort((a, b) => {
+    if (a && b) {
+      return b.dateCreated - a.dateCreated
+    }
+    return 0
   })
 
   const history = useHistory()
