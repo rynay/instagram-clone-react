@@ -7,7 +7,7 @@ import { AppDispatch, RootStore } from '../../redux/store'
 
 type Props = {
   s: any
-  toggleLike: (targetPostId: RootStore['targetPostId']) => void
+  toggleLike: (targetPostId: RootStore['targetPostId']['value']) => void
   photos?: TUser['photos']
   currentUserId?: TUser['userId']
 }
@@ -95,12 +95,12 @@ const Photos = ({ s, toggleLike, photos, currentUserId }: Props) => {
 }
 
 const mapStateToProps = (state: RootStore) => ({
-  photos: state.targetUser?.photos,
-  currentUserId: state.currentUser?.userId,
+  photos: state.targetUser?.value?.photos,
+  currentUserId: state.currentUser?.value?.userId,
 })
 
 const mapDispatchToProps = (dispatch: AppDispatch) => ({
-  toggleLike: (targetPostId: RootStore['targetPostId']) =>
+  toggleLike: (targetPostId: RootStore['targetPostId']['value']) =>
     dispatch(toggleLike(targetPostId)),
 })
 

@@ -4,24 +4,20 @@ import Suggestions from '../Suggestions'
 import s from './Sidebar.module.scss'
 
 type Props = {
-  suggestions: RootStore['suggestions']
+  suggestions: RootStore['suggestions']['value']
   follow: (target: TUser) => void
-  currentUser: RootStore['currentUser']
+  currentUser: RootStore['currentUser']['value']
 }
 
 const Sidebar = ({ suggestions, follow, currentUser }: Props) => {
   return (
     <aside className={s.container}>
       <Profile
-        fullName={currentUser?.value?.fullName}
-        avatar={currentUser?.value?.avatar}
-        username={currentUser?.value?.username}
+        fullName={currentUser?.fullName}
+        avatar={currentUser?.avatar}
+        username={currentUser?.username}
       />
-      <Suggestions
-        currentUser={currentUser}
-        suggestions={suggestions}
-        follow={follow}
-      />
+      <Suggestions suggestions={suggestions} follow={follow} />
     </aside>
   )
 }

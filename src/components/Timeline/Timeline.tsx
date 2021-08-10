@@ -4,14 +4,11 @@ import s from './Timeline.module.scss'
 import { RootStore } from '../../redux/store'
 
 type Props = {
-  posts: RootStore['dashboardPosts']
-  currentUser: RootStore['currentUser']
+  posts: RootStore['dashboardPosts']['value']
+  currentUser: RootStore['currentUser']['value']
 }
 
-const Timeline = ({
-  posts: { value: posts },
-  currentUser: { value: currentUser },
-}: Props) => {
+const Timeline = ({ posts, currentUser }: Props) => {
   return (
     <section className={s.container}>
       {posts?.length === 0 && <h2>Here's no posts just yet</h2>}

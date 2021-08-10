@@ -8,8 +8,8 @@ import { ChangeEvent } from 'react'
 
 type Props = {
   s: any
-  currentUser: RootStore['currentUser']
-  targetUser: RootStore['targetUser']
+  currentUser: RootStore['currentUser']['value']
+  targetUser: RootStore['targetUser']['value']
   toggleFollowing: (target: TUser) => void
   uploadAvatar: (file: File) => void
   toggleNewPostPopup: () => void
@@ -143,8 +143,8 @@ const Header = ({
 }
 
 const mapStateToProps = (state: RootStore) => ({
-  currentUser: state.currentUser,
-  targetUser: state.targetUser,
+  currentUser: state.currentUser.value,
+  targetUser: state.targetUser.value,
 })
 
 const mapDispatchToProps = (dispatch: AppDispatch) => ({

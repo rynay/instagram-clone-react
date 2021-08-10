@@ -4,15 +4,11 @@ import { RootStore } from '../../redux/store'
 import s from './Suggestions.module.scss'
 
 type Props = {
-  suggestions: RootStore['suggestions']
+  suggestions: RootStore['suggestions']['value']
   follow: (sug: TUser) => any
-  currentUser: RootStore['currentUser']
 }
 
-const Suggestions = ({
-  suggestions: { value: suggestions },
-  follow,
-}: Props) => {
+const Suggestions = ({ suggestions, follow }: Props) => {
   return (
     <section className={s.container}>
       {suggestions && (

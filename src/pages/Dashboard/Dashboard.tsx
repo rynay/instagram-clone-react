@@ -7,9 +7,9 @@ import { toggleFollowing } from '../../redux/AC'
 import { AppDispatch, RootStore } from '../../redux/store'
 
 type Props = {
-  currentUser: RootStore['currentUser']
-  suggestions: RootStore['suggestions']
-  dashboardPosts: RootStore['dashboardPosts']
+  currentUser: RootStore['currentUser']['value']
+  suggestions: RootStore['suggestions']['value']
+  dashboardPosts: RootStore['dashboardPosts']['value']
   toggleFollowing: (target: TUser) => void
 }
 
@@ -35,9 +35,9 @@ const Dashboard = ({
 }
 
 const mapStateToProps = (state: RootStore) => ({
-  currentUser: state.currentUser,
-  suggestions: state.suggestions,
-  dashboardPosts: state.dashboardPosts,
+  currentUser: state.currentUser.value,
+  suggestions: state.suggestions.value,
+  dashboardPosts: state.dashboardPosts.value,
 })
 
 const mapDispatchToProps = (dispatch: AppDispatch) => ({
