@@ -8,7 +8,8 @@ type TUser = {
   following: TUser['userId'][]
   followers: TUser['userId'][]
   fullName: string
-  avatar: string
+  avatar?: string
+  photo?: string
   photos?: TFormattedPost[] | null
 }
 

@@ -13,7 +13,6 @@ type Props = {
 }
 
 const Photos = ({ s, toggleLike, photos, currentUserId }: Props) => {
-  console.log(photos)
   const photosSorted = [...(photos || [])]?.sort((a, b) => {
     if (a && b) {
       return b.dateCreated - a.dateCreated

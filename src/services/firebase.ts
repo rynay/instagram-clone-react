@@ -16,7 +16,7 @@ export const setAvatar: SetAvatar = ({ docId, downloadURL }) => {
     .firestore()
     .collection('users')
     .doc(docId)
-    .update({ photo: downloadURL })
+    .update({ avatar: downloadURL })
 }
 
 export const toggleLike = async (
