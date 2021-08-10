@@ -67,7 +67,7 @@ export const setCurrentUserInformationListener = () => (
   dispatch: AppDispatch,
   getState: () => RootStore
 ) => {
-  const userId = getState().currentUser?.userId
+  const userId = getState().currentUser?.value?.userId
   if (!userId) return
   const userListener = firebase
     .firestore()
@@ -131,7 +131,7 @@ const handleDashboardPosts = (data?: null) => (
     dispatch(setDashboardPosts(data))
     return
   }
-  const { following } = getState().currentUser || {}
+  const { following } = getState().currentUser.value || {}
   return firebaseService
     .getFollowingPosts(following)
     .then((posts: TFormattedPost[]) => {
@@ -154,7 +154,7 @@ const handleSuggestions = (data?: null) => (
     dispatch(setSuggestions(data))
     return
   }
-  const { userId } = getState().currentUser || {}
+  const { userId } = getState().currentUser.value || {}
   return firebaseService.getSuggestions(userId).then((suggestions) => {
     dispatch(setSuggestions(suggestions))
   })
@@ -164,9 +164,11 @@ export const toggleFollowing = (target: TUser) => (
   _: AppDispatch,
   getState: () => RootStore
 ) => {
-  const { currentUser } = getState()
-  if (currentUser) {
-    return firebaseService.toggleFollowing(target, currentUser)
+  const {
+    currentUser: { value },
+  } = getState()
+  if (value) {
+    return firebaseService.toggleFollowing(target, value)
   }
 }
 
@@ -176,16 +178,18 @@ export const toggleLike = (targetPost: TPost['photoId'] | null) => (
 ) => {
   if (!targetPost) return
   const { currentUser, targetUser } = getState()
-  const { userId, following } = currentUser || {}
+  const currentUserValue = currentUser.value
+  const targetUserValue = targetUser.value
+  const { userId, following } = currentUserValue || {}
   if (userId) {
-    if (!targetUser) {
+    if (!targetUserValue) {
       firebaseService.toggleLike(userId, targetPost).then(() => {
         dispatch(handleDashboardPosts())
       })
     } else {
       firebaseService.toggleLike(userId, targetPost).then(() => {
         dispatch(updateTargetUserPhotos())
-        if (following && following.includes(targetUser.userId)) {
+        if (following && following.includes(targetUserValue.userId)) {
           dispatch(handleDashboardPosts())
         }
       })
@@ -197,10 +201,12 @@ export const updateTargetUserPhotos = () => async (
   dispatch: AppDispatch,
   getState: () => RootStore
 ) => {
-  const { targetUser } = getState()
-  if (targetUser) {
-    const photos = await firebaseService.getPosts(targetUser.userId)
-    return dispatch(setTargetUser({ ...targetUser, photos }))
+  const {
+    targetUser: { value: targetUserValue },
+  } = getState()
+  if (targetUserValue) {
+    const photos = await firebaseService.getPosts(targetUserValue.userId)
+    return dispatch(setTargetUser({ ...targetUserValue, photos }))
   }
 }
 
@@ -209,16 +215,19 @@ export const sendComment = ({
   targetPhoto,
   comment,
 }: TSendingComment) => (dispatch: AppDispatch, getState: () => RootStore) => {
-  const { targetUser, currentUser } = getState()
-  const { following } = currentUser || {}
+  const {
+    targetUser: { value: targetUserValue },
+    currentUser,
+  } = getState()
+  const { following } = currentUser.value || {}
   return firebaseService
     .sendComment({ displayName, targetPhoto, comment })
     .then(() => {
-      if (!targetUser) {
+      if (!targetUserValue) {
         dispatch(handleDashboardPosts())
       } else {
         dispatch(updateTargetUserPhotos())
-        if (following && following.includes(targetUser.userId)) {
+        if (following && following.includes(targetUserValue.userId)) {
           dispatch(handleDashboardPosts())
         }
       }
@@ -233,7 +242,7 @@ export const uploadPhoto = ({
   description: TPost['caption']
 }) => (dispatch: AppDispatch, getState: () => RootStore) => {
   const { currentUser } = getState()
-  const { userId } = currentUser || {}
+  const { userId } = currentUser.value || {}
   if (!userId) return
   const id = nanoid()
   const filename = `images/${id}.${photo.name.split('.').reverse()[0]}`
@@ -284,7 +293,7 @@ export const uploadAvatar = (photo: File) => (
   getState: () => RootStore
 ) => {
   const { currentUser } = getState()
-  const { docId } = currentUser || {}
+  const { docId } = currentUser.value || {}
   if (!docId) return
   const id = nanoid()
   const filename = `images/${id}.${photo.name.split('.').reverse()[0]}`
