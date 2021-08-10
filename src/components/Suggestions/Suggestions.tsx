@@ -9,7 +9,10 @@ type Props = {
   currentUser: RootStore['currentUser']
 }
 
-const Suggestions = ({ suggestions, follow }: Props) => {
+const Suggestions = ({
+  suggestions: { value: suggestions },
+  follow,
+}: Props) => {
   return (
     <section className={s.container}>
       {suggestions && (

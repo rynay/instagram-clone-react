@@ -8,7 +8,10 @@ type Props = {
   currentUser: RootStore['currentUser']
 }
 
-const Timeline = ({ posts, currentUser }: Props) => {
+const Timeline = ({
+  posts: { value: posts },
+  currentUser: { value: currentUser },
+}: Props) => {
   return (
     <section className={s.container}>
       {posts?.length === 0 && <h2>Here's no posts just yet</h2>}

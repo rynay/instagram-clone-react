@@ -204,7 +204,7 @@ const mapDispatchToProps = (dispatch: AppDispatch) => ({
 })
 
 const mapStateToProps = (state: RootStore) => ({
-  currentUser: state.currentUser,
+  currentUser: state.currentUser.value,
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Info)

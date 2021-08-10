@@ -75,7 +75,7 @@ const Header = ({ logout, user }: Props) => {
 }
 
 const mapStateToProps = (state: RootStore) => ({
-  user: state.currentUser,
+  user: state.currentUser.value,
 })
 
 const mapDispatchToProps = (dispatch: AppDispatch) => ({

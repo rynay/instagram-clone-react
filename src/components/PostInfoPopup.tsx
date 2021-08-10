@@ -48,7 +48,7 @@ const PostInfoPopup = ({ s, targetUser }: Props) => {
 }
 
 const mapStateToProps = (state: RootStore) => ({
-  targetUser: state?.targetUser,
+  targetUser: state?.targetUser?.value,
 })
 
 export default connect(mapStateToProps)(PostInfoPopup)

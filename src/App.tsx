@@ -77,7 +77,7 @@ function App({ initApp, currentUsername }: Props) {
 
 const mapStateToProps = (state: RootStore) => ({
   currentUser: state.currentUser,
-  currentUsername: state.currentUser?.username,
+  currentUsername: state.currentUser?.value?.username,
 })
 
 const mapDispatchToProps = (dispatch: AppDispatch) => ({
