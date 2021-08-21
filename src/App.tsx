@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { lazy, Suspense, useEffect, useState } from 'react'
-import { Switch, Route, useHistory } from 'react-router-dom'
+import { Switch, Route, useHistory} from 'react-router-dom'
 import * as ROUTES from './constants/routes'
 import Header from './components/Header'
 import s from './app.module.scss'
