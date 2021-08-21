@@ -28,11 +28,11 @@ function App({ initApp, currentUsername }: Props) {
     document.title = 'Instagram'
     const listener = initApp()
 
-    return listener()
+    return listener
   }, [])
 
   useEffect(() => {
-    const localUser = JSON.parse(localStorage.getItem('user') || '')
+    const localUser = JSON.parse(localStorage.getItem('user') || 'null')
     if (!currentUsername && !localUser) history.push('/login')
   }, [currentUsername])
 

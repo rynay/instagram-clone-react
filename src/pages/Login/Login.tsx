@@ -1,7 +1,6 @@
 import { firebase } from '../../lib/firebase'
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
-import InputField from '../../components/InputField'
 import * as ROUTES from '../../constants/routes'
 import s from '../Login-SignUp.module.scss'
 
@@ -92,10 +91,9 @@ const Login = ({ currentUsername }: Props) => {
             {error && <p className={s.error}>{error}</p>}
             <form
               className={`${s.content__form} ${s.form}`}
-              onSubmit={handleSubmit}
-              method="POST">
+              onSubmit={handleSubmit}>
               {fields.map((field) => (
-                <InputField key={field.placeholder} {...field} />
+                <input key={field.placeholder} value={field.value} onChange={field.onChange} className={field.className} placeholder={field.placeholder} type={field.type}/>
               ))}
 
               <button className={s.form__button} disabled={!isValid}>

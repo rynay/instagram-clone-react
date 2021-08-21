@@ -13,7 +13,7 @@ import {
 import { setCurrentUser } from './slices/currentUserSlice'
 
 export const initApp = () => (dispatch: AppDispatch) => {
-  const localUser: TUser | null = JSON.parse(localStorage.getItem('user') || '')
+  const localUser: TUser | null = JSON.parse(localStorage.getItem('user') || 'null')
   let authListener: () => void
   let currentInfoListener: () => void
   if (localUser) {

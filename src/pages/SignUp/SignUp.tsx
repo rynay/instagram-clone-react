@@ -1,149 +1,173 @@
-import InputField from '../../components/InputField'
-import { useEffect, useState, useMemo, FormEvent, ChangeEvent } from 'react'
-import { Link, useHistory } from 'react-router-dom'
-import * as ROUTES from '../../constants/routes'
-import s from '../Login-SignUp.module.scss'
-import { firebase } from '../../lib/firebase'
-import * as FirebaseService from '../../services/firebase'
+import { useEffect, useState, useMemo, FormEvent, ChangeEvent } from "react";
+import { Link, useHistory } from "react-router-dom";
+import * as ROUTES from "../../constants/routes";
+import s from "../Login-SignUp.module.scss";
+import { firebase } from "../../lib/firebase";
+import * as FirebaseService from "../../services/firebase";
 
 type Props = {
-  currentUsername?: TUser['username']
-}
+  currentUsername?: TUser["username"];
+};
 
 const SignUp = ({ currentUsername }: Props) => {
-  const history = useHistory()
-  const [userName, setUserName] = useState('')
-  const [fullName, setFullName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [repeatPassword, setRepeatPassword] = useState('')
-  const [isValid, setIsValid] = useState(false)
-  const [error, setError] = useState('')
+  const history = useHistory();
+  const [state, setState] = useState<{ [key in string]: string }>({
+    username: "",
+    fullName: "",
+    email: "",
+    password: "",
+    repeatPassword: "",
+  });
+  const [isValid, setIsValid] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleChange = (name: string, value: string) => {
+    setState((state) => ({
+      ...state,
+      [name]: value,
+    }));
+  };
 
   useEffect(() => {
-    document.title = 'Sign Up - Instagram'
-  }, [])
+    document.title = "Sign Up - Instagram";
+  }, []);
 
   useEffect(() => {
-    if (currentUsername) history.push('/')
-  }, [currentUsername])
+    if (currentUsername) history.push("/");
+  }, [currentUsername]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const isUserNameExist = await FirebaseService.checkIsUserNameExist(userName)
-    const isEmailExist = await FirebaseService.checkIsEmailExist(email)
+    const isUserNameExist = await FirebaseService.checkIsUserNameExist(
+      state.username
+    );
+    const isEmailExist = await FirebaseService.checkIsEmailExist(state.email);
 
     if (!isUserNameExist && !isEmailExist) {
       try {
         const userCreated = await firebase
           .auth()
-          .createUserWithEmailAndPassword(email, password)
-        if (!userCreated.user) return
+          .createUserWithEmailAndPassword(state.email, state.password);
+        if (!userCreated.user) return;
         return firebase
           .firestore()
-          .collection('users')
+          .collection("users")
           .add({
             dateCreated: Date.now(),
-            emailAddress: email,
+            emailAddress: state.email,
             followers: [],
             following: [],
-            fullName,
+            fullName: state.fullName,
             userId: userCreated.user.uid,
-            username: userName,
-            photo: '/images/avatars/default.png',
+            username: state.username,
+            photo: "/images/avatars/default.png",
           })
           .then(() => {
-            history.push(ROUTES.DASHBOARD)
-          })
-      } catch (error) {
-        setError(error.message)
+            history.push(ROUTES.DASHBOARD);
+          });
+      } catch ({ message }) {
+        setError(message)
       }
     } else {
       if (isUserNameExist) {
-        setError(
-          'User with this username is already exists. Please choose another one.'
-        )
+        setError("User with this username is already exists. Please choose another one.")
       } else if (isEmailExist) {
-        setError(
-          'User with this email address is already exists. Please Log In or choose another email address.'
-        )
+        setError("User with this email address is already exists. Please Log In or choose another email address.")
       }
     }
-  }
+  };
 
-  const fields = useMemo(
-    () => [
-      {
+  const fields: { [key in string]: {
+    className: string,
+    type: string,
+    placeholder: string,
+    "aria-label": string,
+    value: string,
+    onChange: (e: ChangeEvent<HTMLInputElement>) => void,
+  } } = useMemo(
+    () => ({
+      "username":{
         className: s.form__input,
-        type: 'text',
-        placeholder: 'Username',
-        'aria-label': 'Enter your username here',
-        value: userName,
-        onChange(e: ChangeEvent<HTMLInputElement>) {
-          setUserName(e.target.value.toLowerCase())
+        type: "text",
+        placeholder: "Username",
+        "aria-label": "Enter your username here",
+        value: state.username,
+        onChange: (e: ChangeEvent<HTMLInputElement>) => {
+          handleChange("username", e.target.value.toLowerCase());
         },
       },
-      {
+      "fullName": {
         className: s.form__input,
-        type: 'text',
-        placeholder: 'Full name',
-        'aria-label': 'Enter your full name here',
-        value: fullName,
+        type: "text",
+        placeholder: "Full name",
+        "aria-label": "Enter your full name here",
+        value: state.fullName,
+        name: "fullName",
         onChange(e: ChangeEvent<HTMLInputElement>) {
-          setFullName(e.target.value)
+          handleChange("fullName", e.target.value);
         },
       },
-      {
+      "email": {
         className: s.form__input,
-        type: 'email',
-        placeholder: 'Email address',
-        'aria-label': 'Enter your email address here',
-        value: email,
+        type: "email",
+        placeholder: "Email address",
+        "aria-label": "Enter your email address here",
+        value: state.email,
+        name: "email",
         onChange(e: ChangeEvent<HTMLInputElement>) {
-          setEmail(e.target.value.toLowerCase())
+          handleChange("email", e.target.value.toLowerCase());
         },
       },
-      {
+      "password": {
         className: s.form__input,
-        type: 'password',
-        placeholder: 'Password',
-        'aria-label': 'Enter your password here',
-        value: password,
+        type: "password",
+        placeholder: "Password",
+        "aria-label": "Enter your password here",
+        value: state.password,
+        name: "password",
         onChange(e: ChangeEvent<HTMLInputElement>) {
-          setPassword(e.target.value)
+          handleChange("password", e.target.value);
         },
       },
-      {
+      "repeatPassword": {
         className: s.form__input,
-        type: 'password',
-        placeholder: 'Repeat password',
-        'aria-label': 'Please repeat password',
-        value: repeatPassword,
+        type: "password",
+        placeholder: "Repeat password",
+        "aria-label": "Please repeat password",
+        value: state.repeatPassword,
+        name: "repeatPassword",
         onChange(e: ChangeEvent<HTMLInputElement>) {
-          setRepeatPassword(e.target.value)
+          handleChange("repeatPassword", e.target.value);
         },
       },
-    ],
+    }),
     []
-  )
+  );
 
   useEffect(() => {
-    document.title = 'Sign Up - Instagram'
-  }, [])
+    document.title = "Sign Up - Instagram";
+  }, []);
 
   useEffect(() => {
-    setError('')
+    setError("");
     if (
-      fields.every((field) => field.value.length >= 4) &&
-      password === repeatPassword &&
-      /^.+@.+$/.test(email)
+      Object.keys(fields).every((key) => fields[key].value.length >= 4) &&
+      state.password === state.repeatPassword &&
+      /^.+@.+$/.test(state.email)
     ) {
-      setIsValid(true)
+      setIsValid(true);
     } else {
-      setIsValid(false)
+      setIsValid(false);
     }
-  }, [userName, fullName, email, password, repeatPassword, fields])
+  }, [
+    state.username,
+    state.fullName,
+    state.email,
+    state.password,
+    state.repeatPassword,
+    fields,
+  ]);
 
   return (
     <main className={`container ${s.container}`}>
@@ -165,9 +189,14 @@ const SignUp = ({ currentUsername }: Props) => {
             <form
               className={`${s.content__form} ${s.form}`}
               onSubmit={handleSubmit}
-              method="POST">
-              {fields.map((field) => (
-                <InputField key={field.placeholder} {...field} />
+              method="POST"
+            >
+              {Object.keys(fields).map((key) => (
+                <input
+                  key={key}
+                  {...fields[key]}
+                  value={state[key]}
+                />
               ))}
 
               <button className={s.form__button} disabled={!isValid}>
@@ -186,7 +215,7 @@ const SignUp = ({ currentUsername }: Props) => {
         </section>
       </div>
     </main>
-  )
-}
+  );
+};
 
-export default SignUp
+export default SignUp;
