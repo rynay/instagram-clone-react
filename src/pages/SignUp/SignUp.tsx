@@ -67,27 +67,33 @@ const SignUp = ({ currentUsername }: Props) => {
             history.push(ROUTES.DASHBOARD);
           });
       } catch ({ message }) {
-        setError(message)
+        setError(message as string);
       }
     } else {
       if (isUserNameExist) {
-        setError("User with this username is already exists. Please choose another one.")
+        setError(
+          "User with this username is already exists. Please choose another one."
+        );
       } else if (isEmailExist) {
-        setError("User with this email address is already exists. Please Log In or choose another email address.")
+        setError(
+          "User with this email address is already exists. Please Log In or choose another email address."
+        );
       }
     }
   };
 
-  const fields: { [key in string]: {
-    className: string,
-    type: string,
-    placeholder: string,
-    "aria-label": string,
-    value: string,
-    onChange: (e: ChangeEvent<HTMLInputElement>) => void,
-  } } = useMemo(
+  const fields: {
+    [key in string]: {
+      className: string;
+      type: string;
+      placeholder: string;
+      "aria-label": string;
+      value: string;
+      onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+    };
+  } = useMemo(
     () => ({
-      "username":{
+      username: {
         className: s.form__input,
         type: "text",
         placeholder: "Username",
@@ -97,7 +103,7 @@ const SignUp = ({ currentUsername }: Props) => {
           handleChange("username", e.target.value.toLowerCase());
         },
       },
-      "fullName": {
+      fullName: {
         className: s.form__input,
         type: "text",
         placeholder: "Full name",
@@ -108,7 +114,7 @@ const SignUp = ({ currentUsername }: Props) => {
           handleChange("fullName", e.target.value);
         },
       },
-      "email": {
+      email: {
         className: s.form__input,
         type: "email",
         placeholder: "Email address",
@@ -119,7 +125,7 @@ const SignUp = ({ currentUsername }: Props) => {
           handleChange("email", e.target.value.toLowerCase());
         },
       },
-      "password": {
+      password: {
         className: s.form__input,
         type: "password",
         placeholder: "Password",
@@ -130,7 +136,7 @@ const SignUp = ({ currentUsername }: Props) => {
           handleChange("password", e.target.value);
         },
       },
-      "repeatPassword": {
+      repeatPassword: {
         className: s.form__input,
         type: "password",
         placeholder: "Repeat password",
@@ -152,7 +158,7 @@ const SignUp = ({ currentUsername }: Props) => {
   useEffect(() => {
     setError("");
     if (
-      Object.keys(fields).every((key) => fields[key].value.length >= 4) &&
+      Object.keys(state).every((key) => state[key].length >= 4) &&
       state.password === state.repeatPassword &&
       /^.+@.+$/.test(state.email)
     ) {
@@ -192,11 +198,7 @@ const SignUp = ({ currentUsername }: Props) => {
               method="POST"
             >
               {Object.keys(fields).map((key) => (
-                <input
-                  key={key}
-                  {...fields[key]}
-                  value={state[key]}
-                />
+                <input key={key} {...fields[key]} value={state[key]} />
               ))}
 
               <button className={s.form__button} disabled={!isValid}>
