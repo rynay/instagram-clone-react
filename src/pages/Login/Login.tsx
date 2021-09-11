@@ -1,76 +1,76 @@
-import { firebase } from '../../lib/firebase'
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
-import * as ROUTES from '../../constants/routes'
-import s from '../Login-SignUp.module.scss'
+import { firebase } from "../../lib/firebase";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
+import * as ROUTES from "../../constants/routes";
+import s from "../Login-SignUp.module.scss";
 
 type Props = {
-  currentUsername?: TUser['username']
-}
+  currentUsername?: TUser["username"];
+};
 
 const Login = ({ currentUsername }: Props) => {
-  const history = useHistory()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [isValid, setIsValid] = useState(false)
-  const [error, setError] = useState('')
+  const history = useHistory();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isValid, setIsValid] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    if (currentUsername) history.push('/')
-  }, [currentUsername])
+    if (currentUsername) history.push("/");
+  }, [currentUsername]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       return firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(() => {
-          history.push(ROUTES.DASHBOARD)
+          history.push(ROUTES.DASHBOARD);
         })
         .catch((error) => {
-          setError(error.message)
-        })
+          setError(error.message);
+        });
     } catch (error) {
-      setError(error.message)
+      setError(error.message);
     }
-  }
+  };
 
   const fields = [
     {
       className: s.form__input,
-      type: 'email',
-      placeholder: 'Email address',
-      'aria-label': 'Enter your email address here',
+      type: "email",
+      placeholder: "Email address",
+      "aria-label": "Enter your email address here",
       value: email,
       onChange(e: ChangeEvent<HTMLInputElement>) {
-        setEmail(e.target.value)
+        setEmail(e.target.value);
       },
     },
     {
       className: s.form__input,
-      type: 'password',
-      placeholder: 'Password',
-      'aria-label': 'Enter your password here',
+      type: "password",
+      placeholder: "Password",
+      "aria-label": "Enter your password here",
       value: password,
       onChange(e: ChangeEvent<HTMLInputElement>) {
-        setPassword(e.target.value)
+        setPassword(e.target.value);
       },
     },
-  ]
+  ];
 
   useEffect(() => {
-    document.title = 'Log In - Instagram'
-  }, [])
+    document.title = "Log In - Instagram";
+  }, []);
 
   useEffect(() => {
-    setError('')
-    if (email && password && /^.+@.+$/.test(email) && password.length >= 4) {
-      setIsValid(true)
+    setError("");
+    if (email && password && password.length >= 4) {
+      setIsValid(true);
     } else {
-      setIsValid(false)
+      setIsValid(false);
     }
-  }, [email, password])
+  }, [email, password]);
 
   return (
     <main className={`container ${s.container}`}>
@@ -91,9 +91,17 @@ const Login = ({ currentUsername }: Props) => {
             {error && <p className={s.error}>{error}</p>}
             <form
               className={`${s.content__form} ${s.form}`}
-              onSubmit={handleSubmit}>
+              onSubmit={handleSubmit}
+            >
               {fields.map((field) => (
-                <input key={field.placeholder} value={field.value} onChange={field.onChange} className={field.className} placeholder={field.placeholder} type={field.type}/>
+                <input
+                  key={field.placeholder}
+                  value={field.value}
+                  onChange={field.onChange}
+                  className={field.className}
+                  placeholder={field.placeholder}
+                  type={field.type}
+                />
               ))}
 
               <button className={s.form__button} disabled={!isValid}>
@@ -112,7 +120,7 @@ const Login = ({ currentUsername }: Props) => {
         </section>
       </div>
     </main>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
